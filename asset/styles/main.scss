@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "./user/sign.scss";
 @import "./board/setPost.scss";
 @import "./board/getPost.scss";
