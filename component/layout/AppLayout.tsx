@@ -4,7 +4,7 @@ import { Dropdown, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useCookies } from "react-cookie";
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import logo from "../../asset/images/logo.png";
 import logoSmall from "../../asset/images/header_logo.png";
@@ -14,7 +14,7 @@ import { useGrid } from "../utils/responsive";
 import { postSearch } from "../../pages/api";
 import Rank from "../../pages/post/rank";
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
   const router = useRouter();
   // const user = useRecoilValue(userState);
   const [user, setUser] = useRecoilState(userState);
@@ -27,7 +27,7 @@ const AppLayout = ({ children }) => {
   const { isMobile, isDesktop } = useGrid();
 
   const logout = () => {
-    setUser();
+    setUser("");
     removecookie("refresh_token");
   };
 
@@ -89,7 +89,7 @@ const AppLayout = ({ children }) => {
           </button>
           <span style={{ color: "#2b3089" }}> | </span>
           <button onClick={() => router.push("/user/signup")} className="header_signin">
-            회원가입 g{" "}
+            회원가입
           </button>
         </div>
       )}

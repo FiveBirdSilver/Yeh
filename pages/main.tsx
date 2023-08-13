@@ -26,43 +26,44 @@ export default function Main() {
 
   const { isMobile, isTablet, isDesktop } = useGrid();
   const { ref, inView } = useInView();
-  const { data, isLoading, error, refetch, fetchNextPage, status } = useInfiniteQuery(
-    "posts",
-    async ({ pageParam = 1 }) => {
-      const res = await postSearch(keyword, pageParam);
-      return {
-        result: res.data.data,
-        page: pageParam,
-      };
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        return lastPage.page + 1;
-      },
-    }
-  );
 
-  const POST = data?.pages.map((data) => data.result)?.map((val) => val.posts);
-  const flattenedArray = POST?.reduce((previousValue, currentValue) => {
-    return previousValue.concat(currentValue);
-  });
+  // const { data, isLoading, error, refetch, fetchNextPage, status } = useInfiniteQuery(
+  //   "posts",
+  //   async ({ pageParam = 1 }) => {
+  //     const res = await postSearch(keyword, pageParam);
+  //     return {
+  //       result: res.data.data,
+  //       page: pageParam,
+  //     };
+  //   },
+  //   {
+  //     getNextPageParam: (lastPage) => {
+  //       return lastPage.page + 1;
+  //     },
+  //   }
+  // );
 
-  useEffect(() => {
-    refetch();
-  }, [keyword]);
+  // const POST = data?.pages.map((data) => data.result)?.map((val) => val.posts);
+  // const flattenedArray = POST?.reduce((previousValue, currentValue) => {
+  //   return previousValue.concat(currentValue);
+  // });
 
-  useEffect(() => {
-    if (inView) fetchNextPage();
-  }, [inView]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [keyword]);
 
-  // 리프레시 토큰 발급
-  useEffect(() => {
-    if (user?.loggin) setToken();
-  }, []);
+  // useEffect(() => {
+  //   if (inView) fetchNextPage();
+  // }, [inView]);
+
+  // // 리프레시 토큰 발급
+  // useEffect(() => {
+  //   if (user?.loggin) setToken();
+  // }, []);
 
   const Data = (
     <div className="getPostsBox_wrap">
-      {flattenedArray?.map((i) =>
+      {/* {flattenedArray?.map((i) =>
         isLoading ? (
           <Skeleton key={i} active />
         ) : (
@@ -115,7 +116,7 @@ export default function Main() {
             </div>
           </div>
         )
-      )}
+      )} */}
     </div>
   );
   return (
@@ -127,10 +128,10 @@ export default function Main() {
           {Data}
         </div>
       )} */}
-      <div className="getPost">
+      {/* <div className="getPost">
         <Rank />
         {Data}
-      </div>
+      </div> */}
       <p className="scrollRef" ref={ref}>
         ㅤ
       </p>
