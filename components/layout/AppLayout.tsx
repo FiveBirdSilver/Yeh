@@ -11,24 +11,21 @@ import logoSmall from "../../asset/images/header_logo.png";
 import AppFooter from "./appFooter";
 import { keywordState, pageState, userState } from "../../store/index";
 import { useGrid } from "../utils/responsive";
-import { postSearch } from "../../pages/api";
+import { postSearch } from "../../libs/apis";
 import Rank from "../../pages/post/rank";
 
 const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
   const router = useRouter();
-  // const user = useRecoilValue(userState);
+  const [keyword, setKeyword] = useState<string>("");
+
   const [user, setUser] = useRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
-  const setPageState = useSetRecoilState(pageState);
 
-  const [searchVal, setSearchVal] = useState(null);
-  // const [activeSearch, setActiveSearch] = useState(false);
-  const [cookie, setCookie, removecookie] = useCookies(["refresh_token"]);
   const { isMobile, isDesktop } = useGrid();
 
   const logout = () => {
     setUser("");
-    removecookie("refresh_token");
+    // removecookie("refresh_token");
   };
 
   const items = [
@@ -42,38 +39,23 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
     },
   ];
 
-  // const handleOnKeyup = async (e) => {
-  //   if (e.keyCode === 13 && searchVal.trim() !== "") {
-  //     setActiveSearch(false);
-  //     try {
-  //       const res = await postSearch(searchVal);
-  //       if (res.data.success && res.data.data.postCount > 0) {
-  //         keywordHandler({
-  //           posts: res.data.data.posts,
-  //           postCount: res.data.data.postCount,
-  //         });
-  //         router.push("/main");
-  //       } else if (res.data.success && res.data.data.postCount === 0) alert("검색 결과가 없습니다.");
-  //       else alert("잠시 후 다시 시도해주세요.");
-  //     } catch (e) {
-  //       console.log(e);
-  //       alert("잠시 후 다시 시도해주세요.");
-  //     }
-  //   } else if (e.keyCode === 13 && searchVal.trim() === "") alert("검색어를 입력해 주세요.");
-  //   else return;
-  // };
+  const handleOnSubmit = () => {
+    if (keyword !== "") {
+      setKeywordState(keyword);
+    } else alert("검색어를 입력해주세요.");
+  };
 
-  const handleOnKeyup = async (e) => {
-    if (e.keyCode === 13 && searchVal.trim() !== "") setKeywordState(searchVal);
-    else if (e.keyCode === 13 && searchVal.trim() === "") alert("검색어를 입력해 주세요.");
-    else return;
+  const handleOnKeyDown = async (e: { code: string }) => {
+    if (e.code === "Enter") {
+      handleOnSubmit();
+    }
   };
 
   // 로고 버튼 클릭 핸들러
   const handleOnInit = () => {
     router.push("/main", undefined, { shallow: true });
     setKeywordState(null);
-    setSearchVal("");
+    setKeyword("");
   };
 
   const DesktopUser = (
@@ -110,20 +92,21 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
             onClick={() => handleOnInit()}
           />
           <div className="header_search">
-            <button onClick={() => handleOnClick()}>
+            <button onClick={() => handleOnSubmit()} className="font">
               <SearchOutlined
                 style={{
                   fontSize: "22px",
                   fontWeight: "bold",
+                  cursor: "pointer",
                 }}
               />
             </button>
             <input
               placeholder="관심있는 내용을 검색해보세요"
               className="header_input"
-              onChange={(e) => setSearchVal(e.target.value)}
-              onKeyUp={(e) => handleOnKeyup(e)}
-              value={searchVal || ""}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => handleOnKeyDown(e)}
+              value={keyword || ""}
             />
           </div>
         </div>

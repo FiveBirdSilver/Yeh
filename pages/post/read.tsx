@@ -16,11 +16,11 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaPen } from "react-icons/fa";
 
-import CreateTime from "../../component/utils/createTime";
-import setToken from "../../component/utils/setToken";
+import CreateTime from "../../components/utils/createTime";
+import setToken from "../../components/utils/setToken";
 import { pageState, userState } from "../../store/index";
-import { postComment, postLike, postDelete, postRead } from "../api";
-import { useGrid } from "../../component/utils/responsive";
+import { postComment, postLike, postDelete, postRead } from "../../libs/apis";
+import { useGrid } from "../../components/utils/responsive";
 
 const Rank = dynamic(() => import("./rank"));
 const Comments = dynamic(() => import("./comments"));

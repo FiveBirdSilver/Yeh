@@ -7,13 +7,14 @@ import RecoilNexus from "recoil-nexus";
 import { getRecoil, setRecoil } from "recoil-nexus";
 import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "tailwindcss/tailwind.css";
 
 import { ThemeProvider } from "styled-components";
-import { useGrid } from "../component/utils/responsive";
-import { lightTheme, darkTheme, GlobalStyles } from "../component/utils/themeConfig";
+import { useGrid } from "../components/utils/responsive";
+import { lightTheme, darkTheme, GlobalStyles } from "../components/utils/themeConfig";
 import { themeState } from "../store";
 
-const AppLayout = dynamic(() => import("../component/layout/AppLayout"), { ssr: false });
+const AppLayout = dynamic(() => import("../components/layout/AppLayout"), { ssr: false });
 
 function MyApp({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient());

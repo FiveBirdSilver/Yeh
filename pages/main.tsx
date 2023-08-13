@@ -6,16 +6,16 @@ import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
-import CreateTime from "../component/utils/createTime";
-import setToken from "../component/utils/setToken";
-import { useGrid } from "../component/utils/responsive";
+import CreateTime from "../components/utils/createTime";
+import setToken from "../components/utils/setToken";
+import { useGrid } from "../components/utils/responsive";
 import { keywordState, pageState, userState } from "../store/index";
-import { postAll, postSearch } from "./api";
+import { postAll, postSearch } from "../libs/apis";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
 import axios from "axios";
-import AppFooter from "../component/layout/appFooter";
+import AppFooter from "../components/layout/appFooter";
 
 const Rank = dynamic(() => import("./post/rank"));
 

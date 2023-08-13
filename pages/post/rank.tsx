@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { postRank } from "../api";
+import { postRank } from "../../libs/apis";
 
 export default function Rank() {
   const router = useRouter();

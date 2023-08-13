@@ -5,9 +5,9 @@ import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
 import { pageState, userState } from "../../store/index";
-import { postNew } from "../api";
+import { postNew } from "../../libs/apis";
 import { useEffect } from "react";
-import setToken from "../../component/utils/setToken";
+import setToken from "../../components/utils/setToken";
 
 export default function New() {
   const user = useRecoilValue(userState);

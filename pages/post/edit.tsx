@@ -5,9 +5,9 @@ import { useRecoilValue } from "recoil";
 import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
-import setToken from "../../component/utils/setToken";
+import setToken from "../../components/utils/setToken";
 import { userState } from "../../store/index";
-import { postEdit, postRead } from "../api";
+import { postEdit, postRead } from "../../libs/apis";
 
 export default function Edit() {
   const router = useRouter();
