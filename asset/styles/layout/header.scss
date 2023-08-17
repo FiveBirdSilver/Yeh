@@ -1,6 +1,5 @@
 .header {
   height: 80px;
-  // background-color: #ffffff;
   z-index: 1;
   display: flex;
   @include mobile {
@@ -64,6 +63,7 @@
       }
     }
   }
+  
   .header_signBtn {
     cursor: pointer;
     display: flex;
