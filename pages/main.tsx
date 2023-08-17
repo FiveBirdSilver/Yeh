@@ -10,12 +10,15 @@ import CreateTime from "../components/utils/createTime";
 import setToken from "../components/utils/setToken";
 import { useGrid } from "../components/utils/responsive";
 import { keywordState, pageState, userState } from "../store/index";
-import { postAll, postSearch } from "../libs/apis";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
-import axios from "axios";
-import AppFooter from "../components/layout/appFooter";
+import { getPostAll } from "../libs/apis/post";
+import { Grid } from "@mui/material";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 
 const Rank = dynamic(() => import("./post/rank"));
 
@@ -26,6 +29,18 @@ export default function Main() {
 
   const { isMobile, isTablet, isDesktop } = useGrid();
   const { ref, inView } = useInView();
+
+  const posts = useQuery(["posts"], async () => await getPostAll());
+
+  console.log(posts.data);
+
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
 
   // const { data, isLoading, error, refetch, fetchNextPage, status } = useInfiniteQuery(
   //   "posts",
@@ -60,82 +75,72 @@ export default function Main() {
   // useEffect(() => {
   //   if (user?.loggin) setToken();
   // }, []);
-
-  const Data = (
-    <div className="getPostsBox_wrap">
-      {/* {flattenedArray?.map((i) =>
-        isLoading ? (
-          <Skeleton key={i} active />
-        ) : (
-          <div
-            key={i.id}
-            className="getPostsBox"
-            onClick={() =>
-              router.push({
-                pathname: "/post/read",
-                query: { id: i.id },
-              })
-            }
-          >
-            {CreateTime(i.createTime).includes("방금전") ||
-            CreateTime(i.createTime).includes("분전") ||
-            CreateTime(i.createTime).includes("시간전") ? (
-              <p className="NewPosts">NEW</p>
-            ) : null}
-            <div className="mainInfo">
-              <div className="mainInfoText">
-                <p className="mainInfoTitle">{i.title}</p>
-                <p className="mainInfoContents">{i.content}</p>
-              </div>
-              {i.image.firstImageUrl !== null ? (
-                <div className="ImageInfo">
-                  <Image src={i.image.firstImageUrl} width={100} height={100} alt="postImage" />
-                  {i.image.totalImagesCount > 1 ? (
-                    <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-            <div className="addInfo">
-              <p className="addInfoWriter">{i.writer}</p>
-              <div className="addInfo_wrap">
-                <p className="addInfo_icons_wrap">
-                  <FieldTimeOutlined className="addInfoIcons" />
-                  {CreateTime(i.createTime)}
-                </p>
-                <p className="addInfo_icons_wrap">
-                  <EyeOutlined className="addInfoIcons" /> {i.view}
-                </p>
-                <p className="addInfo_icons_wrap">
-                  <CommentOutlined className="addInfoIcons" /> {i.comments}
-                </p>
-                <p className="addInfo_icons_wrap">
-                  <LikeOutlined className="addInfoIcons" /> {i.likes}
-                </p>
-              </div>
-            </div>
-          </div>
-        )
-      )} */}
-    </div>
-  );
   return (
-    <div className="getPost_container">
-      {/* {isMobile && <div className="getPost">{Data}</div>}
-      {(isTablet || isDesktop) && (
-        <div className="getPost">
-          <Rank />
-          {Data}
-        </div>
-      )} */}
-      {/* <div className="getPost">
-        <Rank />
-        {Data}
-      </div> */}
-      <p className="scrollRef" ref={ref}>
-        ㅤ
-      </p>
-      {/* <AppFooter /> */}
-    </div>
+    // <div className="getPost_container">
+    //   <div className="getPost">
+    //     <div className="getPostsBox_wrap">
+    //       {posts?.data?.map((i: any) =>
+    //         posts.isLoading ? (
+    //           <Skeleton key={i} active />
+    //         ) : (
+    //           <div
+    //             key={i.id}
+    //             className="getPostsBox"
+    //             onClick={() =>
+    //               router.push({
+    //                 pathname: "/post/read",
+    //                 query: { id: i.id },
+    //               })
+    //             }
+    //           >
+    //             {CreateTime(i.createTime).includes("방금전") ||
+    //             CreateTime(i.createTime).includes("분전") ||
+    //             CreateTime(i.createTime).includes("시간전") ? (
+    //               <p className="NewPosts">NEW</p>
+    //             ) : null}
+    //             <div className="mainInfo">
+    //               <div className="mainInfoText">
+    //                 <p className="mainInfoTitle">{i.title}</p>
+    //                 <p className="mainInfoContents">{i.content}</p>
+    //               </div>
+    //             </div>
+    //             <div className="addInfo">
+    //               <p className="addInfoWriter">{i.writer}</p>
+    //               <div className="addInfo_wrap">
+    //                 <p className="addInfo_icons_wrap">
+    //                   <FieldTimeOutlined className="addInfoIcons" />
+    //                   {CreateTime(i.createTime)}
+    //                 </p>
+    //                 <p className="addInfo_icons_wrap">
+    //                   <EyeOutlined className="addInfoIcons" /> {i.view}
+    //                 </p>
+    //                 <p className="addInfo_icons_wrap">
+    //                   <CommentOutlined className="addInfoIcons" /> {i.comments}
+    //                 </p>
+    //                 <p className="addInfo_icons_wrap">
+    //                   <LikeOutlined className="addInfoIcons" /> {i.likes}
+    //                 </p>
+    //               </div>
+    //             </div>
+    //           </div>
+    //         )
+    //       )}
+    //     </div>
+    //   </div>
+    //   <p className="scrollRef" ref={ref}>
+    //     ㅤ
+    //   </p>
+    //   {/* <AppFooter /> */}
+    // </div>
+    <Box sx={{ flexGrow: 1 }} marginTop={"100px"}>
+      <Grid container spacing={2}>
+        <Grid item xs={6} md={6}>
+          <Item></Item>
+        </Grid>
+        <Grid item xs={6} md={6}>
+          <Item></Item>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

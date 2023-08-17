@@ -1,7 +1,6 @@
 import axios from "axios";
 // import qs from "qs";
-axios.defaults.baseURL = "https://www.devyeh.com/api";
-// axios.defaults.baseURL = "http://localhost:8080/api";
+axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
 
 // 회원가입
