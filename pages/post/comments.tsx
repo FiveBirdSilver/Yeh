@@ -4,19 +4,19 @@ import { FaCommentDots, FaPen } from "react-icons/fa";
 import CreateTime from "../../components/utils/createTime";
 import { postNestedComment } from "../../libs/apis";
 
-export default function Comments({ comments, getPostView, loading }) {
+export default function Comments({ comments, getPostView, loading }: any) {
   const Comments = comments.comments;
   const formData = new FormData();
   const [id, setId] = useState("");
   const [value, setValue] = useState("");
   const [active, setActive] = useState(false);
 
-  const handleOnComments = async (id) => {
+  const handleOnComments = async (id: any) => {
     setId(id);
     setActive(true);
   };
 
-  const handleOnKeyUp = (e) => {
+  const handleOnKeyUp = (e: any) => {
     if (e.keyCode === 13) insertNestedComments();
     else return;
   };
@@ -42,7 +42,7 @@ export default function Comments({ comments, getPostView, loading }) {
     <div className="postComments">
       {Comments !== null ? (
         <div className="postComments_wrap">
-          {Comments?.map((v) => (
+          {Comments?.map((v: any) => (
             <div key={v.id}>
               {loading ? (
                 <Skeleton.Input active block key={v.id} />
@@ -76,7 +76,7 @@ export default function Comments({ comments, getPostView, loading }) {
                 </div>
               )}
 
-              {v.children?.map((i) =>
+              {v.children?.map((i: any) =>
                 loading ? (
                   <Skeleton.Input active block key={i} />
                 ) : (
