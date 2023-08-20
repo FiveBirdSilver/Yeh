@@ -5,7 +5,7 @@ import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
 import { pageState, userState } from "../../store/index";
-import { postNew } from "../../libs/apis";
+import { postNew } from "../../libs/axios";
 import { useEffect } from "react";
 import setToken from "../../components/utils/setToken";
 

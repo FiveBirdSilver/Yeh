@@ -7,7 +7,7 @@ import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
 import setToken from "../../components/utils/setToken";
 import { userState } from "../../store/index";
-import { postEdit, postRead } from "../../libs/apis";
+import { postEdit, postRead } from "../../libs/axios";
 
 export default function Edit() {
   const router = useRouter();

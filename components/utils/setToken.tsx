@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getRefreshToken } from "../../libs/apis";
+import { getRefreshToken } from "../../libs/axios";
 import { resetRecoil } from "recoil-nexus";
 import { userState } from "../../store";
 

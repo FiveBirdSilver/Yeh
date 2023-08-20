@@ -13,12 +13,13 @@ import { keywordState, pageState, userState } from "../store/index";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
-import { getPostAll } from "../libs/apis/post";
+import { getPostAll } from "../libs/axios/post";
 import { Grid } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import axios from "axios";
 
 const Rank = dynamic(() => import("./post/rank"));
 
@@ -32,8 +33,7 @@ export default function Main() {
 
   const posts = useQuery(["posts"], async () => await getPostAll());
 
-  console.log(posts.data);
-
+  console.log(posts);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -76,6 +76,7 @@ export default function Main() {
   //   if (user?.loggin) setToken();
   // }, []);
   return (
+    <></>
     // <div className="getPost_container">
     //   <div className="getPost">
     //     <div className="getPostsBox_wrap">
@@ -132,15 +133,62 @@ export default function Main() {
     //   </p>
     //   {/* <AppFooter /> */}
     // </div>
-    <Box sx={{ flexGrow: 1 }} marginTop={"100px"}>
-      <Grid container spacing={2}>
-        <Grid item xs={6} md={6}>
-          <Item></Item>
-        </Grid>
-        <Grid item xs={6} md={6}>
-          <Item></Item>
-        </Grid>
-      </Grid>
-    </Box>
+    // <Box sx={{ flexGrow: 1 }} marginTop={"100px"}>
+    //   <Grid container spacing={2}>
+    //     <Grid item xs={6} md={6}>
+    //       {posts?.data?.map((i: any) =>
+    //         posts.isLoading ? (
+    //           <Skeleton key={i} active />
+    //         ) : (
+    //           <Item>
+    //             <div
+    //               key={i.id}
+    //               className="getPostsBox"
+    //               onClick={() =>
+    //                 router.push({
+    //                   pathname: "/post/read",
+    //                   query: { id: i.id },
+    //                 })
+    //               }
+    //             >
+    //               {CreateTime(i.createTime).includes("방금전") ||
+    //               CreateTime(i.createTime).includes("분전") ||
+    //               CreateTime(i.createTime).includes("시간전") ? (
+    //                 <p className="NewPosts">NEW</p>
+    //               ) : null}
+    //               <div className="mainInfo">
+    //                 <div className="mainInfoText">
+    //                   <p className="mainInfoTitle">{i.title}</p>
+    //                   <p className="mainInfoContents">{i.content}</p>
+    //                 </div>
+    //               </div>
+    //               <div className="addInfo">
+    //                 <p className="addInfoWriter">{i.writer}</p>
+    //                 <div className="addInfo_wrap">
+    //                   <p className="addInfo_icons_wrap">
+    //                     <FieldTimeOutlined className="addInfoIcons" />
+    //                     {CreateTime(i.createTime)}
+    //                   </p>
+    //                   <p className="addInfo_icons_wrap">
+    //                     <EyeOutlined className="addInfoIcons" /> {i.view}
+    //                   </p>
+    //                   <p className="addInfo_icons_wrap">
+    //                     <CommentOutlined className="addInfoIcons" /> {i.comments}
+    //                   </p>
+    //                   <p className="addInfo_icons_wrap">
+    //                     <LikeOutlined className="addInfoIcons" /> {i.likes}
+    //                   </p>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           </Item>
+    //         )
+    //       )}
+    //     </Grid>
+    //     {/* <Grid item xs={6} md={6}>
+    //       <Item></Item>
+    //     </Grid> */}
+    //   </Grid>
+    // </Box>
   );
 }

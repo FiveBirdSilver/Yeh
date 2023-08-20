@@ -19,7 +19,7 @@ import { FaPen } from "react-icons/fa";
 import CreateTime from "../../components/utils/createTime";
 import setToken from "../../components/utils/setToken";
 import { pageState, userState } from "../../store/index";
-import { postComment, postLike, postDelete, postRead } from "../../libs/apis";
+import { postComment, postLike, postDelete, postRead } from "../../libs/axios";
 import { useGrid } from "../../components/utils/responsive";
 
 const Rank = dynamic(() => import("./rank"));
