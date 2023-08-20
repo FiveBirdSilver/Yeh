@@ -83,7 +83,7 @@ export default function Main() {
               <Item>
                 <div
                   key={i.id}
-                  className="getPostsBox"
+                  className="post__card"
                   onClick={() =>
                     router.push({
                       pathname: "/post/read",
@@ -94,7 +94,7 @@ export default function Main() {
                   {CreateTime(i.createTime).includes("방금전") ||
                   CreateTime(i.createTime).includes("분전") ||
                   CreateTime(i.createTime).includes("시간전") ? (
-                    <p className="NewPosts">NEW</p>
+                    <p className="post__new-label">NEW</p>
                   ) : null}
                   <div className="mainInfo">
                     <div className="mainInfoText">
