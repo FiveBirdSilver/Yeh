@@ -101,10 +101,9 @@ export default function Main() {
                       <p className="mainInfoTitle">{i.title}</p>
                       <p className="mainInfoContents">{i.content}</p>
                     </div>
-                    {console.log(i.image)}
                     {i.image !== undefined && (
                       <div className="ImageInfo">
-                        <Image src={`../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
+                        <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
                         {i.image.totalImagesCount > 1 ? (
                           <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
                         ) : null}
