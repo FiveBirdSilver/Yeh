@@ -6,7 +6,12 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "./user/sign.scss";
+// 로그인
+@import "./user/signin.scss";
+
+// 회원가입
+@import "./user/signup.scss";
+
 @import "./board/setPost.scss";
 @import "./board/getPost.scss";
 @import "./layout/header.scss";
