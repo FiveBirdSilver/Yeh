@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { userFind } from "../api";
+// import { userFind } from "../api";
 
 export default function UserFind() {
   const router = useRouter();
