@@ -18,6 +18,8 @@
     "axios": "^1.2.1",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.2",
+    "mongodb": "^5.8.1",
+    "mongoose": "^7.4.5",
     "next": "13.0.2",
     "next-s3-upload": "^0.2.8",
     "qs": "^6.11.1",

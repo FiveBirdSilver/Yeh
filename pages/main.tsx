@@ -13,7 +13,7 @@ import { keywordState, pageState, userState } from "../store/index";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
-import { getPostAll } from "../libs/axios/post";
+import { getPostAll } from "../lib/axios/post";
 import { Grid } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";

@@ -2,7 +2,7 @@ import { Skeleton } from "antd";
 import { useState } from "react";
 import { FaCommentDots, FaPen } from "react-icons/fa";
 import CreateTime from "../../components/utils/createTime";
-import { postNestedComment } from "../../libs/axios";
+import { postNestedComment } from "../../lib/axios";
 
 export default function Comments({ comments, getPostView, loading }: any) {
   const Comments = comments.comments;

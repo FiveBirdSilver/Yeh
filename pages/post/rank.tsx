@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { postRank } from "../../libs/axios";
+import { postRank } from "../../lib/axios";
 
 export default function Rank() {
   const router = useRouter();
