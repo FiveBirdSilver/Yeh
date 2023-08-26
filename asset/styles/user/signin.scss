@@ -1,17 +1,7 @@
 @import "../variables.scss";
 
-.signup {
-  width: max(50%, 300px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 30px;
-  margin: auto;
-}
-
 .sign-in {
-  width: max(30%, 300px);
+  width: max(35%, 300px);
   height: 100%;
   display: flex;
   justify-content: center;

@@ -2,9 +2,6 @@
   height: 80px;
   z-index: 1;
   display: flex;
-  @include mobile {
-    justify-content: center;
-  }
   justify-content: space-between;
   align-items: center;
   position: fixed;
@@ -15,7 +12,7 @@
   box-shadow: 0 2px 2px -2px #dedede;
 
 
-  .heaeder_logo {
+  .header-logo {
     width: 7rem;
     height: 3.5rem;
     cursor: pointer;
@@ -27,17 +24,18 @@
     cursor: pointer;
   }
 
-  .header_wrap {
+  .header-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
     
-    .header_search {
+    .header-search {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: $fontSize14;
 
       > button {
         width: 40px;
@@ -64,16 +62,17 @@
     }
   }
   
-  .header_signBtn {
+  .header__buttons {
     cursor: pointer;
     display: flex;
     align-items: center;
 
-    .header_user {
+    .ser__button {
       background-color: transparent;
       border: none;
     }
-    .header_write {
+
+    .write__button {
       background-color: $main_color;
       border: 0;
       border-radius: 20px;
@@ -84,7 +83,8 @@
       margin-left: 10px;
       cursor: pointer;
     }
-    .header_signin {
+    
+    .notuser__buttons {
       color: $main_color;
       cursor: pointer;
       background-color: transparent;

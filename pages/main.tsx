@@ -76,57 +76,55 @@ export default function Main() {
   // }, []);
   return (
     <>
-      <Box sx={{ flexGrow: 1 }} marginTop={"100px"}>
+      <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           {posts?.data?.map((i: any) => (
             <Grid item xs={12} md={6}>
-              <Item>
-                <div
-                  key={i.id}
-                  className="post__card"
-                  onClick={() =>
-                    router.push({
-                      pathname: "/post/read",
-                      query: { id: i.id },
-                    })
-                  }
-                >
-                  {CreateTime(i.createTime).includes("방금전") ||
-                  CreateTime(i.createTime).includes("분전") ||
-                  CreateTime(i.createTime).includes("시간전") ? (
-                    <p className="post__new-label">NEW</p>
-                  ) : null}
-                  <div className="mainInfo">
-                    <div className="mainInfoText">
-                      <p className="mainInfoTitle">{i.title}</p>
-                      <p className="mainInfoContents">{i.content}</p>
-                    </div>
-                    {i.image !== undefined && (
-                      <div className="ImageInfo">
-                        <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
-                        {i.image.totalImagesCount > 1 ? (
-                          <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
-                        ) : null}
-                      </div>
-                    )}
+              <Item
+                onClick={() =>
+                  router.push({
+                    pathname: "/post/read",
+                    query: { id: i.id },
+                  })
+                }
+                className="post-card"
+                key={i.id}
+              >
+                {CreateTime(i.createTime).includes("방금전") ||
+                CreateTime(i.createTime).includes("분전") ||
+                CreateTime(i.createTime).includes("시간전") ? (
+                  <p className="post-card__new_label">NEW</p>
+                ) : null}
+                <div className="mainInfo">
+                  <div className="mainInfoText">
+                    <p className="mainInfoTitle">{i.title}</p>
+                    <p className="mainInfoContents">{i.content}</p>
                   </div>
-                  <div className="addInfo">
-                    <p className="addInfoWriter">{i.writer}</p>
-                    <div className="addInfo_wrap">
-                      <p className="addInfo_icons_wrap">
-                        <FieldTimeOutlined className="addInfoIcons" />
-                        {CreateTime(i.createTime)}
-                      </p>
-                      <p className="addInfo_icons_wrap">
-                        <EyeOutlined className="addInfoIcons" /> {i.view}
-                      </p>
-                      <p className="addInfo_icons_wrap">
-                        <CommentOutlined className="addInfoIcons" /> {i.comments}
-                      </p>
-                      <p className="addInfo_icons_wrap">
-                        <LikeOutlined className="addInfoIcons" /> {i.likes}
-                      </p>
+                  {i.image !== undefined && (
+                    <div className="ImageInfo">
+                      <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
+                      {i.image.totalImagesCount > 1 ? (
+                        <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
+                      ) : null}
                     </div>
+                  )}
+                </div>
+                <div className="addInfo">
+                  <p className="addInfoWriter">{i.writer}</p>
+                  <div className="addInfo_wrap">
+                    <p className="addInfo_icons_wrap">
+                      <FieldTimeOutlined className="addInfoIcons" />
+                      {CreateTime(i.createTime)}
+                    </p>
+                    <p className="addInfo_icons_wrap">
+                      <EyeOutlined className="addInfoIcons" /> {i.view}
+                    </p>
+                    <p className="addInfo_icons_wrap">
+                      <CommentOutlined className="addInfoIcons" /> {i.comments}
+                    </p>
+                    <p className="addInfo_icons_wrap">
+                      <LikeOutlined className="addInfoIcons" /> {i.likes}
+                    </p>
                   </div>
                 </div>
               </Item>

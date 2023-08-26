@@ -1,15 +1,11 @@
 @import "../mixin";
 
-.post__card {
-  min-width: 21rem;
-  position: relative;
+.post-card {
   display: grid;
-  border-radius: 7px;
-  padding: 15px 15px 10px 15px;
-  height: 125px;
+  min-height: 125px;
   cursor: pointer;
 
-  .post__new-label {
+  .post-card__new_label {
     background-color: tomato;
     color: white;
     position: absolute;
@@ -20,6 +16,7 @@
     font-size: 12px;
     border-radius: 5px;
   }
+
   .mainInfo {
     display: flex;
     justify-content: space-between;

@@ -4,22 +4,49 @@ import { postRank } from "../../libs/axios";
 
 export default function Rank() {
   const router = useRouter();
-  const [rankigData, setRankingData] = useState([]);
 
-  useEffect(() => {
-    async function getRankings() {
-      const res = await postRank();
-
-      if (res.data.success) setRankingData(res.data.data);
-      else alert("잠시 후 다시 접속해주세요");
-    }
-    try {
-      getRankings();
-    } catch (e) {
-      console.log(e);
-      alert("잠시 후 다시 접속해주세요");
-    }
-  }, []);
+  const rankigData = [
+    {
+      id: 1,
+      title: "테스트1",
+    },
+    {
+      id: 2,
+      title: "테스트2",
+    },
+    {
+      id: 3,
+      title: "테스트4",
+    },
+    {
+      id: 4,
+      title: "테스트4",
+    },
+    {
+      id: 5,
+      title: "테스트5",
+    },
+    {
+      id: 6,
+      title: "테스트6",
+    },
+    {
+      id: 7,
+      title: "테스트7",
+    },
+    {
+      id: 8,
+      title: "테스트8",
+    },
+    {
+      id: 9,
+      title: "테스트9",
+    },
+    {
+      id: 10,
+      title: "테스트10",
+    },
+  ];
 
   return (
     <div className="ranking">
