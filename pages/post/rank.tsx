@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import axios from "axios";
 import { useRouter } from "next/router";
-import { postRank } from "../../lib/axios";
+import { useEffect, useState } from "react";
 
 export default function Rank() {
   const router = useRouter();
-
+  const [sendRequest, setSendRequest] = useState(false);
+  const [enteredData, setEnteredData] = useState({});
   const rankigData = [
     {
       id: 1,
