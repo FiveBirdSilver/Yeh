@@ -17,9 +17,8 @@ import dynamic from "next/dynamic";
 import { FaPen } from "react-icons/fa";
 
 import CreateTime from "../../components/utils/createTime";
-import setToken from "../../components/utils/setToken";
 import { pageState, userState } from "../../store/index";
-import { postComment, postLike, postDelete, postRead } from "../../lib/axios";
+import { postComment, postLike, postDelete, postRead } from "../../lib/apis";
 import { useGrid } from "../../components/utils/responsive";
 
 const Rank = dynamic(() => import("./rank"));
@@ -72,19 +71,19 @@ export default function Details() {
   };
 
   useEffect(() => {
-    try {
-      if (user === undefined || user?.name === null) {
-        alert("로그인 후 이용 가능합니다.");
-        router.push("/user/signin", undefined, { shallow: true });
-      } else if (user?.loggin) {
-        setToken().then((res) => {
-          if (res === "userLogin") userConfirm();
-        });
-      } else return;
-    } catch (e) {
-      console.log(e);
-      alert("잠시 후 다시 시도해주세요");
-    }
+    // try {
+    //   if (user === undefined || user?.name === null) {
+    //     alert("로그인 후 이용 가능합니다.");
+    //     router.push("/user/signin", undefined, { shallow: true });
+    //   } else if (user?.loggin) {
+    //     setToken().then((res) => {
+    //       if (res === "userLogin") userConfirm();
+    //     });
+    //   } else return;
+    // } catch (e) {
+    //   console.log(e);
+    //   alert("잠시 후 다시 시도해주세요");
+    // }
   }, [router, user?.loggin]);
 
   // 게시글 공유

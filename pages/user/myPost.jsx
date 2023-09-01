@@ -5,7 +5,6 @@ import { userState } from "../../store/index";
 import { Tabs, List, Modal, Result, Button } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
-import setToken from "../../component/utils/setToken";
 import { myInfo, postDelete } from "../api";
 import MyInfoEdit from "./myInfo";
 
@@ -24,19 +23,19 @@ export default function MyPost() {
   };
 
   useEffect(() => {
-    try {
-      if (user === undefined || user?.name === null) {
-        alert("로그인 후 이용 가능합니다.");
-        router.push("/user/signin");
-      } else if (user?.loggin) {
-        setToken().then((res) => {
-          if (res === "userLogin") getMyInfo();
-        });
-      } else return;
-    } catch (e) {
-      console.log(e);
-      alert("잠시 후 다시 시도해주세요");
-    }
+    // try {
+    //   if (user === undefined || user?.name === null) {
+    //     alert("로그인 후 이용 가능합니다.");
+    //     router.push("/user/signin");
+    //   } else if (user?.loggin) {
+    //     setToken().then((res) => {
+    //       if (res === "userLogin") getMyInfo();
+    //     });
+    //   } else return;
+    // } catch (e) {
+    //   console.log(e);
+    //   alert("잠시 후 다시 시도해주세요");
+    // }
   }, [router, user?.loggin]);
 
   const handleOnDelete = async () => {

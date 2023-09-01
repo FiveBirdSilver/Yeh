@@ -5,7 +5,6 @@ import { useRecoilValue } from "recoil";
 import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
-import setToken from "../../components/utils/setToken";
 import { userState } from "../../store/index";
 import { postEdit, postRead } from "../../lib/axios";
 
@@ -42,7 +41,6 @@ export default function Edit() {
       alert("로그인 후 이용 가능합니다.");
       router.push("/user/signin", undefined, { shallow: true });
     } else if (user?.loggin) {
-      setToken();
       getPostView();
     } else return;
   }, [user?.loggin]);

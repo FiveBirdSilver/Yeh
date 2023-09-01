@@ -17,29 +17,31 @@
     border-radius: 5px;
   }
 
-  .mainInfo {
+  .post-card__text {
     display: flex;
     justify-content: space-between;
     width: 100%;
 
-    .mainInfoText {
+    .post-card__text_container {
       display: flex;
       flex-direction: column;
 
-      .mainInfoTitle {
-        font-size: 20px;
+      &.title {
+        font-size: $fontSize20;
         font-weight: bold;
         margin: 0;
       }
-      .mainInfoContents {
+
+      &.content {
         margin: 0;
         margin-top: 10px;
         max-width: 250px;
-        font-size: 14px;
+        font-size: $fontSize14;
         max-height: 1.5rem;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        text-align: left;
       }
     }
   }
@@ -59,28 +61,28 @@
       font-size: 14px;
     }
   }
-  .addInfo {
+  .post-card__info {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     width: 100%;
 
-    .addInfoWriter {
+    &.writer {
       margin: 0;
-      font-size: 12px;
+      font-size: $fontSize11;
       color: #94969b;
       font-weight: 500;
     }
 
-    .addInfo_wrap {
+    .post-card__info_wrapper {
       display: flex;
       gap: 15px;
 
-      .addInfoIcons {
+      &.icon {
         margin-right: 5px;
         font-size: 16px;
       }
-      p {
+      > p {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -153,4 +155,8 @@
   font-weight: 600;
   background-color: transparent;
   border-color: transparent;
+}
+
+.css-1633um2-MuiPaper-root {
+  padding: 12px !important;
 }

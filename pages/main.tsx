@@ -7,30 +7,25 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import CreateTime from "../components/utils/createTime";
-import setToken from "../components/utils/setToken";
 import { useGrid } from "../components/utils/responsive";
 import { keywordState, pageState, userState } from "../store/index";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
-import { getPostAll } from "../lib/axios/post";
+import { getPostAll } from "../lib/apis/post";
 import { Grid } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-const Rank = dynamic(() => import("./post/rank"));
+import { Post } from "../lib/interface/post";
 
 export default function Main() {
   const router = useRouter();
-  const user = useRecoilValue(userState);
-  const keyword = useRecoilValue(keywordState);
-
-  const { isMobile, isTablet, isDesktop } = useGrid();
   const { ref, inView } = useInView();
 
-  const posts = useQuery(["posts"], async () => await getPostAll());
+  const posts = useQuery<Post[]>(["posts"], async () => await getPostAll());
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -40,39 +35,6 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
-  // const { data, isLoading, error, refetch, fetchNextPage, status } = useInfiniteQuery(
-  //   "posts",
-  //   async ({ pageParam = 1 }) => {
-  //     const res = await postSearch(keyword, pageParam);
-  //     return {
-  //       result: res.data.data,
-  //       page: pageParam,
-  //     };
-  //   },
-  //   {
-  //     getNextPageParam: (lastPage) => {
-  //       return lastPage.page + 1;
-  //     },
-  //   }
-  // );
-
-  // const POST = data?.pages.map((data) => data.result)?.map((val) => val.posts);
-  // const flattenedArray = POST?.reduce((previousValue, currentValue) => {
-  //   return previousValue.concat(currentValue);
-  // });
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [keyword]);
-
-  // useEffect(() => {
-  //   if (inView) fetchNextPage();
-  // }, [inView]);
-
-  // // 리프레시 토큰 발급
-  // useEffect(() => {
-  //   if (user?.loggin) setToken();
-  // }, []);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -94,10 +56,10 @@ export default function Main() {
                 CreateTime(i.createTime).includes("시간전") ? (
                   <p className="post-card__new_label">NEW</p>
                 ) : null}
-                <div className="mainInfo">
-                  <div className="mainInfoText">
-                    <p className="mainInfoTitle">{i.title}</p>
-                    <p className="mainInfoContents">{i.content}</p>
+                <div className="post-card__text">
+                  <div className="post-card__text_container">
+                    <span className="post-card__text_container title">{i.title}</span>
+                    <span className="post-card__text_container content">{i.content}</span>
                   </div>
                   {i.image !== undefined && (
                     <div className="ImageInfo">
@@ -108,21 +70,21 @@ export default function Main() {
                     </div>
                   )}
                 </div>
-                <div className="addInfo">
-                  <p className="addInfoWriter">{i.writer}</p>
-                  <div className="addInfo_wrap">
-                    <p className="addInfo_icons_wrap">
-                      <FieldTimeOutlined className="addInfoIcons" />
+                <div className="post-card__info">
+                  <p className="post-card__info writer">{i.writer}</p>
+                  <div className="post-card__info_wrapper">
+                    <p>
+                      <FieldTimeOutlined className="post-card__info_wrapper icon" />
                       {CreateTime(i.createTime)}
                     </p>
-                    <p className="addInfo_icons_wrap">
-                      <EyeOutlined className="addInfoIcons" /> {i.view}
+                    <p>
+                      <EyeOutlined className="post-card__info_wrapper icon" /> {i.view}
                     </p>
-                    <p className="addInfo_icons_wrap">
-                      <CommentOutlined className="addInfoIcons" /> {i.comments}
+                    <p>
+                      <CommentOutlined className="post-card__info_wrapper icon" /> {i.comments}
                     </p>
-                    <p className="addInfo_icons_wrap">
-                      <LikeOutlined className="addInfoIcons" /> {i.likes}
+                    <p>
+                      <LikeOutlined className="post-card__info_wrapper icon" /> {i.likes}
                     </p>
                   </div>
                 </div>

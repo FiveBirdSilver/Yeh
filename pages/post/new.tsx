@@ -7,7 +7,6 @@ import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 import { pageState, userState } from "../../store/index";
 import { postNew } from "../../lib/axios";
 import { useEffect } from "react";
-import setToken from "../../components/utils/setToken";
 
 export default function New() {
   const user = useRecoilValue(userState);
@@ -28,7 +27,7 @@ export default function New() {
     } else if (user?.loggin && !user.emailAuth) {
       alert("YEH의 모든 기능 사용을 위해 이메일 인증을 완료해 주세요.");
       router.push("/user/signupComplete");
-    } else setToken();
+    }
   }, [user?.loggin]);
 
   const handleOnSubmit = async () => {
