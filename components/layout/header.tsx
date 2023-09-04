@@ -16,8 +16,7 @@ export default function Header() {
   const setKeywordState = useSetRecoilState(keywordState);
 
   const logout = () => {
-    setUser("");
-    // removecookie("refresh_token");
+    setUser({ nickname: "", logging: false });
   };
 
   const items = [
@@ -73,9 +72,9 @@ export default function Header() {
         </div>
       </div>
       <div className="header__buttons">
-        {user?.loggin ? (
-          <Dropdown menu={{ items }} placement="bottom" className="header_more">
-            <Button className="user__button">{user.name}</Button>
+        {user?.logging ? (
+          <Dropdown menu={{ items }} placement="bottom" className="user-dropdown">
+            <Button className="user__button">{user.nickname}</Button>
           </Dropdown>
         ) : (
           <div>

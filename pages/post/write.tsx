@@ -1,14 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
-import { pageState, userState } from "../../store/index";
+import { userState } from "../../store/index";
 
 export default function New() {
   const user = useRecoilValue(userState);
-  const PageHandler = useSetRecoilState(pageState);
   const router = useRouter();
 
   const [title, setTitle] = useState("");
@@ -19,15 +18,12 @@ export default function New() {
   const inputRefTitle = useRef<HTMLInputElement | null>(null);
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
 
-  // useEffect(() => {
-  //   if (user === undefined || user?.name === null) {
-  //     alert("로그인 후 이용 가능합니다.");
-  //     router.push("/user/signin");
-  //   } else if (user?.loggin && !user.emailAuth) {
-  //     alert("YEH의 모든 기능 사용을 위해 이메일 인증을 완료해 주세요.");
-  //     router.push("/user/signupComplete");
-  //   }
-  // }, [user?.loggin]);
+  useEffect(() => {
+    if (!user.logging) {
+      alert("로그인 후 이용 가능합니다.");
+      router.push("/user/signin");
+    }
+  }, []);
 
   const handleOnSubmit = async () => {
     const formData = new FormData();

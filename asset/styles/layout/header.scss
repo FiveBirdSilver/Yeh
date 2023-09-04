@@ -69,13 +69,6 @@
     display: flex;
     align-items: baseline;
 
-
-
-    .ser__button {
-      background-color: transparent;
-      border: none;
-    }
-
     .write__button {
       background-color: $main_color;
       border: 0;
@@ -86,6 +79,15 @@
       cursor: pointer;
       font-size: $fontSize12;
       font-weight: 700;
+    }
+
+    .user__button {
+      background-color: transparent;
+      border: none;
+    }
+
+    .user-dropdown {
+      font-size: $fontSize12;
     }
     
     .notuser__buttons {

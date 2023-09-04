@@ -41,6 +41,21 @@ body {
 
 body * {
   font-family: "nanum", sans-serif;
+
+  /* 수직 스크롤 바 */
+  ::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: $main_color;
+    border-radius: 5px !important;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #ddd !important;
+  }
 }
 
 #__next {

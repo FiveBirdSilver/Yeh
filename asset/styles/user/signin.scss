@@ -1,7 +1,7 @@
 @import "../variables.scss";
 
 .sign-in {
-  width: max(35%, 300px);
+  width: max(30%, 300px);
   height: 100%;
   display: flex;
   justify-content: center;
@@ -24,7 +24,7 @@
   }
 
   > span {
-    font-size: 1.125rem;
+    font-size: $fontSize12;
   }
 }
 
@@ -33,7 +33,7 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  font-size: $fontSize14;
+  font-size: $fontSize12;
 
   > label {
     margin-top: 15px;
@@ -57,7 +57,7 @@
   .auto_logged {
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: $fontSize12;
     margin-left: 2px;
 
     .auto_logged_label {
@@ -134,44 +134,17 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
-  font-size: $fontSize14;
+  font-size: $fontSize12;
 
   > button {
     background-color: transparent;
     border: 0;
-    margin-top: 5px;
     color: grey;
     font-weight: 500;
     cursor: pointer;
   }
   > span {
     color: grey;
-  }
-}
-
-.signupComplete {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  img {
-    width: 12rem;
-    height: 6rem;
-  }
-  span {
-    color: grey;
-  }
-  button {
-    width: 22rem;
-    height: 2.7rem;
-    border: 0;
-    color: white;
-    background-color: $main_color;
-    font-size: $fontSize18;
-    font-weight: 700;
-    margin-top: 50px;
-    cursor: pointer;
-    border-radius: 5px;
   }
 }
 
@@ -182,20 +155,19 @@
   width: 100%;
   gap: 30px;
 
-  span {
+  > span {
     font-size: $fontSize18;
     font-weight: bold;
   }
 
-  input {
+  > input {
     width: 90%;
     height: 40px;
     border: 1px solid #dedede;
     border-radius: 5px;
     padding-left: 10px;
-    margin-top: 5px;
   }
-  button {
+  > button {
     width: 100%;
     height: 2.7rem;
     border: 0;

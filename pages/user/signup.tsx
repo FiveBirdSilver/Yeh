@@ -6,14 +6,15 @@ import Image from "next/image";
 
 import logo from "../../public/logo.png";
 import { signUp } from "../../lib/apis/user";
-import { UserType } from "../../lib/interface/user";
+import { SignUpType } from "../../lib/interface/user";
+import { AxiosError } from "axios";
 
 export default function Signup() {
   const router = useRouter();
 
   // 회원가입 정보 유효성 검사 및 에러 메시지 출력
   const formSchema = yup.object({
-    username: yup.string().required("아이디는 필수 입력 정보입니다"),
+    id: yup.string().required("아이디는 필수 입력 정보입니다"),
     email: yup.string().required("이메일은 필수 입력 정보입니다 입력해주세요").email("이메일 형식이 아닙니다."),
     password: yup
       .string()
@@ -32,20 +33,20 @@ export default function Signup() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<UserType>({ mode: "onChange", resolver: yupResolver(formSchema) });
+  } = useForm<SignUpType>({ mode: "onChange", resolver: yupResolver(formSchema) });
 
   // 회원가입 정보 제출
-  const onSubmit = async (data: UserType) => {
+  const onSubmit = async (data: SignUpType) => {
     try {
-      const res = await signUp(data);
-      if (res === "OK") {
+      const response = await signUp(data);
+      if (response === "OK") {
         router.push("/user/signupComplete");
-      } else {
-        alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
       }
-    } catch (e) {
-      console.log(e);
-      alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
+    } catch (error) {
+      const { response } = error as unknown as AxiosError;
+      if (response?.data === "Duplication") {
+        alert("이미 존재하는 계정입니다.");
+      } else alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
   };
 
@@ -56,15 +57,9 @@ export default function Signup() {
         <span>조직문화의 개선과 소통을 위해 지금 시작해보세요</span>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="sign-up__contents">
-        <label htmlFor="username">아이디</label>
-        <input
-          id="username"
-          type="text"
-          {...register("username")}
-          placeholder="아이디를 입력해주세요"
-          autoComplete="off"
-        />
-        {errors.username && <p>{errors.username.message}</p>}
+        <label htmlFor="id">아이디</label>
+        <input id="id" type="text" {...register("id")} placeholder="아이디를 입력해주세요" autoComplete="off" />
+        {errors.id && <p>{errors.id.message}</p>}
         <label htmlFor="password">비밀번호</label>
         <input
           id="password"

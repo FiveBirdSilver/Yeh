@@ -1,5 +1,6 @@
 import "../asset/styles/main.scss";
 import Head from "next/head";
+import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
@@ -9,25 +10,24 @@ import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";
 
-import { ThemeProvider } from "styled-components";
 import { useGrid } from "../components/utils/responsive";
-import { lightTheme, darkTheme, GlobalStyles } from "../components/utils/themeConfig";
-import { themeState } from "../store";
+// import { lightTheme, darkTheme, GlobalStyles } from "../components/utils/themeConfig";
+// import { themeState } from "../store";
 
 const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   const [theme, setTheme] = useState(false);
   const { isDesktop } = useGrid();
 
-  useEffect(() => {
-    setTheme(getRecoil(themeState));
-  }, []);
+  // useEffect(() => {
+  //   setTheme(getRecoil(themeState));
+  // }, []);
 
   const handleThemeToggle = () => {
     setTheme((prev) => !prev);
-    setRecoil(themeState, (prev) => !prev);
+    // setRecoil(themeState, (prev: any) => !prev);
   };
 
   const handleOnTop = () => {
@@ -66,14 +66,14 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>YEH</title>
       </Head>
-      <ThemeProvider theme={!theme ? lightTheme : darkTheme}>
-        <RecoilRoot>
-          <RecoilNexus />
-          <GlobalStyles />
-          {PageRouter()}
-          {isDesktop && SideBtn}
-        </RecoilRoot>
-      </ThemeProvider>
+      {/* <ThemeProvider theme={!theme ? lightTheme : darkTheme}> */}
+      <RecoilRoot>
+        <RecoilNexus />
+        {/* <GlobalStyles /> */}
+        {PageRouter()}
+        {isDesktop && SideBtn}
+      </RecoilRoot>
+      {/* </ThemeProvider> */}
     </QueryClientProvider>
   );
 }

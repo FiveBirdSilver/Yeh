@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Image from "next/image";
@@ -8,52 +8,33 @@ import axios from "axios";
 
 import logo from "../../public/logo.png";
 import { userState } from "../../store/index";
-
-interface UserType {
-  username: string;
-  password: string;
-}
+import { LoggingType, SignInType } from "../../lib/interface/user";
+import { signIn } from "../../lib/apis/user";
 
 export default function Signiin() {
   const router = useRouter();
-  const [user, setUser] = useRecoilState(userState);
+  const setLogging = useSetRecoilState<LoggingType>(userState);
 
   const formSchema = yup.object({
-    username: yup.string().required(""),
+    id: yup.string().required(""),
     password: yup.string().required(""),
   });
 
-  const { register, handleSubmit } = useForm<UserType>({
+  const { register, handleSubmit } = useForm<SignInType>({
     mode: "onChange",
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = async (data: UserType) => {
-    const formData = new FormData();
-    // formData.append("username", data.username);
-    // formData.append("password", data.password);
-
-    // try {
-    //   const res = await login(formData);
-    //   if (res.data.success === true) {
-    //     const response = res.data.data;
-    //     const accessToken = response.access_token;
-    //     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
-    //     setUser({
-    //       name: response.nickname,
-    //       loggin: true,
-    //       emailAuth: response.emailVerified,
-    //     });
-    //     setPage(1);
-    //     router.push("/main");
-    //   } else {
-    //     alert(res.data.error.message);
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    //   alert("잠시 후 다시 시도해주세요.");
-    // }
+  const onSubmit = async (data: SignInType) => {
+    try {
+      const response = await signIn(data);
+      if (response.message === "Access") {
+        setLogging({ nickname: response.data, logging: true });
+        router.push("/main");
+      }
+    } catch (error) {
+      alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+    }
   };
 
   return (
@@ -67,14 +48,8 @@ export default function Signiin() {
         />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="sign-in__contents">
-        <label htmlFor="username">아이디</label>
-        <input
-          id="username"
-          type="text"
-          {...register("username")}
-          placeholder="아이디를 입력해주세요"
-          autoComplete="off"
-        />
+        <label htmlFor="id">아이디</label>
+        <input id="id" type="text" {...register("id")} placeholder="아이디를 입력해주세요" autoComplete="off" />
         <label htmlFor="password">비밀번호</label>
         <input id="password" type="password" {...register("password")} placeholder="비밀번호를 입력해주세요" />
         <button type="submit" className="sign-in__button" style={{ marginTop: "50px" }}>
