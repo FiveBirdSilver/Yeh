@@ -21,7 +21,6 @@ import { pageState, userState } from "../../store/index";
 import { postComment, postLike, postDelete, postRead } from "../../lib/apis";
 import { useGrid } from "../../components/utils/responsive";
 
-const Rank = dynamic(() => import("./rank"));
 const Comments = dynamic(() => import("./comments"));
 
 export default function Details() {
@@ -256,12 +255,7 @@ export default function Details() {
   return (
     <>
       {isMobile && <div className="detailPost">{Data}</div>}
-      {(isTablet || isDesktop) && (
-        <div className="detailPost">
-          <Rank />
-          {Data}
-        </div>
-      )}
+      {(isTablet || isDesktop) && <div className="detailPost">{Data}</div>}
     </>
   );
 }

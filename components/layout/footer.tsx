@@ -4,7 +4,7 @@ import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import logo from "../../asset/images/logo.png";
+import logo from "../../public/logo.png";
 import { useGrid } from "../utils/responsive";
 import { keywordState, pageState, userState } from "../../store/index";
 

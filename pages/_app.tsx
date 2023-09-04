@@ -14,7 +14,7 @@ import { useGrid } from "../components/utils/responsive";
 import { lightTheme, darkTheme, GlobalStyles } from "../components/utils/themeConfig";
 import { themeState } from "../store";
 
-const AppLayout = dynamic(() => import("../components/layout/AppLayout"), { ssr: false });
+const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
 
 function MyApp({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient());

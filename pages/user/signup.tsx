@@ -3,23 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import * as yup from "yup";
 import Image from "next/image";
-import axios from "axios";
 
-import logo from "../../asset/images/logo.png";
-import { useRecoilValue } from "recoil";
-import { userState } from "../../store";
-
-interface UserType {
-  confirmPassword: string;
-  email: string;
-  nickname: string;
-  password: string;
-  username: string;
-}
+import logo from "../../public/logo.png";
+import { signUp } from "../../lib/apis/user";
+import { UserType } from "../../lib/interface/user";
 
 export default function Signup() {
   const router = useRouter();
-  const user = useRecoilValue(userState);
 
   // 회원가입 정보 유효성 검사 및 에러 메시지 출력
   const formSchema = yup.object({
@@ -34,6 +24,7 @@ export default function Signup() {
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[,./;'<>?:"~!@#$%^&*()])[a-zA-Z0-9,./;'<>?:"~!@#$%^&*()]{8,20}$/,
         "영문, 숫자, 특수문자 포함 8자리를 입력해주세요."
       ),
+    confirmPassword: yup.string().oneOf([yup.ref("password"), null], "비밀번호가 일치하지 않습니다"),
     nickname: yup.string().required("닉네임은 필수 입력 정보입니다"),
   });
 
@@ -45,22 +36,17 @@ export default function Signup() {
 
   // 회원가입 정보 제출
   const onSubmit = async (data: UserType) => {
-    console.log(data);
-    // try {
-    //   const res = await join(data);
-    //   console.log(res);
-    //   if (res.data.success === true) {
-    //     axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.data.access_token}`;
-    //     router.push("/user/signupComplete");
-    //   } else if (res.data.success === false) {
-    //     alert(res.data.error[0].message);
-    //   } else {
-    //     alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    //   alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
-    // }
+    try {
+      const res = await signUp(data);
+      if (res === "OK") {
+        router.push("/user/signupComplete");
+      } else {
+        alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
+      }
+    } catch (e) {
+      console.log(e);
+      alert("회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.");
+    }
   };
 
   return (
@@ -105,13 +91,7 @@ export default function Signup() {
         />
         {errors.nickname && <p>{errors.nickname.message}</p>}
         <label htmlFor="email">이메일</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="이메일을 입력해주세요 (user@goldenplanet.co.kr)"
-          {...register("email")}
-          autoComplete="off"
-        />
+        <input id="email" type="email" placeholder="이메일을 입력해주세요" {...register("email")} autoComplete="off" />
         {errors.email && <p>{errors.email.message}</p>}
         <button type="submit" className="sign-up__button">
           가입하기

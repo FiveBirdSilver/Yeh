@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useState } from "react";
 
-import logo from "../../asset/images/logo.png";
+import logo from "../../public/logo.png";
 import { keywordState, userState } from "../../store/index";
 
 export default function Header() {
@@ -88,7 +88,7 @@ export default function Header() {
             </button>
           </div>
         )}
-        <button onClick={() => router.push("/post/new")} className="write__button">
+        <button onClick={() => router.push("/post/write")} className="write__button">
           글쓰기
         </button>
       </div>

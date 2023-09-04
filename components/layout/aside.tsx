@@ -4,7 +4,7 @@ import { getPostAll } from "../../lib/apis/post";
 import { useQuery } from "react-query";
 import { Post } from "../../lib/interface/post";
 
-export default function Rank() {
+export default function Aside() {
   const router = useRouter();
   const rankigData = useQuery<Post[]>(["posts"], async () => await getPostAll());
 

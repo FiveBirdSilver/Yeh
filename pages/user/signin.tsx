@@ -6,7 +6,7 @@ import * as yup from "yup";
 import Image from "next/image";
 import axios from "axios";
 
-import logo from "../../asset/images/logo.png";
+import logo from "../../public/logo.png";
 import { userState } from "../../store/index";
 
 interface UserType {
