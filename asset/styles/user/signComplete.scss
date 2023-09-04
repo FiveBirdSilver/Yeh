@@ -1,0 +1,44 @@
+.sign-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  .sign-complete__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .icon {
+      font-size: 64px;
+      margin-bottom: 10px;
+      color: $main_color;
+    }
+
+    > h1 {
+      font-size: $fontSize28;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    > span {
+      font-size: $fontSize14;
+      text-align: center;
+      color: $medium_gray;
+    }
+
+    > button {
+      width: 22rem;
+      height: 2.7rem;
+      border: 0;
+      color: white;
+      background-color: $main_color;
+      font-size: $fontSize18;
+      font-weight: 700;
+      margin-top: 50px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  }
+}

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+// tailwind
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -9,12 +10,12 @@
 // 레이아웃
 @import "./layout/section.scss";
 
-// 로그인
-@import "./user/signin.scss";
+// 유저
+@import "./user/signIn.scss";
+@import "./user/signUp.scss";
+@import "./user/signComplete.scss";
 
-// 회원가입
-@import "./user/signup.scss";
-
+// 게시글
 @import "./board/setPost.scss";
 @import "./board/post.scss";
 @import "./layout/header.scss";
@@ -23,6 +24,12 @@
 @import "./board/comments.scss";
 @import "./board/rank.scss";
 @import "./user/myinfo.scss";
+
+@font-face {
+  font-family: "nanum";
+  font-style: normal;
+  src: url("../fonts/NanumSquareNeoOTF-Rg.otf");
+}
 
 html,
 body {
@@ -33,7 +40,7 @@ body {
 }
 
 body * {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "nanum", sans-serif;
 }
 
 #__next {

@@ -32,7 +32,7 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  font-size: $fontSize14;
+  font-size: $fontSize12;
 
   > label {
     margin-top: 15px;
@@ -63,32 +63,6 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: 700;
-}
-
-.signupComplete {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  img {
-    width: 12rem;
-    height: 6rem;
-  }
-  span {
-    color: grey;
-  }
-  button {
-    width: 22rem;
-    height: 2.7rem;
-    border: 0;
-    color: white;
-    background-color: $main_color;
-    font-size: $fontSize18;
-    font-weight: 700;
-    margin-top: 50px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
 }
 
 .userFind {

@@ -11,10 +11,9 @@
   padding: 0 10rem;
   box-shadow: 0 2px 2px -2px #dedede;
 
-
   .header-logo {
-    width: 7rem;
-    height: 3.5rem;
+    width: 8rem;
+    height: 4rem;
     cursor: pointer;
   }
 
@@ -36,6 +35,7 @@
       align-items: center;
       justify-content: center;
       font-size: $fontSize14;
+      margin-top: 5px;
 
       > button {
         width: 40px;
@@ -53,11 +53,13 @@
       }
 
       >input {
+        font-size: $fontSize12;
         min-width: 25rem;
         height: 40px;
         padding-left: 15px;
         border: 1px solid #dedede;
         border-radius: 20px;
+
       }
     }
   }
@@ -65,7 +67,9 @@
   .header__buttons {
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: baseline;
+
+
 
     .ser__button {
       background-color: transparent;
@@ -77,11 +81,11 @@
       border: 0;
       border-radius: 20px;
       color: white;
-      font-size: $fontSize14;
-      font-weight: 700;
       padding: 8px 15px;
       margin-left: 10px;
       cursor: pointer;
+      font-size: $fontSize12;
+      font-weight: 700;
     }
     
     .notuser__buttons {
@@ -89,7 +93,7 @@
       cursor: pointer;
       background-color: transparent;
       border: 0;
-      font-size: $fontSize14;
+      font-size: $fontSize12;
       font-weight: 700;
     }
   }
