@@ -1,31 +1,30 @@
-import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { Pagination, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 
 import CreateTime from "../components/utils/createTime";
-import { useGrid } from "../components/utils/responsive";
-import { keywordState, pageState, userState } from "../store/index";
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery, useQuery } from "react-query";
-import { getPostAll } from "../lib/apis/post";
+import { viewPosts } from "../lib/apis/post";
 import { Grid } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import axios from "axios";
 import { Post } from "../lib/interface/post";
+
+interface BufferType {
+  data: string;
+  contentType: string;
+}
 
 export default function Main() {
   const router = useRouter();
   const { ref, inView } = useInView();
 
-  const posts = useQuery<Post[]>(["posts"], async () => await getPostAll());
+  const posts = useQuery<Post[]>(["posts"], async () => await viewPosts());
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -35,6 +34,18 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
+  const bufferConvert = (props: BufferType) => {
+    const { data, contentType } = props;
+    const blob = new Blob([data], { type: contentType });
+
+    const url = URL.createObjectURL(blob);
+
+    return (
+      <div className="ImageInfo">
+        <Image src={url} width={100} height={100} alt="postImage" />
+      </div>
+    );
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -61,14 +72,7 @@ export default function Main() {
                     <span className="post-card__text_container title">{i.title}</span>
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
-                  {i.image !== undefined && (
-                    <div className="ImageInfo">
-                      <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
-                      {i.image.totalImagesCount > 1 ? (
-                        <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
-                      ) : null}
-                    </div>
-                  )}
+                  {i.image !== undefined && bufferConvert(i.image)}
                 </div>
                 <div className="post-card__info">
                   <p className="post-card__info writer">{i.writer}</p>
@@ -99,3 +103,11 @@ export default function Main() {
     </>
   );
 }
+// {i.image !== undefined && (
+//   <div className="ImageInfo">
+//     <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
+//     {i.image.totalImagesCount > 1 ? (
+//       <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
+//     ) : null}
+//   </div>
+// )}
