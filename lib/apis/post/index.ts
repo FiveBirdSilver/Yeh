@@ -10,9 +10,6 @@ const viewPosts = async () => {
 
 // 게시글 작성
 const writePost = async (data: FormData) => {
-  for (let value of data.values()) {
-    console.log(value);
-  }
   const result = await axios.post("/api/post/writePost", data, {
     headers: {
       "Content-Type": "multipart/form-data",

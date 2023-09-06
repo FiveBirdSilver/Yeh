@@ -38,9 +38,7 @@ export default function New() {
     },
   });
 
-  const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    console.log("test");
-    e.preventDefault();
+  const handleOnSubmit = async () => {
     const formData = new FormData();
 
     if (title === "") {
@@ -49,6 +47,7 @@ export default function New() {
       return inputRefContent?.current?.focus();
     }
 
+    formData.append("id", user.id);
     formData.append("writer", user.nickname);
     formData.append("title", title);
     formData.append("content", content);
@@ -82,7 +81,7 @@ export default function New() {
 
   return (
     <>
-      <form onSubmit={handleOnSubmit} className="post">
+      <div className="post">
         <input
           type="text"
           placeholder="제목을 입력해 주세요"
@@ -126,9 +125,9 @@ export default function New() {
             취소
           </button>
 
-          <button type="submit">등록</button>
+          <button onClick={() => handleOnSubmit()}>등록</button>
         </div>
-      </form>
+      </div>
 
       {isModal ? (
         <Modal

@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useState } from "react";
 
-import logo from "../../public/logo.png";
+import logo from "../../public/static/logo.png";
 import { keywordState, userState } from "../../store/index";
 
 export default function Header() {

@@ -6,7 +6,7 @@ import * as yup from "yup";
 import Image from "next/image";
 import axios from "axios";
 
-import logo from "../../public/logo.png";
+import logo from "../../public/static/logo.png";
 import { userState } from "../../store/index";
 import { LoggingType, SignInType } from "../../lib/interface/user";
 import { signIn } from "../../lib/apis/user";
@@ -29,7 +29,7 @@ export default function Signiin() {
     try {
       const response = await signIn(data);
       if (response.message === "Access") {
-        setLogging({ nickname: response.data, logging: true });
+        setLogging({ nickname: response.data.nickname, id: response.data.id, logging: true });
         router.push("/main");
       }
     } catch (error) {

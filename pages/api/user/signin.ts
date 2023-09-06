@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const isUser = await collection.findOne({ id });
 
     if (await bcrypt.compare(password, isUser?.password)) {
-      res.status(200).json({ message: "Access", data: isUser?.nickname });
+      res.status(200).json({ message: "Access", data: { nickname: isUser?.nickname, id: isUser?._id } });
     } else res.status(200).json("Access Denied");
 
     client.close();

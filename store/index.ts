@@ -8,7 +8,7 @@ const { persistAtom } = recoilPersist({ key: "yeh", storage: sessionStorage });
 // 유저 State
 const userState = atom<LoggingType>({
   key: "userState",
-  default: { nickname: "", logging: false },
+  default: { nickname: "", id: "", logging: false },
   effects_UNSTABLE: [persistAtom],
 });
 

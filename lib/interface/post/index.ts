@@ -6,6 +6,6 @@ export interface Post {
   title: string;
   view: number;
   writer: string;
-  image?: File | Blob;
+  image: any;
   _id: string;
 }
