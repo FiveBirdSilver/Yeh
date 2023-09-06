@@ -2,6 +2,7 @@
   height: fit-content;
   padding: 10px 20px 15px 20px;
   border-radius: 7px;
+  background-color: $light_gray;
 
   @include mobile {
     background-color: transparent !important;

@@ -9,7 +9,11 @@
   left: 0;
   right: 0;
   padding: 0 10rem;
-  box-shadow: 0 2px 2px -2px #dedede;
+  box-shadow: 0 3px 3px -3px $medium_gray;
+  background-color: #ffffff;
+  @include tablet {
+    padding: 0 2rem;
+  }
 
   .header-logo {
     width: 8rem;

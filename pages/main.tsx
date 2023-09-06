@@ -26,9 +26,6 @@ export default function Main() {
 
   const posts = useQuery<Post[]>(["posts"], async () => await viewPosts());
 
-  const Test = posts.data?.map((v) => v.image)[0];
-
-  console.log(Test);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -64,17 +61,16 @@ export default function Main() {
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
                   {i.image !== undefined && (
-                    <div className="ImageInfo">
+                    <div className="post-card__image">
                       <Image
                         src={`/../public/uploads/${i.image[0]?.newFilename}`}
                         width={100}
                         height={100}
                         alt="postImage"
                       />
-                      {i.image.length > 1 && <p className="totalImagesCount">{`+${i.image.length - 1}`}</p>}
+                      {i.image.length > 1 && <p className="post-card__image_num">{`+${i.image.length - 1}`}</p>}
                     </div>
                   )}
-                  {/* {console.log(i.image.length)} */}
                 </div>
                 <div className="post-card__info">
                   <p className="post-card__info writer">{i.writer}</p>
