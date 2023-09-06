@@ -14,9 +14,9 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Post } from "../lib/interface/post";
-
+import { Blob } from "buffer";
 interface BufferType {
-  data: string;
+  data: any;
   contentType: string;
 }
 
@@ -26,6 +26,9 @@ export default function Main() {
 
   const posts = useQuery<Post[]>(["posts"], async () => await viewPosts());
 
+  const Test = posts.data?.map((v) => v.image)[0];
+
+  console.log(Test);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -34,33 +37,21 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
-  const bufferConvert = (props: BufferType) => {
-    const { data, contentType } = props;
-    const blob = new Blob([data], { type: contentType });
-
-    const url = URL.createObjectURL(blob);
-
-    return (
-      <div className="ImageInfo">
-        <Image src={url} width={100} height={100} alt="postImage" />
-      </div>
-    );
-  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          {posts?.data?.map((i: any) => (
+          {posts?.data?.map((i: Post) => (
             <Grid item xs={12} md={6}>
               <Item
                 onClick={() =>
                   router.push({
                     pathname: "/post/read",
-                    query: { id: i.id },
+                    query: { id: i._id },
                   })
                 }
                 className="post-card"
-                key={i.id}
+                key={i._id}
               >
                 {CreateTime(i.createTime).includes("방금전") ||
                 CreateTime(i.createTime).includes("분전") ||
@@ -72,7 +63,18 @@ export default function Main() {
                     <span className="post-card__text_container title">{i.title}</span>
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
-                  {i.image !== undefined && bufferConvert(i.image)}
+                  {i.image !== undefined && (
+                    <div className="ImageInfo">
+                      <Image
+                        src={`/../public/uploads/${i.image[0]?.newFilename}`}
+                        width={100}
+                        height={100}
+                        alt="postImage"
+                      />
+                      {i.image.length > 1 && <p className="totalImagesCount">{`+${i.image.length - 1}`}</p>}
+                    </div>
+                  )}
+                  {/* {console.log(i.image.length)} */}
                 </div>
                 <div className="post-card__info">
                   <p className="post-card__info writer">{i.writer}</p>
