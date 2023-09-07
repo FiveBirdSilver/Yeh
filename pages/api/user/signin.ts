@@ -1,21 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../../lib/db/connet";
 import bcrypt from "bcrypt";
+import dbConnect from "../../../lib/db/connet";
+import User from "../../../lib/db/model/user";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const { id, password } = req.body;
-    const client = await clientPromise;
 
-    const db = client.db("yeh");
-    const collection = await db.collection("user");
+    dbConnect();
 
-    const isUser = await collection.findOne({ id });
+    const checkUser = await User.find({ userId: id });
 
-    if (await bcrypt.compare(password, isUser?.password)) {
-      res.status(200).json({ message: "Access", data: { nickname: isUser?.nickname, id: isUser?._id } });
+    if (await bcrypt.compare(password, checkUser[0]?.password)) {
+      res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname, id: checkUser[0]?._id } });
     } else res.status(200).json("Access Denied");
-
-    client.close();
   }
 }

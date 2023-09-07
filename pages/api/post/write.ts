@@ -3,6 +3,8 @@ import clientPromise from "../../../lib/db/connet";
 
 import formidable from "formidable";
 import fs from "fs/promises";
+import dbConnect from "../../../lib/db/connet";
+import Post from "../../../lib/db/model/post";
 
 export const config = {
   api: {
@@ -13,21 +15,6 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const options: formidable.Options = {};
-
-    // const imgStoragePath = async (req: NextApiRequest) => {
-    //   return new Promise<string>((resolve, rejects) => {
-    //     const form = formidable(options);
-
-    //     form.parse(req, (err, fields, files) => {
-    //       if (err) {
-    //         rejects(err);
-    //       }
-    //       // console.log(fields);
-    //       resolve("./public/uploads/" + fields?.id);
-    //     });
-    //   });
-    // };
-    // const primaryPath = await imgStoragePath(req);
     const imgStoragePath = "./public/uploads";
 
     try {
@@ -60,11 +47,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
     const data = await readFile(req);
 
-    const client = await clientPromise;
-    const db = client.db("yeh");
-    const collection = await db.collection("post");
+    dbConnect();
 
-    await collection.insertOne({
+    const images = (props: any) => {
+      const result = props.map((v: any) => ({
+        filename: v.newFilename,
+        path: v.filepath,
+        type: v.mimetype,
+      }));
+      return result;
+    };
+
+    const postData = new Post({
       image: data.files.image,
       userId: data.fields.id && data.fields.id[0],
       writer: data.fields.writer && data.fields.writer[0],
@@ -75,7 +69,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       likes: 0,
       comments: 0,
     });
-    client.close();
+
+    await Post.create(postData);
 
     res.status(200).json("OK");
   }
