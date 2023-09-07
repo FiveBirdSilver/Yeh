@@ -62,12 +62,15 @@ export default function Main() {
                   </div>
                   {i.image !== undefined && (
                     <div className="post-card__image">
-                      <Image
-                        src={`/../public/uploads/${i.image[0]?.newFilename}`}
-                        width={100}
-                        height={100}
-                        alt="postImage"
-                      />
+                      <div className="post-card__image_wrapper">
+                        <Image
+                          src={`/../public/uploads/${i.image[0]?.newFilename}`}
+                          // width={85}
+                          // height={85}
+                          fill
+                          alt="postImage"
+                        />
+                      </div>
                       {i.image.length > 1 && <p className="post-card__image_num">{`+${i.image.length - 1}`}</p>}
                     </div>
                   )}

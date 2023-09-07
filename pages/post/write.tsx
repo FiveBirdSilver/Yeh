@@ -15,7 +15,7 @@ export default function New() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<File[]>([]);
   const [isModal, setIsModal] = useState(false);
 
   const inputRefTitle = useRef<HTMLInputElement | null>(null);
@@ -33,8 +33,9 @@ export default function New() {
       alert("잠시 후 다시 시도해주세요.");
     },
     onSuccess: (data, variables) => {
-      alert("정보가 추가되었습니다.");
+      alert("등록되었습니다.");
       queryClient.invalidateQueries("posts");
+      router.push("/main");
     },
   });
 
@@ -53,31 +54,31 @@ export default function New() {
     formData.append("content", content);
     images?.forEach((file) => formData.append("image", file));
 
-    await writePost(formData);
+    setPost.mutate(formData);
   };
 
   // 이미지 첨부 핸들러
   const handleOnImageUpload = (e: any) => {
     const tmpFiles = Array.from(e.target.files);
-    // if ([...images, ...tmpFiles].length < 5) setImages(m, ...tmpFiles]);
-    // else {
-    //   setIsModal(true);
-    //   setImages([...images, ...tmpFiles].slice(0, 5));
-    // }
-    // setIsModal(true);
-    setImages(tmpFiles as any);
-    // setImages(tmpFiles.slice(0, 5));
+
+    const totalFiles = [...images, ...tmpFiles] as File[];
+
+    if (totalFiles.length < 5) setImages(totalFiles);
+    else {
+      setIsModal(true);
+      setImages(totalFiles.slice(0, 5));
+    }
   };
 
   const handleOnCancle = () => {
     setTitle("");
     setContent("");
-    // setImages(null);
+    setImages([]);
   };
 
-  // const deleteOnFile = (key) => {
-  //   setImages(images.filter((i) => i.lastModified !== key));
-  // };
+  const deleteOnFile = (key: number) => {
+    setImages(images.filter((i) => i.lastModified !== key));
+  };
 
   return (
     <>
@@ -97,7 +98,7 @@ export default function New() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           ref={inputRefContent}
-          rows={20}
+          rows={15}
           className="post__contents"
         />
         <form className="post__file">
@@ -112,14 +113,14 @@ export default function New() {
             />
           </label>
         </form>
-        {/* <div className="postFileList">
-        {images?.map((i) => (
-          <div className="postFileList_wrap" key={i.lastModified}>
-            <p>{i.name}</p>
-            <DeleteFilled onClick={() => deleteOnFile(i.lastModified)} />
-          </div>
-        ))}
-      </div> */}
+        <div className="postFileList">
+          {images?.map((v, index) => (
+            <div className="postFileList_wrap" key={index}>
+              <p>{v.name}</p>
+              <DeleteFilled onClick={() => deleteOnFile(v.lastModified)} />
+            </div>
+          ))}
+        </div>
         <div className="post-submit">
           <button className="cancle" onClick={() => handleOnCancle()}>
             취소

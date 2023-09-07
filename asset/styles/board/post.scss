@@ -48,7 +48,10 @@
   .post-card__image {
     position: relative;
     display: flex;
-
+    .post-card__image_wrapper {
+      width: 90px;
+      height: 90px;
+    }
     .post-card__image_num {
       position: absolute;
       bottom: 2px;

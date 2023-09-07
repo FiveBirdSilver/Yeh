@@ -16,7 +16,7 @@ export default function Header() {
   const setKeywordState = useSetRecoilState(keywordState);
 
   const logout = () => {
-    setUser({ nickname: "", logging: false });
+    setUser({ nickname: "", id: "", logging: false });
   };
 
   const items = [

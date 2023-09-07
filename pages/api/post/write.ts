@@ -3,7 +3,6 @@ import clientPromise from "../../../lib/db/connet";
 
 import formidable from "formidable";
 import fs from "fs/promises";
-// import multer from "multer";
 
 export const config = {
   api: {
@@ -31,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // const primaryPath = await imgStoragePath(req);
     const imgStoragePath = "./public/uploads";
 
-    //fs모듈을 사용하여path에 폴더가 없을때엔 생성하도록 할 수 있다.
     try {
       await fs.readdir(imgStoragePath);
     } catch {
@@ -56,12 +54,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (err) {
             rejects(err);
           }
-          // console.log(fields);
           resolve({ fields, files });
         });
       });
     };
-    // console.log(await test(req));
     const data = await readFile(req);
 
     const client = await clientPromise;
