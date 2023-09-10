@@ -5,6 +5,7 @@ axios.defaults.baseURL = "http://localhost:3000";
 // 메인화면 전체 게시글 조회
 const viewPosts = async () => {
   const result = await axios.get("/api/post/view");
+  console.log(result);
   if (result.status === 200) return result.data;
 };
 

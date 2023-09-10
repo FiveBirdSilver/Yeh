@@ -58,8 +58,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return result;
     };
 
+    // const images = (props: any) => {
+    //   const result = props.map((v: any) => v.newFilename);
+    //   return result;
+    // };
+
+    console.log(JSON.stringify(images(data.files.image)));
     const postData = new Post({
-      image: data.files.image,
+      images: JSON.stringify(images(data.files.image)),
       userId: data.fields.id && data.fields.id[0],
       writer: data.fields.writer && data.fields.writer[0],
       title: data.fields.title && data.fields.title[0],
@@ -68,6 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       view: 0,
       likes: 0,
       comments: 0,
+      file: JSON.stringify(images(data.files.image)),
     });
 
     await Post.create(postData);

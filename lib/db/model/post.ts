@@ -1,5 +1,11 @@
 import mongoose, { Schema, models } from "mongoose";
 
+const ImageSchema = new mongoose.Schema({
+  filename: String,
+  path: String,
+  type: String,
+});
+
 export const PostSchema = new Schema(
   {
     title: {
@@ -10,7 +16,13 @@ export const PostSchema = new Schema(
       type: String,
       required: true,
     },
-    image: mongoose.Schema.Types.ObjectId,
+    images: {
+      type: [String],
+      required: true,
+    },
+    file: {
+      type: [String],
+    },
     createTime: {
       type: Date,
       required: true,
@@ -30,6 +42,9 @@ export const PostSchema = new Schema(
     likes: {
       type: Number,
       required: true,
+    },
+    imag: {
+      type: Number,
     },
   },
   { collection: "Post" }
