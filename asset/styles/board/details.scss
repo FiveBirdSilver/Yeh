@@ -1,95 +1,87 @@
-.detailPost {
-  display: grid;
-  grid-template-columns: 2fr 8fr;
-  margin-top: 80px;
+.detailPostBox {
+  width: 100%;
+  padding: 0 30px;
 
-  @include mobile {
+  .detailPostBox_header {
     display: flex;
-    justify-content: center;
-    padding: 0 5px;
+    flex-direction: column;
+    border-bottom: 1px solid #eee;
+    position: relative;
+
+    > h2 {
+      font-size: $fontSize28;
+      margin: 0;
+    }
   }
 
-  .detailPostBox {
-    padding: 0 30px;
-    @include mobile {
-      padding: 0;
-    }
-    .detailPostBox_header {
-      display: flex;
-      flex-direction: column;
-      border-bottom: 1px solid #eee;
-      position: relative;
+  .detailPostBox_header_info {
+    display: flex;
+    justify-content: space-between;
+    font-size: $fontSize12;
+    color: #94969b;
+    margin: 30px 0 10px 0;
+  }
 
-      h2 {
-        font-size: $fontSize28;
-        margin: 0;
-      }
-    }
+  > p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
 
-    .detailPostBox_header_info {
-      display: flex;
-      justify-content: space-between;
-      font-size: $fontSize14;
-      color: #94969b;
-      margin: 30px 0 10px 0;
-    }
+  .detailPostBox_contents {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    gap: 30px;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: keep-all;
+    min-height: 150px;
 
-    p {
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    > p {
+      font-size: $fontSize18;
     }
 
-    .detailPostBox_contents {
-      display: flex;
-      flex-direction: column;
-      padding: 20px 0;
-      gap: 30px;
-      text-align: left;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      word-break: keep-all;
-      min-height: 150px;
-
-      p {
-        font-size: $fontSize18;
-      }
-
-      img {
-        position: relative !important;
-        height: auto;
-        object-fit: cover;
-      }
+    > img {
+      position: relative !important;
+      height: auto;
+      object-fit: cover;
     }
+  }
 
-    .detailPostBox_footer {
+  .detail-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .detail-footer__container {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 20px;
 
-      p {
-        font-size: 1.2rem;
+      &.comment {
+        gap: 5px;
       }
-      .detailPostBox_footer_info {
-        display: flex;
-        gap: 30px;
 
-        button {
-          border: none;
-          background-color: transparent;
-          font-size: 1.2rem;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          cursor: pointer;
-        }
-      }
-      .detailPostBox_share {
-        background-color: transparent;
+      &.like {
         border: none;
+        background-color: transparent;
+        font-size: $fontSize12;
+        gap: 5px;
         cursor: pointer;
       }
+
+      span {
+        font-size: $fontSize12;
+      }
+    }
+
+    .detailPostBox_share {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
     }
   }
 }

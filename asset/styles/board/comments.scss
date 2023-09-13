@@ -99,11 +99,12 @@
 }
 .comments_input {
   display: flex;
-  flex-direction: column;
   position: relative;
+  font-size: $fontSize12;
   margin: 10px 0;
 
   input {
+    width: 100%;
     min-height: 40px;
     overflow-y: hidden;
     background-color: transparent;
@@ -113,11 +114,12 @@
     resize: none;
     outline: none;
   }
+
   button {
     background-color: transparent;
     border: none;
     position: absolute;
-    bottom: 10px;
+    bottom: 12px;
     right: 7px;
     cursor: pointer;
   }

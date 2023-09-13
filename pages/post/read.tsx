@@ -23,6 +23,7 @@ import { useGrid } from "../../components/utils/responsive";
 import { useQuery } from "react-query";
 import { detailPost } from "../../lib/apis/post";
 import axios from "axios";
+import { IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
 
@@ -33,10 +34,8 @@ export default function Details() {
   const user = useRecoilValue(userState);
   const { isMobile, isTablet, isDesktop } = useGrid();
 
-  const [detailData, setDetailData] = useState([]);
   const [comments, setCommnets] = useState("");
   const [isModal, setIsModal] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // const items = [
   //   {
@@ -46,7 +45,7 @@ export default function Details() {
   //         onClick={() =>
   //           router.push({
   //             pathname: "/post/edit",
-  //             query: { id: detailData.id },
+  //             query: { id: detail.id },
   //           })
   //         }
   //       >
@@ -59,10 +58,7 @@ export default function Details() {
   //     label: <a onClick={() => setIsModal(true)}>삭제</a>,
   //   },
   // ];
-
-  const detail = useQuery(["detail"], async () => await detailPost(postId));
-
-  console.log(detail);
+  const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
   useEffect(() => {
     // try {
     //   if (user === undefined || user?.name === null) {
@@ -80,176 +76,173 @@ export default function Details() {
   }, [router, user?.logging]);
 
   // 게시글 공유
-  // const doCopy = (url) => {
-  //   if (navigator.clipboard) {
-  //     navigator.clipboard
-  //       .writeText(url)
-  //       .then(() => {
-  //         alert("클립보드에 복사되었습니다.");
-  //       })
-  //       .catch(() => {
-  //         alert("잠시 후 다시 시도해주세요.");
-  //       });
-  //   }
-  // };
+  const doCopy = (url: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          alert("클립보드에 복사되었습니다.");
+        })
+        .catch(() => {
+          alert("잠시 후 다시 시도해주세요.");
+        });
+    }
+  };
 
   // 대댓글까지의 총 개수
-  // const handleOnComments = (data) => {
-  //   let CommentsLength = 0;
-  //   CommentsLength =
-  //     data
-  //       ?.map((i) => i.children)
-  //       .map((v) => v.length)
-  //       .reduce((cum, n) => cum + n) + data?.length;
-  //   if (CommentsLength > 0) return CommentsLength;
-  //   else return 0;
-  // };
+  const handleOnComments = (data: any) => {
+    // let CommentsLength = 0;
+    // CommentsLength =
+    //   data
+    //     ?.map((i) => i.children)
+    //     .map((v) => v.length)
+    //     .reduce((cum, n) => cum + n) + data?.length;
+    // if (CommentsLength > 0) return CommentsLength;
+    // else return 0;
+  };
 
   // 게시글 좋아요
-  // const handleOnLike = async () => {
-  //   try {
-  //     const res = await postLike(detailData.id);
-  //     if (res.data.success) getPostView();
-  //     else alert("잠시 후 다시 시도해주세요");
-  //   } catch (e) {
-  //     console.log(e);
-  //     alert("잠시 후 다시 시도해주세요");
-  //   }
-  // };
+  const handleOnLike = async () => {
+    // try {
+    //   const res = await postLike(detail.id);
+    //   if (res.data.success) {}
+    //   else alert("잠시 후 다시 시도해주세요");
+    // } catch (e) {
+    //   console.log(e);
+    //   alert("잠시 후 다시 시도해주세요");
+    // }
+  };
 
   // 댓글 작성
-  // const insertComments = async () => {
-  //   if (comments.trim() !== "") {
-  //     formData.append("content", comments);
-  //     try {
-  //       const res = await postComment(detailData.id, formData);
-  //       if (res.data.success) {
-  //         alert(res.data.data);
-  //         getPostView();
-  //         setCommnets("");
-  //       } else alert("잠시 후 다시 시도해 주세요");
-  //     } catch (e) {
-  //       console.log(e);
-  //       alert("잠시 후 다시 시도해 주세요");
-  //     }
-  //   } else alert("댓글을 입력해주세요.");
-  // };
-
-  // const handleOnKeyup = (e) => {
-  //   if (e.keyCode === 13) insertComments();
-  //   else return;
-  // };
+  const insertComments = async () => {
+    //   if (comments.trim() !== "") {
+    //     formData.append("content", comments);
+    //     try {
+    //       const res = await postComment(detail.id, formData);
+    //       if (res.data.success) {
+    //         alert(res.data.data);
+    //         setCommnets("");
+    //       } else alert("잠시 후 다시 시도해 주세요");
+    //     } catch (e) {
+    //       console.log(e);
+    //       alert("잠시 후 다시 시도해 주세요");
+    //     }
+    //   } else alert("댓글을 입력해주세요.");
+    // };
+    // const handleOnKeyup = (e) => {
+    //   if (e.keyCode === 13) insertComments();
+    //   else return;
+  };
 
   // 게시글 삭제
-  // const handleOnDelete = async () => {
-  //   try {
-  //     const res = await postDelete(detailData.id);
-  //     if (res.data.success) {
-  //       setIsModal(false);
-  //       PageHandler(1);
-  //       router.push("/main");
-  //     } else alert("잠시 후 다시 시도해주세요");
-  //   } catch (e) {
-  //     console.log(e);
-  //     alert("잠시 후 다시 시도해주세요");
-  //   }
-  // };
-
-  // const Data = (
-  // <div className="detailPostBox">
-  //   <div className="detailPostBox_header">
-  //     {loading ? <Skeleton.Input active block /> : <h2>{detailData.title}</h2>}
-  //     <div className="detailPostBox_header_info">
-  //       {loading ? (
-  //         <Skeleton.Input active size="small" />
-  //       ) : (
-  //         <div style={{ display: "flex", gap: "10px" }}>
-  //           <p>
-  //             <FieldTimeOutlined />
-  //             {CreateTime(detailData.createTime)}
-  //           </p>
-  //           <p>
-  //             <EyeOutlined />
-  //             {detailData.view}
-  //           </p>
-  //         </div>
-  //       )}
-  //       {loading ? <Skeleton.Input active size="small" /> : <p>{detailData.writer}</p>}
-  //     </div>
-  //   </div>
-  //   <div className="detailPostBox_contents">
-  //     {loading ? <Skeleton.Input active block /> : <p>{detailData.content}</p>}
-  //     {detailData.images !== undefined && detailData?.images.every((i) => i !== null)
-  //       ? detailData.images.map((i) =>
-  //           loading ? (
-  //             <Skeleton.Image active key={i} />
-  //           ) : (
-  //             <Image
-  //               src={`https://yeh-bucket.s3.ap-northeast-2.amazonaws.com/${i.imageName}`}
-  //               key={i.id}
-  //               fill
-  //               alt="게시글사진"
-  //             />
-  //           )
-  //         )
-  //       : null}
-  //   </div>
-  //   <div className="detailPostBox_footer">
-  //     <div className="detailPostBox_footer_info">
-  //       <button onClick={() => handleOnLike()}>
-  //         <LikeOutlined />
-  //         {detailData.likes}
-  //       </button>
-  //       <p>
-  //         <CommentOutlined />
-  //         {handleOnComments(detailData.comments)}
-  //       </p>
-  //     </div>
-  //     <div style={{ display: "flex", gap: "10px" }}>
-  //       {detailData.writeStatus ? (
-  //         <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
-  //           <p style={{ cursor: "pointer" }}>
-  //             <EllipsisOutlined style={{ fontSize: "24px", fontWeight: "bold" }} />
-  //           </p>
-  //         </Dropdown>
-  //       ) : null}
-  //       <button onClick={() => doCopy(`https://www.devyeh.com${router.asPath}`)} className="detailPostBox_share">
-  //         <p>
-  //           <ShareAltOutlined />
-  //         </p>
-  //       </button>
-  //     </div>
-  //   </div>
-  //   <div className="comments_input">
-  //     <input
-  //       placeholder="따뜻한 답변은 작성자에게 큰 힘이 됩니다 =)"
-  //       value={comments}
-  //       onChange={(e) => setCommnets(e.target.value)}
-  //       onKeyUp={(e) => handleOnKeyup(e)}
-  //     />
-  //     <button onClick={() => insertComments()}>
-  //       <FaPen />
-  //     </button>
-  //   </div>
-  //   <Comments comments={detailData} getPostView={getPostView} loading={loading} />
-  //   <Modal
-  //     title="게시글 삭제"
-  //     open={isModal}
-  //     centered
-  //     okText="확인"
-  //     cancelText="취소"
-  //     onOk={handleOnDelete}
-  //     onCancel={() => setIsModal(false)}
-  //   >
-  //     <p>정말 게시글을 삭제하시겠습니까?</p>
-  //   </Modal>
-  // </div>
-  // );
+  const handleOnDelete = async () => {
+    // try {
+    //   const res = await postDelete(detail.id);
+    //   if (res.data.success) {
+    //     setIsModal(false);
+    //     router.push("/main");
+    //   } else alert("잠시 후 다시 시도해주세요");
+    // } catch (e) {
+    //   console.log(e);
+    //   alert("잠시 후 다시 시도해주세요");
+    // }
+  };
 
   return (
-    <>
-      {/* {isMobile && <div className="detailPost">{Data}</div>} */}
-      {(isTablet || isDesktop) && <div className="detailPost"></div>}
-    </>
+    <div className="detailPostBox">
+      <div className="detailPostBox_header">
+        {detail.isLoading ? (
+          <Skeleton.Input active block />
+        ) : (
+          <h2>{detail.isSuccess && detail.isSuccess && detail.data[0].title}</h2>
+        )}
+        <div className="detailPostBox_header_info">
+          {detail.isLoading ? (
+            <Skeleton.Input active size="small" />
+          ) : (
+            <div style={{ display: "flex", gap: "10px" }}>
+              <p>
+                <FieldTimeOutlined />
+                {detail.isSuccess && CreateTime(detail.isSuccess && detail.data[0].createTime)}
+              </p>
+              <p>
+                <EyeOutlined />
+                {detail.isSuccess && detail.data[0].view}
+              </p>
+            </div>
+          )}
+          {detail.isLoading ? (
+            <Skeleton.Input active size="small" />
+          ) : (
+            <p>{detail.isSuccess && detail.data[0].writer}</p>
+          )}
+        </div>
+      </div>
+      <div className="detailPostBox_contents">
+        {detail.isLoading ? <Skeleton.Input active block /> : <p>{detail.isSuccess && detail.data[0].content}</p>}
+        {/* {detail.isSuccess && detail.data[0].img !== undefined && detail?.img.every((i) => i !== null)
+        ? detail.isSuccess && detail.data[0].img.map((i) =>
+            detail.isLoading ? (
+              <Skeleton.Image active key={i} />
+            ) : (
+              <Image
+                src={`https://yeh-bucket.s3.ap-northeast-2.amazonaws.com/${i.imageName}`}
+                key={i.id}
+                fill
+                alt="게시글사진"
+              />
+            )
+          )
+        : null} */}
+      </div>
+      <div className="detail-footer">
+        <div className="detail-footer__container">
+          <button onClick={() => handleOnLike()} className="detail-footer__container like">
+            <LikeOutlined />
+            {detail.isSuccess && detail.data[0].likes}
+          </button>
+          <div className="detail-footer__container comment">
+            <CommentOutlined />
+            {/* {handleOnComments(detail.isSuccess && detail.data[0].comments)} */}
+            <span>{detail.isSuccess && detail.data[0].comments}</span>
+          </div>
+        </div>
+        {/* {detail.isSuccess && detail.data[0].writeStatus ? (
+          <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
+            <p style={{ cursor: "pointer" }}>
+              <EllipsisOutlined style={{ fontSize: "24px", fontWeight: "bold" }} />
+            </p>
+          </Dropdown>
+        ) : null} */}
+        <button onClick={() => doCopy(`https://www.devyeh.com${router.asPath}`)} className="detailPostBox_share">
+          <p>
+            <ShareAltOutlined />
+          </p>
+        </button>
+      </div>
+      <div className="comments_input">
+        <input
+          placeholder="따뜻한 답변은 작성자에게 큰 힘이 됩니다 =)"
+          value={comments}
+          onChange={(e) => setCommnets(e.target.value)}
+          // onKeyUp={(e) => handleOnKeyup(e)}
+        />
+        <button onClick={() => insertComments()}>
+          <FaPen />
+        </button>
+      </div>
+      <Comments comments={detail} loading={detail.isLoading} />
+      <Modal
+        title="게시글 삭제"
+        open={isModal}
+        centered
+        okText="확인"
+        cancelText="취소"
+        onOk={handleOnDelete}
+        onCancel={() => setIsModal(false)}
+      >
+        <p>정말 게시글을 삭제하시겠습니까?</p>
+      </Modal>
+    </div>
   );
 }
