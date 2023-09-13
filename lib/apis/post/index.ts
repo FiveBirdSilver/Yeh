@@ -1,11 +1,9 @@
 import axios from "axios";
-import { Post } from "../../interface/post";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
 const viewPosts = async () => {
   const result = await axios.get("/api/post/view");
-  console.log(result);
   if (result.status === 200) return result.data;
 };
 
@@ -21,7 +19,11 @@ const writePost = async (data: FormData) => {
 
 // 상세 게시글 조회
 const detailPost = async (params: string) => {
-  const result = await axios.get("/api/post/read", { params: params });
+  const result = await axios.get("/api/post/read", {
+    params: {
+      id: params,
+    },
+  });
   if (result.status === 200) return result.data;
 };
 

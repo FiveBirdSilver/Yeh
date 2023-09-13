@@ -27,7 +27,7 @@
       flex-direction: column;
 
       &.title {
-        font-size: $fontSize18;
+        font-size: $fontSize16;
         font-weight: bold;
         margin: 0;
       }
@@ -48,13 +48,14 @@
   .post-card__image {
     position: relative;
     display: flex;
+
     .post-card__image_wrapper {
-      width: 90px;
-      height: 90px;
+      width: 75px;
+      height: 75px;
     }
     .post-card__image_num {
       position: absolute;
-      bottom: 2px;
+      bottom: 1.5px;
       right: 1px;
       margin: 0;
       color: white;
@@ -97,7 +98,20 @@
     }
   }
 }
+.post-card-loading {
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+  gap: 10px;
 
+  .ant-skeleton .ant-skeleton-content .ant-skeleton-title + .ant-skeleton-paragraph {
+    margin-block-start: 16px;
+  }
+  .ant-skeleton.ant-skeleton-element .ant-skeleton-image {
+    height: 90px !important;
+    width: 90px !important;
+    min-height: 0 !important;
+  }
+}
 // mui Card 커스텀
 .css-1633um2-MuiPaper-root {
   padding: 12px !important;

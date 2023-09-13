@@ -1,30 +1,24 @@
 import { useRouter } from "next/router";
-import { Skeleton } from "antd";
 import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@ant-design/icons";
 import Image from "next/image";
-
-import CreateTime from "../components/utils/createTime";
 import { useInView } from "react-intersection-observer";
-
 import { useInfiniteQuery, useQuery } from "react-query";
-import { viewPosts } from "../lib/apis/post";
-import { Grid } from "@mui/material";
+import { Avatar, Grid, Typography } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { Post } from "../lib/interface/post";
-import { Blob } from "buffer";
-interface BufferType {
-  data: any;
-  contentType: string;
-}
+
+import CreateTime from "../components/utils/createTime";
+import { IPost } from "../lib/interface/post";
+import { viewPosts } from "../lib/apis/post";
+import { Skeleton, Space } from "antd";
 
 export default function Main() {
   const router = useRouter();
   const { ref, inView } = useInView();
 
-  const posts = useQuery<Post[]>(["posts"], async () => await viewPosts());
+  const posts = useQuery<IPost[]>(["posts"], async () => await viewPosts());
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -38,7 +32,7 @@ export default function Main() {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          {posts?.data?.map((i: Post) => (
+          {posts?.data?.map((i: IPost) => (
             <Grid item xs={12} md={6}>
               <Item
                 onClick={() =>
@@ -50,28 +44,28 @@ export default function Main() {
                 className="post-card"
                 key={i._id}
               >
-                {CreateTime(i.createTime).includes("방금전") ||
-                CreateTime(i.createTime).includes("분전") ||
-                CreateTime(i.createTime).includes("시간전") ? (
+                {posts.isLoading ? (
+                  <div className="post-card-loading">
+                    <Skeleton paragraph={{ rows: 2 }} />
+                    <Skeleton.Image active className="post-card-loading image" />
+                  </div>
+                ) : CreateTime(i.createTime).includes("방금전") ||
+                  CreateTime(i.createTime).includes("분전") ||
+                  CreateTime(i.createTime).includes("시간전") ? (
                   <p className="post-card__new_label">NEW</p>
                 ) : null}
+
                 <div className="post-card__text">
                   <div className="post-card__text_container">
                     <span className="post-card__text_container title">{i.title}</span>
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
-                  {i.image !== undefined && (
+                  {i.img !== undefined && (
                     <div className="post-card__image">
                       <div className="post-card__image_wrapper">
-                        <Image
-                          src={`/../public/uploads/${i.image[0]?.newFilename}`}
-                          // width={85}
-                          // height={85}
-                          fill
-                          alt="postImage"
-                        />
+                        <Image src={`/../public/uploads/${i.img[0]?.filename}`} fill alt="postImage" />
                       </div>
-                      {i.image.length > 1 && <p className="post-card__image_num">{`+${i.image.length - 1}`}</p>}
+                      {i.img.length > 1 && <p className="post-card__image_num">{`+${i.img.length - 1}`}</p>}
                     </div>
                   )}
                 </div>
@@ -104,11 +98,3 @@ export default function Main() {
     </>
   );
 }
-// {i.image !== undefined && (
-//   <div className="ImageInfo">
-//     <Image src={`/../public/post/${i.image}.jpeg`} width={100} height={100} alt="postImage" />
-//     {i.image.totalImagesCount > 1 ? (
-//       <p className="totalImagesCount">{`+${i.image.totalImagesCount - 1}`}</p>
-//     ) : null}
-//   </div>
-// )}

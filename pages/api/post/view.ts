@@ -7,10 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   dbConnect();
 
   const result = await Post.find();
-
-  // const client = await clientPromise;
-  // const db = client.db("yeh");
-  // const result = await db.collection("post").find({}).toArray();
+  result.sort((a, b) => b.createTime.getTime() - a.createTime.getTime());
 
   return res.status(200).json(result);
 }

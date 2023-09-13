@@ -1,4 +1,10 @@
-export interface Post {
+interface Iimage {
+  filename: string;
+  path: string;
+  type: string;
+  _id: string;
+}
+export interface IPost {
   comments: number;
   content: string;
   createTime: any;
@@ -6,6 +12,6 @@ export interface Post {
   title: string;
   view: number;
   writer: string;
-  image: any;
+  img: Iimage[];
   _id: string;
 }

@@ -2,11 +2,11 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { viewPosts } from "../../lib/apis/post";
 import { useQuery } from "react-query";
-import { Post } from "../../lib/interface/post";
+import { IPost } from "../../lib/interface/post";
 
 export default function Aside() {
   const router = useRouter();
-  const rankigData = useQuery<Post[]>(["posts"], async () => await viewPosts());
+  const rankigData = useQuery<IPost[]>(["posts"], async () => await viewPosts());
 
   return (
     <div className="ranking">

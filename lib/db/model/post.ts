@@ -16,12 +16,8 @@ export const PostSchema = new Schema(
       type: String,
       required: true,
     },
-    images: {
-      type: [String],
-      required: true,
-    },
-    file: {
-      type: [String],
+    img: {
+      type: [ImageSchema],
     },
     createTime: {
       type: Date,
