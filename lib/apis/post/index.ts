@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IComments } from "../../interface/post";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
@@ -27,4 +28,14 @@ const detailPost = async (params: string) => {
   if (result.status === 200) return result.data;
 };
 
-export { viewPosts, writePost, detailPost };
+// 댓글 작성
+const writeComments = async (data: IComments) => {
+  const result = await axios.post("/api/post/comment", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if (result.status === 200) return result.data;
+};
+
+export { viewPosts, writePost, detailPost, writeComments };

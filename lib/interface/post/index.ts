@@ -15,3 +15,11 @@ export interface IPost {
   img: Iimage[];
   _id: string;
 }
+
+export interface IComments {
+  content: string;
+  writer: string;
+  postId: string;
+  date?: any;
+  _id?: string;
+}

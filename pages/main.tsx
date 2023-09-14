@@ -60,7 +60,7 @@ export default function Main() {
                     <span className="post-card__text_container title">{i.title}</span>
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
-                  {i.img !== undefined && (
+                  {i.img && (
                     <div className="post-card__image">
                       <div className="post-card__image_wrapper">
                         <Image src={`/../public/uploads/${i.img[0]?.filename}`} fill alt="postImage" />

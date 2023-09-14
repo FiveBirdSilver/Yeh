@@ -20,8 +20,8 @@ import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
 import { postComment, postLike, postDelete, postRead } from "../../lib/apis";
 import { useGrid } from "../../components/utils/responsive";
-import { useQuery } from "react-query";
-import { detailPost } from "../../lib/apis/post";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { detailPost, writeComments } from "../../lib/apis/post";
 import axios from "axios";
 import { IPost } from "../../lib/interface/post";
 
@@ -36,6 +36,8 @@ export default function Details() {
 
   const [comments, setCommnets] = useState("");
   const [isModal, setIsModal] = useState(false);
+
+  const queryClient = useQueryClient();
 
   // const items = [
   //   {
@@ -58,7 +60,12 @@ export default function Details() {
   //     label: <a onClick={() => setIsModal(true)}>삭제</a>,
   //   },
   // ];
+
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
+
+  const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
+
+  // console.log(detail.data?.map((v) => v.img));
   useEffect(() => {
     // try {
     //   if (user === undefined || user?.name === null) {
@@ -73,7 +80,7 @@ export default function Details() {
     //   console.log(e);
     //   alert("잠시 후 다시 시도해주세요");
     // }
-  }, [router, user?.logging]);
+  }, [postId, user?.logging]);
 
   // 게시글 공유
   const doCopy = (url: string) => {
@@ -113,9 +120,27 @@ export default function Details() {
     // }
   };
 
+  const setComments = useMutation(writeComments, {
+    onError: (data, error, variables) => {
+      alert("잠시 후 다시 시도해주세요.");
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries("detail");
+    },
+  });
+
   // 댓글 작성
   const insertComments = async () => {
-    //   if (comments.trim() !== "") {
+    const requset = {
+      content: comments,
+      writer: user.nickname,
+      postId: postId,
+    };
+
+    if (comments.trim() !== "") {
+      setComments.mutate(requset);
+    }
+
     //     formData.append("content", comments);
     //     try {
     //       const res = await postComment(detail.id, formData);
@@ -160,7 +185,7 @@ export default function Details() {
           {detail.isLoading ? (
             <Skeleton.Input active size="small" />
           ) : (
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div className="flex gap-10">
               <p>
                 <FieldTimeOutlined />
                 {detail.isSuccess && CreateTime(detail.isSuccess && detail.data[0].createTime)}
@@ -180,20 +205,12 @@ export default function Details() {
       </div>
       <div className="detailPostBox_contents">
         {detail.isLoading ? <Skeleton.Input active block /> : <p>{detail.isSuccess && detail.data[0].content}</p>}
-        {/* {detail.isSuccess && detail.data[0].img !== undefined && detail?.img.every((i) => i !== null)
-        ? detail.isSuccess && detail.data[0].img.map((i) =>
-            detail.isLoading ? (
-              <Skeleton.Image active key={i} />
-            ) : (
-              <Image
-                src={`https://yeh-bucket.s3.ap-northeast-2.amazonaws.com/${i.imageName}`}
-                key={i.id}
-                fill
-                alt="게시글사진"
-              />
-            )
-          )
-        : null} */}
+
+        {detail.isSuccess &&
+          !imgConfirm &&
+          detail.data.map((v) =>
+            v.img?.map((i) => <Image src={`/../public/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />)
+          )}
       </div>
       <div className="detail-footer">
         <div className="detail-footer__container">
@@ -231,7 +248,7 @@ export default function Details() {
           <FaPen />
         </button>
       </div>
-      <Comments comments={detail} loading={detail.isLoading} />
+      {/* <Comments comments={detail} loading={detai/l.isLoading} /> */}
       <Modal
         title="게시글 삭제"
         open={isModal}

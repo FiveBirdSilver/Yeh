@@ -6,6 +6,11 @@ const ImageSchema = new mongoose.Schema({
   type: String,
 });
 
+const ContentSchema = new mongoose.Schema({
+  content: String,
+  writer: String,
+});
+
 export const PostSchema = new Schema(
   {
     title: {
@@ -32,7 +37,7 @@ export const PostSchema = new Schema(
       required: true,
     },
     comments: {
-      type: Number,
+      type: [ContentSchema] || [],
       required: true,
     },
     likes: {

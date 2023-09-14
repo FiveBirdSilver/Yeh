@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     dbConnect();
 
     const images = (props: any) => {
-      const result = props.map((v: any) => ({
+      const result = props?.map((v: any) => ({
         filename: v.newFilename,
         path: v.filepath,
         type: v.mimetype,
@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     const postData = new Post({
-      img: images(data.files.image),
+      img: data.files.image ? images(data.files.image) : null,
       userId: data.fields.id && data.fields.id[0],
       writer: data.fields.writer && data.fields.writer[0],
       title: data.fields.title && data.fields.title[0],
@@ -67,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       createTime: new Date(),
       view: 0,
       likes: 0,
-      comments: 0,
+      comments: [],
     });
 
     await Post.create(postData);
