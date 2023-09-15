@@ -30,11 +30,7 @@ const detailPost = async (params: string) => {
 
 // 댓글 작성
 const writeComments = async (data: IComments) => {
-  const result = await axios.post("/api/post/comment", data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const result = await axios.post("/api/post/comment", data);
   if (result.status === 200) return result.data;
 };
 

@@ -2,7 +2,6 @@ import { Skeleton } from "antd";
 import { useState } from "react";
 import { FaCommentDots, FaPen } from "react-icons/fa";
 import CreateTime from "../../components/utils/createTime";
-import { postNestedComment } from "../../lib/apis";
 
 export default function Comments({ comments, getPostView, loading }: any) {
   const Comments = comments.comments;
@@ -21,22 +20,7 @@ export default function Comments({ comments, getPostView, loading }: any) {
     else return;
   };
 
-  const insertNestedComments = async () => {
-    if (value.trim() !== "") {
-      formData.append("content", value);
-      try {
-        const res = await postNestedComment(comments.id, id, formData);
-        if (res.data.success) {
-          getPostView();
-          setValue("");
-          setActive(false);
-        } else alert("잠시 후 다시 시도해 주세요");
-      } catch (e) {
-        console.log(e);
-        alert("잠시 후 다시 시도해 주세요");
-      }
-    } else alert("댓글을 입력해주세요.");
-  };
+  const insertNestedComments = async () => {};
 
   return (
     <div className="postComments">

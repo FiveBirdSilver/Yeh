@@ -9,6 +9,7 @@ const ImageSchema = new mongoose.Schema({
 const ContentSchema = new mongoose.Schema({
   content: String,
   writer: String,
+  writeTime: Date,
 });
 
 export const PostSchema = new Schema(
@@ -43,9 +44,6 @@ export const PostSchema = new Schema(
     likes: {
       type: Number,
       required: true,
-    },
-    imag: {
-      type: Number,
     },
   },
   { collection: "Post" }

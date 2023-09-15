@@ -80,7 +80,7 @@ export default function Main() {
                       <EyeOutlined className="post-card__info_wrapper icon" /> {i.view}
                     </p>
                     <p>
-                      <CommentOutlined className="post-card__info_wrapper icon" /> {i.comments}
+                      <CommentOutlined className="post-card__info_wrapper icon" /> {i.comments.length}
                     </p>
                     <p>
                       <LikeOutlined className="post-card__info_wrapper icon" /> {i.likes}

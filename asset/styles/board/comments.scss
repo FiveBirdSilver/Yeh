@@ -1,126 +1,79 @@
-.postComments {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+.comments {
+  padding-bottom: 30px;
 
-  p {
-    margin: 0;
-  }
-
-  .postComments_wrap {
+  .comments_input__container {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 0 10px 15px 10px;
+    position: relative;
+    font-size: $fontSize12;
+    margin: 10px 0;
 
-    .beingComments {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin: 10px 0;
-    }
+    .comments_input {
+      width: 100%;
+      min-height: 40px;
+      overflow-y: hidden;
+      background-color: transparent;
+      border: 1px solid #dedede;
+      border-radius: 3px;
+      padding: 0 35px 0 10px;
+      resize: none;
+      outline: none;
 
-    .nestedComments {
-      background-color: rgb(53, 54, 58);
-      margin: 10px 20px 0px 30px;
-      padding: 10px;
-    }
-    .writer {
-      font-size: $fontSize14;
-      font-weight: bold;
-    }
-    .beingCommentsInfo {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-
-      .createTime {
-        font-size: $fontSize11;
-        color: #94969b;
-      }
-
-      .nestedComments_button {
-        font-size: $fontSize11;
-        color: #94969b;
-        border: none;
-        background-color: transparent;
-        padding: 0;
+      &.not-logging {
         cursor: pointer;
       }
     }
-    .nestedComments_active {
-      position: relative;
-      display: flex;
 
-      span {
-        position: absolute;
-        top: 22px;
-        left: 24px;
-        font-size: 12px;
-      }
-
-      input {
-        width: 100%;
-        min-height: 40px;
-        overflow-y: hidden;
-        background-color: transparent;
-        border: 1px solid #dedede;
-        border-radius: 3px;
-        padding: 0 45px 0 90px;
-        margin: 10px 0 0px 10px;
-        resize: none;
-        outline: none;
-      }
-
-      button {
-        background-color: transparent;
-        border: none;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        cursor: pointer;
-      }
-    }
-    .nestedComments_notActive {
-      display: none;
+    button {
+      background-color: transparent;
+      border: none;
+      position: absolute;
+      bottom: 14px;
+      right: 10px;
+      cursor: pointer;
     }
   }
 
-  .notComments {
-    margin: 50px 0;
+  .comments__container {
     display: flex;
     align-items: center;
     flex-direction: column;
+    gap: 10px;
+    padding: 0 5px;
 
-    .notCommentsIcon {
-      font-size: 32px;
+    p {
+      margin: 0;
     }
-  }
-}
-.comments_input {
-  display: flex;
-  position: relative;
-  font-size: $fontSize12;
-  margin: 10px 0;
 
-  input {
-    width: 100%;
-    min-height: 40px;
-    overflow-y: hidden;
-    background-color: transparent;
-    border: 1px solid #dedede;
-    border-radius: 3px;
-    padding: 0 35px 0 10px;
-    resize: none;
-    outline: none;
-  }
+    .comments__wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0 10px 15px 10px;
 
-  button {
-    background-color: transparent;
-    border: none;
-    position: absolute;
-    bottom: 12px;
-    right: 7px;
-    cursor: pointer;
+      .comments__wrapper-info {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        > p {
+          font-size: $fontSize11;
+          color: #94969b;
+        }
+      }
+      .comments__wrapper-content {
+        font-size: $fontSize12;
+      }
+    }
+
+    .notComments {
+      margin: 50px 0;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .notCommentsIcon {
+        font-size: 32px;
+      }
+    }
   }
 }

@@ -4,8 +4,16 @@ interface Iimage {
   type: string;
   _id: string;
 }
+export interface IComments {
+  content: string;
+  writer: string;
+  postId: string;
+  writeTime?: Date;
+  _id?: string;
+}
+
 export interface IPost {
-  comments: number;
+  comments: IComments[];
   content: string;
   createTime: any;
   likes: number;
@@ -14,12 +22,4 @@ export interface IPost {
   writer: string;
   img: Iimage[];
   _id: string;
-}
-
-export interface IComments {
-  content: string;
-  writer: string;
-  postId: string;
-  date?: any;
-  _id?: string;
 }

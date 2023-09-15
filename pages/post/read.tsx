@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Dropdown, Modal, Skeleton } from "antd";
-import { resetRecoil } from "recoil-nexus";
 
 import {
   EyeOutlined,
@@ -14,21 +13,18 @@ import {
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaCommentDots } from "react-icons/fa";
 
 import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
-import { postComment, postLike, postDelete, postRead } from "../../lib/apis";
 import { useGrid } from "../../components/utils/responsive";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { detailPost, writeComments } from "../../lib/apis/post";
-import axios from "axios";
 import { IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
 
 export default function Details() {
-  const formData = new FormData();
   const router = useRouter();
   const postId = router.query.id as string;
   const user = useRecoilValue(userState);
@@ -60,7 +56,10 @@ export default function Details() {
   //     label: <a onClick={() => setIsModal(true)}>삭제</a>,
   //   },
   // ];
-
+  // const [detail, setDetail] = useState<any>([]);
+  // const test = async () => {
+  //   await detailPost(postId).then((res) => setDetail(res))
+  // }
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
 
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
@@ -126,6 +125,7 @@ export default function Details() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries("detail");
+      setCommnets("");
     },
   });
 
@@ -136,29 +136,14 @@ export default function Details() {
       writer: user.nickname,
       postId: postId,
     };
-
     if (comments.trim() !== "") {
       setComments.mutate(requset);
     }
-
-    //     formData.append("content", comments);
-    //     try {
-    //       const res = await postComment(detail.id, formData);
-    //       if (res.data.success) {
-    //         alert(res.data.data);
-    //         setCommnets("");
-    //       } else alert("잠시 후 다시 시도해 주세요");
-    //     } catch (e) {
-    //       console.log(e);
-    //       alert("잠시 후 다시 시도해 주세요");
-    //     }
-    //   } else alert("댓글을 입력해주세요.");
-    // };
-    // const handleOnKeyup = (e) => {
-    //   if (e.keyCode === 13) insertComments();
-    //   else return;
   };
 
+  const handleOnKeyup = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") insertComments();
+  };
   // 게시글 삭제
   const handleOnDelete = async () => {
     // try {
@@ -181,19 +166,19 @@ export default function Details() {
         ) : (
           <h2>{detail.isSuccess && detail.isSuccess && detail.data[0].title}</h2>
         )}
-        <div className="detailPostBox_header_info">
+        <div className="detailPostBox-header__container">
           {detail.isLoading ? (
             <Skeleton.Input active size="small" />
           ) : (
-            <div className="flex gap-10">
-              <p>
+            <div className="flex gap-5">
+              <div className="detailPostBox-header__container-text">
                 <FieldTimeOutlined />
-                {detail.isSuccess && CreateTime(detail.isSuccess && detail.data[0].createTime)}
-              </p>
-              <p>
+                <span>{detail.isSuccess && CreateTime(detail.isSuccess && detail.data[0].createTime)}</span>
+              </div>
+              <div className="detailPostBox-header__container-text">
                 <EyeOutlined />
-                {detail.isSuccess && detail.data[0].view}
-              </p>
+                <span> {detail.isSuccess && detail.data[0].view}</span>
+              </div>
             </div>
           )}
           {detail.isLoading ? (
@@ -205,7 +190,6 @@ export default function Details() {
       </div>
       <div className="detailPostBox_contents">
         {detail.isLoading ? <Skeleton.Input active block /> : <p>{detail.isSuccess && detail.data[0].content}</p>}
-
         {detail.isSuccess &&
           !imgConfirm &&
           detail.data.map((v) =>
@@ -220,8 +204,7 @@ export default function Details() {
           </button>
           <div className="detail-footer__container comment">
             <CommentOutlined />
-            {/* {handleOnComments(detail.isSuccess && detail.data[0].comments)} */}
-            <span>{detail.isSuccess && detail.data[0].comments}</span>
+            <span>{detail.isSuccess && detail.data[0].comments.length}</span>
           </div>
         </div>
         {/* {detail.isSuccess && detail.data[0].writeStatus ? (
@@ -231,24 +214,42 @@ export default function Details() {
             </p>
           </Dropdown>
         ) : null} */}
-        <button onClick={() => doCopy(`https://www.devyeh.com${router.asPath}`)} className="detailPostBox_share">
+        <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)} className="detailPostBox_share">
           <p>
             <ShareAltOutlined />
           </p>
         </button>
       </div>
-      <div className="comments_input">
-        <input
-          placeholder="따뜻한 답변은 작성자에게 큰 힘이 됩니다 =)"
-          value={comments}
-          onChange={(e) => setCommnets(e.target.value)}
-          // onKeyUp={(e) => handleOnKeyup(e)}
-        />
-        <button onClick={() => insertComments()}>
-          <FaPen />
-        </button>
+      <div className="comments">
+        <div className="comments_input__container">
+          <input
+            placeholder="따뜻한 답변은 작성자에게 큰 힘이 됩니다 =)"
+            value={comments}
+            onChange={(e) => setCommnets(e.target.value)}
+            onKeyUp={(e) => handleOnKeyup(e)}
+            onClick={() => !user.logging && router.push("/user/signin")}
+            className={user.logging ? `comments_input` : `comments_input not-logging`}
+          />
+          <button onClick={() => insertComments()}>
+            <FaPen />
+          </button>
+        </div>
+        <div className="comments__container">
+          {detail.isSuccess &&
+            detail.data.map((i) =>
+              i.comments.map((v) => (
+                <div className="comments__wrapper">
+                  <div className="comments__wrapper-info">
+                    <p>{v.writer}</p>
+                    <p> · </p>
+                    <p>{CreateTime(v.writeTime)}</p>
+                  </div>
+                  <p className="comments__wrapper-content">{v.content}</p>
+                </div>
+              ))
+            )}
+        </div>
       </div>
-      {/* <Comments comments={detail} loading={detai/l.isLoading} /> */}
       <Modal
         title="게시글 삭제"
         open={isModal}

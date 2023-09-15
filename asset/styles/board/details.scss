@@ -14,16 +14,16 @@
     }
   }
 
-  .detailPostBox_header_info {
+  .detailPostBox-header__container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: $fontSize12;
     color: #94969b;
-    margin: 30px 0 10px 0;
+    margin: 20px 0 5px 0;
   }
 
-  > p {
-    margin: 0;
+  .detailPostBox-header__container-text {
     display: flex;
     align-items: center;
     gap: 5px;
