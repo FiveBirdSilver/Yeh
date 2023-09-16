@@ -4,6 +4,7 @@ interface Iimage {
   type: string;
   _id: string;
 }
+
 export interface IComments {
   content: string;
   writer: string;
@@ -12,11 +13,17 @@ export interface IComments {
   _id?: string;
 }
 
+export interface ILikes {
+  username: string;
+  postId: string;
+  _id?: string;
+}
+
 export interface IPost {
   comments: IComments[];
   content: string;
   createTime: any;
-  likes: number;
+  likes: ILikes[];
   title: string;
   view: number;
   writer: string;

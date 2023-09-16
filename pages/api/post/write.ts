@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       content: data.fields.content && data.fields.content[0],
       createTime: new Date(),
       view: 0,
-      likes: 0,
+      likes: [],
       comments: [],
     });
 

@@ -19,7 +19,7 @@ import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
 import { useGrid } from "../../components/utils/responsive";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { detailPost, writeComments } from "../../lib/apis/post";
+import { detailPost, increaseLikes, writeComments } from "../../lib/apis/post";
 import { IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
@@ -95,28 +95,22 @@ export default function Details() {
     }
   };
 
-  // 대댓글까지의 총 개수
-  const handleOnComments = (data: any) => {
-    // let CommentsLength = 0;
-    // CommentsLength =
-    //   data
-    //     ?.map((i) => i.children)
-    //     .map((v) => v.length)
-    //     .reduce((cum, n) => cum + n) + data?.length;
-    // if (CommentsLength > 0) return CommentsLength;
-    // else return 0;
-  };
+  const setLikes = useMutation(increaseLikes, {
+    onError: (data, error, variables) => {
+      alert("잠시 후 다시 시도해주세요.");
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries("detail");
+    },
+  });
 
   // 게시글 좋아요
   const handleOnLike = async () => {
-    // try {
-    //   const res = await postLike(detail.id);
-    //   if (res.data.success) {}
-    //   else alert("잠시 후 다시 시도해주세요");
-    // } catch (e) {
-    //   console.log(e);
-    //   alert("잠시 후 다시 시도해주세요");
-    // }
+    const requset = {
+      username: user.nickname,
+      postId: postId,
+    };
+    setLikes.mutate(requset);
   };
 
   const setComments = useMutation(writeComments, {
@@ -144,6 +138,7 @@ export default function Details() {
   const handleOnKeyup = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") insertComments();
   };
+
   // 게시글 삭제
   const handleOnDelete = async () => {
     // try {
@@ -200,7 +195,7 @@ export default function Details() {
         <div className="detail-footer__container">
           <button onClick={() => handleOnLike()} className="detail-footer__container like">
             <LikeOutlined />
-            {detail.isSuccess && detail.data[0].likes}
+            {detail.isSuccess && detail.data[0].likes.length}
           </button>
           <div className="detail-footer__container comment">
             <CommentOutlined />

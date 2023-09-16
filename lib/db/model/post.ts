@@ -42,7 +42,7 @@ export const PostSchema = new Schema(
       required: true,
     },
     likes: {
-      type: Number,
+      type: [String] || [],
       required: true,
     },
   },

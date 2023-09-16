@@ -28,6 +28,7 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
+  console.log(posts);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -83,7 +84,7 @@ export default function Main() {
                       <CommentOutlined className="post-card__info_wrapper icon" /> {i.comments.length}
                     </p>
                     <p>
-                      <LikeOutlined className="post-card__info_wrapper icon" /> {i.likes}
+                      <LikeOutlined className="post-card__info_wrapper icon" /> {i.likes.length}
                     </p>
                   </div>
                 </div>

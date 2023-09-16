@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await Post.updateOne(
       { _id: postId },
       {
-        view: (result[0].view += 1),
+        view: result ? (result[0].view += 1) : 0,
       }
     );
 
