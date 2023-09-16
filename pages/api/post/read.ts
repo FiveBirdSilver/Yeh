@@ -9,6 +9,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const result = await Post.find({ _id: postId });
 
+    await Post.updateOne(
+      { _id: postId },
+      {
+        view: (result[0].view += 1),
+      }
+    );
+
     res.status(200).json(result);
   }
 }

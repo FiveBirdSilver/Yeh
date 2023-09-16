@@ -8,8 +8,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     dbConnect();
 
-    const test = await Post.find({ _id: postId });
-
     const update = {
       content: content,
       writer: writer,
