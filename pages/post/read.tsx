@@ -1,19 +1,18 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Dropdown, Modal, Skeleton } from "antd";
-
+import { Modal, Skeleton } from "antd";
 import {
   EyeOutlined,
   FieldTimeOutlined,
   CommentOutlined,
   LikeOutlined,
   ShareAltOutlined,
-  EllipsisOutlined,
+  LikeFilled,
 } from "@ant-design/icons";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { FaPen, FaCommentDots } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 
 import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
@@ -64,6 +63,7 @@ export default function Details() {
 
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
+  console.log(detail);
   // console.log(detail.data?.map((v) => v.img));
   useEffect(() => {
     // try {
@@ -194,8 +194,8 @@ export default function Details() {
       <div className="detail-footer">
         <div className="detail-footer__container">
           <button onClick={() => handleOnLike()} className="detail-footer__container like">
-            <LikeOutlined />
-            {detail.isSuccess && detail.data[0].likes.length}
+            {detail.isSuccess && detail.data[0].likes.includes(user.nickname) ? <LikeFilled /> : <LikeOutlined />}
+            <span>{detail.isSuccess && detail.data[0].likes.length}</span>
           </button>
           <div className="detail-footer__container comment">
             <CommentOutlined />
