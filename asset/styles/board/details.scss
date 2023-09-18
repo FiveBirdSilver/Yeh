@@ -73,6 +73,10 @@
         cursor: pointer;
       }
 
+      &.share {
+        font-size: $fontSize12;
+      }
+
       span {
         font-size: $fontSize12;
       }
@@ -91,5 +95,5 @@
 }
 
 .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
-  font-size: $fontSize11;
+  font-size: $fontSize12;
 }

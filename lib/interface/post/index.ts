@@ -14,6 +14,11 @@ export interface IComments {
   _id?: string;
 }
 
+export interface IDeleteComments {
+  postId: string;
+  commentId: string;
+}
+
 export interface ILikes {
   id: string;
   postId: string;

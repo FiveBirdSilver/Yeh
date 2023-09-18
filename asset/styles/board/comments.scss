@@ -36,7 +36,6 @@
   .comments__container {
     display: flex;
     align-items: center;
-    flex-direction: column;
     gap: 10px;
     padding: 0 5px;
 
@@ -47,15 +46,25 @@
     .comments__wrapper {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       width: 100%;
-      margin: 0 10px 15px 10px;
+      // margin: 0 10px 15px 10px;
 
       .comments__wrapper-info {
         display: flex;
         align-items: center;
         gap: 5px;
 
-        > p {
+        &.my {
+          font-size: 8px;
+          font-weight: 700;
+          padding: 2px;
+          background-color: $main_color;
+          color: #ffffff;
+          border-radius: 5px;
+        }
+        > p,
+        button {
           font-size: $fontSize11;
           color: #94969b;
         }
@@ -63,6 +72,12 @@
       .comments__wrapper-content {
         font-size: $fontSize12;
       }
+    }
+
+    .comments__delete {
+      width: 25px;
+      color: #94969b;
+      font-size: $fontSize11;
     }
 
     .notComments {

@@ -18,7 +18,7 @@ import { FaPen } from "react-icons/fa";
 import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { detailPost, increaseLikes, writeComments } from "../../lib/apis/post";
+import { dropComments, detailPost, increaseLikes, writeComments } from "../../lib/apis/post";
 import { IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
@@ -28,10 +28,12 @@ export default function Details() {
   const postId = router.query.id as string;
   const user = useRecoilValue(userState);
 
-  const [comments, setCommnets] = useState("");
-  const [isModal, setIsModal] = useState(false);
+  const [comments, setCommnets] = useState<string>("");
+  const [commentId, setCommnetId] = useState<string>("");
+  const [isModal, setIsModal] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
+
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
@@ -57,23 +59,6 @@ export default function Details() {
     },
   ];
 
-  // console.log(detail.data?.map((v) => v.img));
-  useEffect(() => {
-    // try {
-    //   if (user === undefined || user?.name === null) {
-    //     alert("로그인 후 이용 가능합니다.");
-    //     router.push("/user/signin", undefined, { shallow: true });
-    //   } else if (user?.loggin) {
-    //     setToken().then((res) => {
-    //       if (res === "userLogin") userConfirm();
-    //     });
-    //   } else return;
-    // } catch (e) {
-    //   console.log(e);
-    //   alert("잠시 후 다시 시도해주세요");
-    // }
-  }, [postId, user?.logging]);
-
   // 게시글 공유
   const doCopy = (url: string) => {
     if (navigator.clipboard) {
@@ -88,6 +73,7 @@ export default function Details() {
     }
   };
 
+  // 게시글 좋아요
   const setLikes = useMutation(increaseLikes, {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
@@ -106,6 +92,7 @@ export default function Details() {
     setLikes.mutate(requset);
   };
 
+  // 댓글 작성
   const setComments = useMutation(writeComments, {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
@@ -133,18 +120,29 @@ export default function Details() {
     if (e.key === "Enter") insertComments();
   };
 
-  // 게시글 삭제
-  const handleOnDelete = async () => {
-    // try {
-    //   const res = await postDelete(detail.id);
-    //   if (res.data.success) {
-    //     setIsModal(false);
-    //     router.push("/main");
-    //   } else alert("잠시 후 다시 시도해주세요");
-    // } catch (e) {
-    //   console.log(e);
-    //   alert("잠시 후 다시 시도해주세요");
-    // }
+  // 댓글 삭제
+  const deleteComments = useMutation(dropComments, {
+    onError: (data, error, variables) => {
+      alert("잠시 후 다시 시도해주세요.");
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries("detail");
+    },
+  });
+
+  // 댓글 삭제
+  const handleOnDeleteComment = async (id: string) => {
+    setIsModal(true);
+    setCommnetId(id);
+  };
+
+  const handleOnDeleteCommentOk = async () => {
+    const request = {
+      postId: postId,
+      commentId: commentId,
+    };
+    deleteComments.mutate(request);
+    setIsModal(false);
   };
 
   return (
@@ -188,13 +186,15 @@ export default function Details() {
             <span>{detail.isSuccess && detail.data[0].comments.length}</span>
           </div>
         </div>
-        <div className="flex items-baseline gap-3">
-          <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
-            <MoreOutlined className="font-bold cursor-pointer" />
-          </Dropdown>
-          <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)} className="detailPostBox_share">
-            <ShareAltOutlined />
+        <div className="flex items-center gap-3">
+          <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)}>
+            <ShareAltOutlined className="detail-footer__container share" />
           </button>
+          {detail.isSuccess && detail.data[0].writer.id === user.id ? (
+            <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
+              <MoreOutlined className="font-bold cursor-pointer" />
+            </Dropdown>
+          ) : null}
         </div>
       </div>
       <div className="comments">
@@ -215,28 +215,37 @@ export default function Details() {
           {detail.isSuccess &&
             detail.data.map((i) =>
               i.comments.map((v, index) => (
-                <div className="comments__wrapper" key={index}>
-                  <div className="comments__wrapper-info">
-                    <p>{v.nickname}</p>
-                    <p> · </p>
-                    <p>{CreateTime(v.writeTime)}</p>
+                <>
+                  <div className="comments__wrapper" key={index}>
+                    <div className="comments__wrapper-info">
+                      <p>{v.nickname}</p>
+                      <p> · </p>
+                      <p>{CreateTime(v.writeTime)}</p>
+                    </div>
+                    <p className="comments__wrapper-content">{v.content}</p>
                   </div>
-                  <p className="comments__wrapper-content">{v.content}</p>
-                </div>
+
+                  {detail.isSuccess && detail.data[0].writer.id === user.id && (
+                    <button className="comments__delete" onClick={() => handleOnDeleteComment(v._id as string)}>
+                      삭제
+                    </button>
+                  )}
+                </>
               ))
             )}
         </div>
       </div>
       <Modal
-        title="게시글 삭제"
+        title="댓글 삭제"
         open={isModal}
         centered
         okText="확인"
         cancelText="취소"
-        onOk={handleOnDelete}
+        onOk={() => handleOnDeleteCommentOk()}
         onCancel={() => setIsModal(false)}
+        width={300}
       >
-        <p>정말 게시글을 삭제하시겠습니까?</p>
+        <p>삭제하시겠습니까?</p>
       </Modal>
     </div>
   );
