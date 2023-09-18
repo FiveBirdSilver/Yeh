@@ -61,7 +61,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const postData = new Post({
       img: data.files.image ? images(data.files.image) : null,
       userId: data.fields.id && data.fields.id[0],
-      writer: data.fields.writer && data.fields.writer[0],
+      writer: {
+        id: data.fields.id && data.fields.id[0],
+        nickname: data.fields.writer && data.fields.writer[0],
+      },
       title: data.fields.title && data.fields.title[0],
       content: data.fields.content && data.fields.content[0],
       createTime: new Date(),

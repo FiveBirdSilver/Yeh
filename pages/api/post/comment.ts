@@ -4,13 +4,14 @@ import Post from "../../../lib/db/model/post";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { content, writer, postId } = req.body;
+    const { userId, nickname, postId, content } = req.body;
 
     dbConnect();
 
     const update = {
       content: content,
-      writer: writer,
+      userId: userId,
+      nickname: nickname,
       writeTime: new Date(),
     };
 

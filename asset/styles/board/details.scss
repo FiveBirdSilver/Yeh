@@ -89,3 +89,7 @@
   width: 100% !important;
   min-height: 300px !important;
 }
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+  font-size: $fontSize11;
+}

@@ -7,26 +7,29 @@ interface Iimage {
 
 export interface IComments {
   content: string;
-  writer: string;
+  userId: string;
+  nickname: string;
   postId: string;
   writeTime?: Date;
   _id?: string;
 }
 
 export interface ILikes {
-  username: string;
+  id: string;
   postId: string;
-  _id?: string;
 }
 
 export interface IPost {
   comments: IComments[];
   content: string;
   createTime: any;
-  likes: ILikes[];
+  likes: string[];
   title: string;
   view: number;
-  writer: string;
+  writer: {
+    nickname: string;
+    id: string;
+  };
   img: Iimage[];
   _id: string;
 }

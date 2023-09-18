@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Modal, Skeleton } from "antd";
+import { Dropdown, Modal, Skeleton } from "antd";
 import {
   EyeOutlined,
   FieldTimeOutlined,
@@ -8,6 +8,7 @@ import {
   LikeOutlined,
   ShareAltOutlined,
   LikeFilled,
+  MoreOutlined,
 } from "@ant-design/icons";
 import { useRecoilValue } from "recoil";
 import Image from "next/image";
@@ -16,7 +17,6 @@ import { FaPen } from "react-icons/fa";
 
 import CreateTime from "../../components/utils/createTime";
 import { userState } from "../../store/index";
-import { useGrid } from "../../components/utils/responsive";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { detailPost, increaseLikes, writeComments } from "../../lib/apis/post";
 import { IPost } from "../../lib/interface/post";
@@ -27,43 +27,36 @@ export default function Details() {
   const router = useRouter();
   const postId = router.query.id as string;
   const user = useRecoilValue(userState);
-  const { isMobile, isTablet, isDesktop } = useGrid();
 
   const [comments, setCommnets] = useState("");
   const [isModal, setIsModal] = useState(false);
 
   const queryClient = useQueryClient();
-
-  // const items = [
-  //   {
-  //     key: "1",
-  //     label: (
-  //       <a
-  //         onClick={() =>
-  //           router.push({
-  //             pathname: "/post/edit",
-  //             query: { id: detail.id },
-  //           })
-  //         }
-  //       >
-  //         수정
-  //       </a>
-  //     ),
-  //   },
-  //   {
-  //     key: "2",
-  //     label: <a onClick={() => setIsModal(true)}>삭제</a>,
-  //   },
-  // ];
-  // const [detail, setDetail] = useState<any>([]);
-  // const test = async () => {
-  //   await detailPost(postId).then((res) => setDetail(res))
-  // }
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
-
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
-  console.log(detail);
+  const items = [
+    {
+      key: "1",
+      label: (
+        <a
+          onClick={() =>
+            router.push({
+              pathname: "/post/edit",
+              // query: { id: detail.id },
+            })
+          }
+        >
+          수정
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: <a onClick={() => setIsModal(true)}>삭제</a>,
+    },
+  ];
+
   // console.log(detail.data?.map((v) => v.img));
   useEffect(() => {
     // try {
@@ -107,7 +100,7 @@ export default function Details() {
   // 게시글 좋아요
   const handleOnLike = async () => {
     const requset = {
-      username: user.nickname,
+      id: user.id,
       postId: postId,
     };
     setLikes.mutate(requset);
@@ -126,9 +119,10 @@ export default function Details() {
   // 댓글 작성
   const insertComments = async () => {
     const requset = {
-      content: comments,
-      writer: user.nickname,
+      userId: user.id,
+      nickname: user.nickname,
       postId: postId,
+      content: comments,
     };
     if (comments.trim() !== "") {
       setComments.mutate(requset);
@@ -156,35 +150,27 @@ export default function Details() {
   return (
     <div className="detailPostBox">
       <div className="detailPostBox_header">
-        {detail.isLoading ? (
-          <Skeleton.Input active block />
-        ) : (
-          <h2>{detail.isSuccess && detail.isSuccess && detail.data[0].title}</h2>
-        )}
+        {detail.isSuccess ? <h2>{detail.data[0].title}</h2> : <Skeleton.Input active block />}
         <div className="detailPostBox-header__container">
-          {detail.isLoading ? (
-            <Skeleton.Input active size="small" />
-          ) : (
+          {detail.isSuccess ? (
             <div className="flex gap-5">
               <div className="detailPostBox-header__container-text">
                 <FieldTimeOutlined />
-                <span>{detail.isSuccess && CreateTime(detail.isSuccess && detail.data[0].createTime)}</span>
+                <span>{CreateTime(detail.data[0].createTime)}</span>
               </div>
               <div className="detailPostBox-header__container-text">
                 <EyeOutlined />
-                <span> {detail.isSuccess && detail.data[0].view}</span>
+                <span> {detail.data[0].view}</span>
               </div>
             </div>
-          )}
-          {detail.isLoading ? (
-            <Skeleton.Input active size="small" />
           ) : (
-            <p>{detail.isSuccess && detail.data[0].writer}</p>
+            <Skeleton.Input active size="small" />
           )}
+          {detail.isSuccess ? <p>{detail.data[0].writer.nickname}</p> : <Skeleton.Input active size="small" />}
         </div>
       </div>
       <div className="detailPostBox_contents">
-        {detail.isLoading ? <Skeleton.Input active block /> : <p>{detail.isSuccess && detail.data[0].content}</p>}
+        {detail.isSuccess ? <p>{detail.data[0].content}</p> : <Skeleton.Input active block />}
         {detail.isSuccess &&
           !imgConfirm &&
           detail.data.map((v) =>
@@ -194,7 +180,7 @@ export default function Details() {
       <div className="detail-footer">
         <div className="detail-footer__container">
           <button onClick={() => handleOnLike()} className="detail-footer__container like">
-            {detail.isSuccess && detail.data[0].likes.includes(user.nickname) ? <LikeFilled /> : <LikeOutlined />}
+            {detail.isSuccess && detail.data[0].likes.includes(user.id) ? <LikeFilled /> : <LikeOutlined />}
             <span>{detail.isSuccess && detail.data[0].likes.length}</span>
           </button>
           <div className="detail-footer__container comment">
@@ -202,18 +188,14 @@ export default function Details() {
             <span>{detail.isSuccess && detail.data[0].comments.length}</span>
           </div>
         </div>
-        {/* {detail.isSuccess && detail.data[0].writeStatus ? (
+        <div className="flex items-baseline gap-3">
           <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
-            <p style={{ cursor: "pointer" }}>
-              <EllipsisOutlined style={{ fontSize: "24px", fontWeight: "bold" }} />
-            </p>
+            <MoreOutlined className="font-bold cursor-pointer" />
           </Dropdown>
-        ) : null} */}
-        <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)} className="detailPostBox_share">
-          <p>
+          <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)} className="detailPostBox_share">
             <ShareAltOutlined />
-          </p>
-        </button>
+          </button>
+        </div>
       </div>
       <div className="comments">
         <div className="comments_input__container">
@@ -232,10 +214,10 @@ export default function Details() {
         <div className="comments__container">
           {detail.isSuccess &&
             detail.data.map((i) =>
-              i.comments.map((v) => (
-                <div className="comments__wrapper">
+              i.comments.map((v, index) => (
+                <div className="comments__wrapper" key={index}>
                   <div className="comments__wrapper-info">
-                    <p>{v.writer}</p>
+                    <p>{v.nickname}</p>
                     <p> · </p>
                     <p>{CreateTime(v.writeTime)}</p>
                   </div>

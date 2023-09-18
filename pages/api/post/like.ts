@@ -4,20 +4,20 @@ import Post from "../../../lib/db/model/post";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { username, postId } = req.body;
+    const { id, postId } = req.body;
 
     dbConnect();
 
     const checkingId = await Post.find({ _id: postId });
 
-    const isLike = checkingId && checkingId[0]?.likes.includes(username);
+    const isLike = checkingId && checkingId[0]?.likes.includes(id);
 
     if (!isLike) {
       await Post.updateOne(
         { _id: postId },
         {
           $push: {
-            likes: username,
+            likes: id,
           },
         }
       );
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         { _id: postId },
         {
           $pull: {
-            likes: username,
+            likes: id,
           },
         }
       );
