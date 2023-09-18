@@ -3,7 +3,7 @@ import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { Avatar, Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 import CreateTime from "../components/utils/createTime";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
-import { Skeleton, Space } from "antd";
+import { Skeleton } from "antd";
 
 export default function Main() {
   const router = useRouter();
@@ -28,7 +28,6 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
-  console.log(posts);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>

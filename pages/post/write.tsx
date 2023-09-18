@@ -26,7 +26,7 @@ export default function New() {
       alert("로그인 후 이용 가능합니다.");
       router.push("/user/signin");
     }
-  }, []);
+  }, [user.logging]);
 
   const setPost = useMutation(writePost, {
     onError: (data, error, variables) => {
@@ -125,7 +125,6 @@ export default function New() {
           <button className="cancle" onClick={() => handleOnCancle()}>
             취소
           </button>
-
           <button onClick={() => handleOnSubmit()}>등록</button>
         </div>
       </div>

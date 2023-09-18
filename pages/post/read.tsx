@@ -45,7 +45,7 @@ export default function Details() {
           onClick={() =>
             router.push({
               pathname: "/post/edit",
-              // query: { id: detail.id },
+              query: { id: postId },
             })
           }
         >

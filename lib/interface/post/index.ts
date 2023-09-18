@@ -1,4 +1,4 @@
-interface Iimage {
+export interface Iimage {
   filename: string;
   path: string;
   type: string;

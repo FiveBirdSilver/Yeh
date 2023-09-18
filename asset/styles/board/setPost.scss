@@ -29,13 +29,13 @@
   font-size: $fontSize12;
 }
 
-.postImages {
+.post__preview {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 10px;
 
-  .postImages_wrap {
+  .post__preview-wrapper {
     position: relative;
 
     button {
@@ -44,10 +44,10 @@
       right: 0;
       color: white;
       z-index: 1;
-      background-color: rgb(0, 0, 0, 0.5);
+      background-color: rgb(0, 0, 0, 0.7);
       border: none;
-      font-size: $fontSize20;
-      padding: 1px 12px;
+      font-size: $fontSize12;
+      padding: 1px 7px;
       cursor: pointer;
     }
 
