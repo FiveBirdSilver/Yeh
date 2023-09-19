@@ -11,6 +11,7 @@
   padding: 0 10rem;
   box-shadow: 0 3px 3px -3px $medium_gray;
   background-color: #ffffff;
+  z-index: 10;
   @include tablet {
     padding: 0 2rem;
   }
