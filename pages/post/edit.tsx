@@ -69,7 +69,7 @@ export default function Edit() {
       images?.forEach((file) => formData.append("image", file._id));
       newImages?.forEach((file) => formData.append("newImage", file));
     }
-    setUpdate.mutate(formData);
+    await setUpdate.mutate(formData);
     router.push(`/post/read?id=${router.query.id}`);
   };
 

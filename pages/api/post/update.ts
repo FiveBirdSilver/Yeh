@@ -44,8 +44,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     };
 
-    const data = await readFile(req);
+    const deleteFile = async (req: string) => {
+      const path = imgStoragePath + "/" + req;
+      await fs.unlink(path);
+    };
 
+    const data = await readFile(req);
     const images = (props: any) => {
       const result = props?.map((v: any) => ({
         filename: v.newFilename,
@@ -57,19 +61,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     dbConnect();
 
-    const id = data.fields.postId && data.fields.postId[0];
-    const title = data.fields.title && data.fields.title[0];
-    const content = data.fields.content && data.fields.content[0];
+    const id = data?.fields?.postId![0];
+    const title = data?.fields?.title![0];
+    const content = data?.fields?.content![0];
     const image = data.fields.image;
 
     const checkingId = await Post.find({ _id: id });
     const existingImg = checkingId[0].img.filter((v: any) => image?.includes(v._id.toString()));
+    const deleteImg = checkingId[0].img.filter((v: any) => !image?.includes(v._id.toString()));
 
     let uploadImg = [];
     if (data.files.newImage) uploadImg = [...images(data.files.newImage), ...existingImg];
     else uploadImg = existingImg;
 
     await Post.updateOne({ _id: id }, { title: title, content: content, img: uploadImg });
+    await deleteImg.map((v: any) => deleteFile(v.filename));
 
     res.status(200).json("OK");
   }
