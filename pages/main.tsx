@@ -28,6 +28,7 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
+  console.log(posts);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -60,7 +61,7 @@ export default function Main() {
                     <span className="post-card__text_container title">{i.title}</span>
                     <span className="post-card__text_container content">{i.content}</span>
                   </div>
-                  {i.img && (
+                  {i.img.length !== 0 && (
                     <div className="post-card__image">
                       <div className="post-card__image_wrapper">
                         <Image src={`/../public/uploads/${i.img[0]?.filename}`} fill alt="postImage" />

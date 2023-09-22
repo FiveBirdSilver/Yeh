@@ -54,7 +54,6 @@ export default function Edit() {
     onSuccess: (data, variables) => {
       alert("등록되었습니다.");
       queryClient.invalidateQueries("posts");
-      // router.push("/main");
     },
   });
 
@@ -71,6 +70,7 @@ export default function Edit() {
       newImages?.forEach((file) => formData.append("newImage", file));
     }
     setUpdate.mutate(formData);
+    router.push(`/post/read?id=${router.query.id}`);
   };
 
   // 이미지 첨부 핸들러
@@ -81,7 +81,15 @@ export default function Edit() {
     setNewimages(allFiles);
   };
 
-  // 이미지 미리보기 핸들러
+  // 기존 이미지 삭제 핸들러
+  const handleOnImageDelete = (id: string) => {
+    if (detail.isSuccess) {
+      const existingImg = images.filter((v) => v._id !== id);
+      setImages(existingImg);
+    }
+  };
+
+  //새 이미지 미리보기 핸들러
   const handleOnPreview = (img: File) => {
     const imgUrl = URL.createObjectURL(img);
     return (
@@ -91,6 +99,7 @@ export default function Edit() {
       </div>
     );
   };
+
   return (
     <div className="post">
       <input
@@ -124,16 +133,10 @@ export default function Edit() {
           !imgConfirm &&
           images.map((i) => (
             <div className="post__preview-wrapper" key={i._id}>
-              <button onClick={() => setImages(detail.data[0].img.filter((v) => i._id !== v._id))}>X</button>
+              <button onClick={() => handleOnImageDelete(i._id)}>X</button>
               <Image src={`/../public/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />
             </div>
           ))}
-        {/* {preView?.map((image, id) => (
-          <div className="post__preview-wrapper" key={id}>
-            <button onClick={() => setPreView(preView.filter((i) => i !== image))}>X</button>
-            <Image src={image} fill alt="게시글사진" />
-          </div>
-        ))} */}
         {newImages?.map((img) => handleOnPreview(img))}
       </div>
       <div className="post-submit">

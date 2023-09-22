@@ -37,6 +37,7 @@ export default function Details() {
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
+  console.log(detail);
   const items = [
     {
       key: "1",

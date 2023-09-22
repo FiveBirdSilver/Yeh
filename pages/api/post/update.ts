@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../../lib/db/connet";
-
 import formidable from "formidable";
 import fs from "fs/promises";
 import dbConnect from "../../../lib/db/connet";
@@ -65,27 +63,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const image = data.fields.image;
 
     const checkingId = await Post.find({ _id: id });
-    const existingImg = checkingId[0].img;
-    const uploadImg = existingImg.map((x: any) => ({ ...x, _id: image?.includes(x._id) }));
-    console.log(uploadImg);
+    const existingImg = checkingId[0].img.filter((v: any) => image?.includes(v._id.toString()));
 
-    await Post.updateOne({ _id: id }, { title: title, content: content });
-    // const postData = new Post({
-    //   img: data.files.image ? images(data.files.image) : null,
-    //   userId: data.fields.id && data.fields.id[0],
-    //   writer: {
-    //     id: data.fields.id && data.fields.id[0],
-    //     nickname: data.fields.writer && data.fields.writer[0],
-    //   },
-    //   title: data.fields.title && data.fields.title[0],
-    //   content: data.fields.content && data.fields.content[0],
-    //   createTime: new Date(),
-    //   view: 0,
-    //   likes: [],
-    //   comments: [],
-    // });
+    let uploadImg = [];
+    if (data.files.newImage) uploadImg = [...images(data.files.newImage), ...existingImg];
+    else uploadImg = existingImg;
 
-    // await Post.create(postData);
+    await Post.updateOne({ _id: id }, { title: title, content: content, img: uploadImg });
 
     res.status(200).json("OK");
   }
