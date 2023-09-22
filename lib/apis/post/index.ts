@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IComments, IDeleteComments, ILikes } from "../../interface/post";
+import { IComments, IDeleteComments, IDeletePost, ILikes } from "../../interface/post";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
@@ -38,6 +38,12 @@ const updatePost = async (data: FormData) => {
   if (result.status === 200) return result.data;
 };
 
+// 게시글 삭제
+const dropPost = async (data: IDeletePost) => {
+  const result = await axios.delete("/api/post/delete", { data });
+  if (result.status === 200) return result.data;
+};
+
 // 댓글 작성
 const writeComments = async (data: IComments) => {
   const result = await axios.post("/api/post/comment", data);
@@ -56,4 +62,4 @@ const increaseLikes = async (data: ILikes) => {
   if (result.status === 200) return result.data;
 };
 
-export { viewPosts, writePost, updatePost, detailPost, writeComments, dropComments, increaseLikes };
+export { viewPosts, writePost, updatePost, dropPost, detailPost, writeComments, dropComments, increaseLikes };

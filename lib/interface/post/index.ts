@@ -1,3 +1,25 @@
+export interface IPost {
+  comments: IComments[];
+  content: string;
+  createTime: any;
+  likes: string[];
+  title: string;
+  view: number;
+  writer: {
+    nickname: string;
+    id: string;
+  };
+  img: Iimage[];
+  _id: string;
+}
+
+export interface IDeletePost {
+  postId: string;
+}
+export interface ILikes {
+  id: string;
+  postId: string;
+}
 export interface Iimage {
   filename: string;
   path: string;
@@ -17,24 +39,4 @@ export interface IComments {
 export interface IDeleteComments {
   postId: string;
   commentId: string;
-}
-
-export interface ILikes {
-  id: string;
-  postId: string;
-}
-
-export interface IPost {
-  comments: IComments[];
-  content: string;
-  createTime: any;
-  likes: string[];
-  title: string;
-  view: number;
-  writer: {
-    nickname: string;
-    id: string;
-  };
-  img: Iimage[];
-  _id: string;
 }

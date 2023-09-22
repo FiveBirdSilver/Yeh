@@ -16,7 +16,7 @@ import dynamic from "next/dynamic";
 
 import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { detailPost, increaseLikes } from "../../lib/apis/post";
+import { detailPost, dropPost, increaseLikes } from "../../lib/apis/post";
 import CreateTime from "../../components/utils/createTime";
 import { IPost } from "../../lib/interface/post";
 
@@ -80,11 +80,33 @@ export default function Details() {
 
   // 게시글 좋아요
   const handleOnLike = async () => {
+    if (user.id === "") {
+      router.push("/user/signin");
+    } else {
+      const requset = {
+        id: user.id,
+        postId: postId,
+      };
+      setLikes.mutate(requset);
+    }
+  };
+
+  // 게시글 삭제
+  const setDelete = useMutation(dropPost, {
+    onError: (data, error, variables) => {
+      alert("잠시 후 다시 시도해주세요.");
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries("detail");
+    },
+  });
+
+  const handleOnDelete = async () => {
     const requset = {
-      id: user.id,
       postId: postId,
     };
-    setLikes.mutate(requset);
+    await setDelete.mutate(requset);
+    router.push("/main");
   };
 
   return (
@@ -140,6 +162,18 @@ export default function Details() {
         </div>
       </div>
       {detail.isSuccess && <Comments data={detail.data[0].comments} />}
+      <Modal
+        title="게시글 삭제"
+        open={isModal}
+        centered
+        okText="확인"
+        cancelText="취소"
+        onOk={() => handleOnDelete()}
+        onCancel={() => setIsModal(false)}
+        width={300}
+      >
+        <p>삭제하시겠습니까?</p>
+      </Modal>
     </div>
   );
 }
