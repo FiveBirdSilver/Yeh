@@ -1,3 +1,6 @@
+export interface IKeyword {
+  keyword: string;
+}
 export interface IPost {
   comments: IComments[];
   content: string;

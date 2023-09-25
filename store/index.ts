@@ -1,6 +1,7 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 import { LoggingType } from "../lib/interface/user";
+import { IKeyword } from "../lib/interface/post";
 
 const sessionStorage = typeof window !== "undefined" ? window.sessionStorage : undefined;
 const { persistAtom } = recoilPersist({ key: "yeh", storage: sessionStorage });
@@ -13,23 +14,9 @@ const userState = atom<LoggingType>({
 });
 
 // 검색 State
-const keywordState = atom({
+const keywordState = atom<IKeyword>({
   key: "keywordState",
-  // default: { posts: null, postCount: 0 },
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+  default: { keyword: "" },
 });
 
-// 페이지 State
-// const pageState = atom({
-//   key: "pageState",
-//   default: 1,
-// });
-
-// 테마 State
-// const themeState = atom({
-//   key: "themeState",
-//   default: false,
-//   effects_UNSTABLE: [persistAtom],
-// });
 export { userState, keywordState };

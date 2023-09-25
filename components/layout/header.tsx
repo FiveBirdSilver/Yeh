@@ -32,8 +32,8 @@ export default function Header() {
 
   const handleOnSubmit = () => {
     if (keyword !== "") {
-      setKeywordState(keyword);
-    } else alert("검색어를 입력해주세요.");
+      setKeywordState({ keyword: keyword });
+    }
   };
 
   const handleOnKeyDown = async (e: { code: string }) => {
@@ -45,9 +45,10 @@ export default function Header() {
   // 로고 버튼 클릭 핸들러
   const handleOnInit = () => {
     router.push("/main", undefined, { shallow: true });
-    setKeywordState(null);
+    setKeywordState({ keyword: "" });
     setKeyword("");
   };
+
   return (
     <div className="header">
       <div className="header-wrap">

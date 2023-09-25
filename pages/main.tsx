@@ -13,12 +13,15 @@ import CreateTime from "../components/utils/createTime";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
 import { Skeleton } from "antd";
+import { useRecoilValue } from "recoil";
+import { keywordState } from "../store";
 
 export default function Main() {
   const router = useRouter();
   const { ref, inView } = useInView();
 
-  const posts = useQuery<IPost[]>(["posts"], async () => await viewPosts());
+  const keyword = useRecoilValue(keywordState);
+  const posts = useQuery<IPost[]>(["posts", keyword], async () => await viewPosts(keyword));
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,7 +31,6 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
-  console.log(posts);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
