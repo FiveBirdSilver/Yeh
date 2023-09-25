@@ -56,6 +56,7 @@ export default function Header() {
         <div className="header-search">
           <button onClick={() => handleOnSubmit()} className="font">
             <SearchOutlined
+              className="header-search__icon"
               style={{
                 fontSize: "22px",
                 fontWeight: "bold",

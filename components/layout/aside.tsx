@@ -6,13 +6,14 @@ import { IPost } from "../../lib/interface/post";
 
 export default function Aside() {
   const router = useRouter();
-  const rankigData = useQuery<IPost[]>(["posts"], async () => await viewPosts());
+  const post = useQuery<IPost[]>(["posts"], async () => await viewPosts({ keyword: "" }));
+  const ranking = post.data?.slice(0, 10);
 
   return (
     <div className="ranking">
       <p className="rankingTitle">실시간 인기글</p>
-      {rankigData.data &&
-        rankigData.data?.map((i, index: number) => (
+      {post.isSuccess &&
+        ranking?.map((i, index: number) => (
           <div
             className="rankingContents"
             key={i._id}

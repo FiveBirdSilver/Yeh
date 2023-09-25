@@ -10,9 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     dbConnect();
 
     const checkUser = await User.find({ userId: id });
-
-    if (await bcrypt.compare(password, checkUser[0]?.password)) {
-      res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname, id: checkUser[0]?._id } });
-    } else res.status(200).json("Access Denied");
+    try {
+      if (await bcrypt.compare(password, checkUser[0]?.password)) {
+        res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname, id: checkUser[0]?._id } });
+      } else res.status(200).json({ message: "Access Denied" });
+    } catch {
+      res.status(200).json({ message: "ERROR" });
+    }
   }
 }

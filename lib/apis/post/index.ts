@@ -3,7 +3,7 @@ import { IComments, IDeleteComments, IDeletePost, IKeyword, ILikes } from "../..
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
-const viewPosts = async (data: IKeyword) => {
+const viewPosts = async (data: any) => {
   const result = await axios.post("/api/post/view", data);
   if (result.status === 200) return result.data;
 };

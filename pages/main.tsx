@@ -21,7 +21,23 @@ export default function Main() {
   const { ref, inView } = useInView();
 
   const keyword = useRecoilValue(keywordState);
-  const posts = useQuery<IPost[]>(["posts", keyword], async () => await viewPosts(keyword));
+  // const posts = useQuery<IPost[]>(["posts", keyword], async () => await viewPosts(keyword));
+
+  const posts = useInfiniteQuery<IPost[]>(
+    ["posts", keyword],
+    async ({ pageParam = 1 }) => {
+      const res = await viewPosts(keyword, pageParam);
+      return {
+        list: res,
+        page: pageParam,
+      };
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage?.page + 1;
+      },
+    }
+  );
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
