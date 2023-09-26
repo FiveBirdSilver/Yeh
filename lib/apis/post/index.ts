@@ -3,9 +3,13 @@ import { IComments, IDeleteComments, IDeletePost, IKeyword, ILikes } from "../..
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
-const viewPosts = async (data: any) => {
-  const result = await axios.post("/api/post/view", data);
-  if (result.status === 200) return result.data;
+const viewPosts = async (data: IKeyword, page: number) => {
+  const limit = 20;
+  const keyword = data.keyword;
+
+  const result = await axios.get(`/api/post/view?keyword=${keyword}&page=${page}&limit=${limit}`);
+  if (result.status === 200 && result.data.message === "OK") return result.data.data;
+  else return null;
 };
 
 // 상세 게시글 조회
