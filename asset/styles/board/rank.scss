@@ -9,14 +9,14 @@
     margin: 0 30px;
   }
 
-  .rankingTitle {
+  .ranking__title {
     text-align: center;
     font-size: $fontSize16;
     font-weight: bold;
     margin: 10px;
   }
 
-  .rankingContents {
+  .ranking__contents {
     display: flex;
     width: 13.5rem;
     margin: 15px 0px;
@@ -42,5 +42,10 @@
       margin: 0;
       padding-left: 20px;
     }
+  }
+  .ranking_loading {
+    min-width: 70px;
+    height: 27px;
+    margin-bottom: 2px;
   }
 }
