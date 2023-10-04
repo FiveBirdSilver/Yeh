@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { LoggingType } from "../lib/interface/user";
+import { LoggingType } from "../lib/interface/auth";
 import { IKeyword } from "../lib/interface/post";
 
 const sessionStorage = typeof window !== "undefined" ? window.sessionStorage : undefined;

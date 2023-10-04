@@ -8,8 +8,8 @@ import axios from "axios";
 
 import logo from "../../public/static/logo.png";
 import { userState } from "../../store/index";
-import { LoggingType, SignInType } from "../../lib/interface/user";
-import { signIn } from "../../lib/apis/user";
+import { LoggingType, SignInType } from "../../lib/interface/auth";
+import { signIn } from "../../lib/apis/auth";
 
 export default function Signiin() {
   const router = useRouter();
@@ -28,12 +28,11 @@ export default function Signiin() {
   const onSubmit = async (data: SignInType) => {
     try {
       const response = await signIn(data);
-      console.log(response);
       if (response.message === "Access") {
         setLogging({ nickname: response.data.nickname, id: response.data.id, logging: true });
         router.push("/main");
       } else if (response.message === "Access Denied") {
-        alert("아이디나 비밀번호가 일치하지 않습니다.");
+        alert("일치하는 계정정보가 없습니다.");
       }
     } catch (error) {
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");

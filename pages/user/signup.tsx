@@ -5,8 +5,8 @@ import * as yup from "yup";
 import Image from "next/image";
 
 import logo from "../../public/static/logo.png";
-import { signUp } from "../../lib/apis/user";
-import { SignUpType } from "../../lib/interface/user";
+import { signUp } from "../../lib/apis/auth";
+import { SignUpType } from "../../lib/interface/auth";
 import { AxiosError } from "axios";
 
 export default function Signup() {
