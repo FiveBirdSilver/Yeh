@@ -1,14 +1,17 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
 
 import { userState } from "../../store/index";
 import { writePost } from "../../lib/apis/post";
 import { useMutation, useQueryClient } from "react-query";
+import { GetServerSideProps } from "next";
 
-export default function New() {
+export default function New(props: { cookies: string }) {
+  console.log(props.cookies);
+
   const user = useRecoilValue(userState);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -20,6 +23,7 @@ export default function New() {
 
   const inputRefTitle = useRef<HTMLInputElement | null>(null);
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
+  const formData = new FormData();
 
   useEffect(() => {
     if (!user.logging) {
@@ -28,20 +32,18 @@ export default function New() {
     }
   }, [user.logging]);
 
-  const setPost = useMutation(writePost, {
-    onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
-    },
-    onSuccess: (data, variables) => {
-      alert("등록되었습니다.");
-      queryClient.invalidateQueries("posts");
-      router.push("/main");
-    },
-  });
+  // const setPost = useMutation(wr, {
+  //   onError: (data, error, variables) => {
+  //     alert("잠시 후 다시 시도해주세요.");
+  //   },
+  //   onSuccess: (data, variables) => {
+  //     alert("등록되었습니다.");
+  //     queryClient.invalidateQueries("posts");
+  //     router.push("/main");
+  //   },
+  // });
 
   const handleOnSubmit = async () => {
-    const formData = new FormData();
-
     if (title === "") {
       return inputRefTitle?.current?.focus();
     } else if (content === "") {
@@ -54,7 +56,13 @@ export default function New() {
     formData.append("content", content);
     images?.forEach((file) => formData.append("image", file));
 
-    setPost.mutate(formData);
+    // setPost.mutate(formData);
+    const submit = await writePost(formData, props.cookies);
+
+    if (submit === "Access") {
+      alert("등록되었습니다.");
+      // router.push("/main");
+    } else alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
   };
 
   // 이미지 첨부 핸들러
@@ -144,3 +152,12 @@ export default function New() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req.cookies?.accessToken || "";
+  return {
+    props: {
+      cookies: cookies,
+    },
+  };
+};

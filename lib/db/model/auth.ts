@@ -2,13 +2,9 @@ import mongoose, { Schema, models } from "mongoose";
 
 export const UserSchema = new Schema(
   {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     userId: {
       type: String,
+      unique: true,
       required: true,
     },
     nickname: {
@@ -16,6 +12,13 @@ export const UserSchema = new Schema(
       required: true,
     },
     password: {
+      type: String,
+      required: true,
+    },
+    refreshToken: {
+      type: String,
+    },
+    email: {
       type: String,
       required: true,
     },

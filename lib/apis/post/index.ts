@@ -1,5 +1,8 @@
 import axios from "axios";
+import { useCookies } from "react-cookie";
 import { IComments, IDeleteComments, IDeletePost, IKeyword, ILikes } from "../../interface/post";
+
+// const [cookie] = useCookies(["accessToken"]);
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
@@ -23,9 +26,10 @@ const detailPost = async (params: string) => {
 };
 
 // 게시글 작성
-const writePost = async (data: FormData) => {
+const writePost = async (data: FormData, params: string) => {
   const result = await axios.post("/api/post/write", data, {
     headers: {
+      Authorization: params,
       "Content-Type": "multipart/form-data",
     },
   });

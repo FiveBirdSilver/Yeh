@@ -60,12 +60,13 @@ export default function Comments(props: Props) {
     },
   });
 
-  // 댓글 삭제
+  // 댓글 삭제 모달 ON
   const handleOnDeleteComment = async (id: string) => {
     setIsModal(true);
     setCommnetId(id);
   };
 
+  // 댓글 삭제 확인
   const handleOnDeleteCommentOk = async () => {
     const request = {
       postId: postId,
@@ -102,7 +103,7 @@ export default function Comments(props: Props) {
                 <div className="comments__wrapper-info">
                   <p>{v.nickname}</p>
                   <p> · </p>
-                  <p>{CreateTime(v.writeTime)}</p>
+                  <p>{CreateTime(v.writeTime!)}</p>
                 </div>
                 <p className="comments__wrapper-content">{v.content}</p>
               </div>
