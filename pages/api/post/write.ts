@@ -15,13 +15,11 @@ export const config = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    const token = req.headers.authorization!;
+  const token = req.headers.authorization!;
 
-    if (verify(token).message === "Access Denied") {
-      res.status(200).json(verify(token).message);
-    }
-
+  if (verify(token).message === "Access Denied") {
+    res.status(200).json(verify(token).message);
+  } else {
     const options: formidable.Options = {};
     const imgStoragePath = "./public/uploads";
 

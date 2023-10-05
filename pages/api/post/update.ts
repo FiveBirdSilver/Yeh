@@ -3,6 +3,7 @@ import formidable from "formidable";
 import fs from "fs/promises";
 import dbConnect from "../../../lib/db/connet";
 import Post from "../../../lib/db/model/post";
+import { verify } from "../../../lib/jwt";
 
 export const config = {
   api: {
@@ -11,7 +12,10 @@ export const config = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
+  const token = req.headers.authorization!;
+  if (verify(token).message === "Access Denied") {
+    res.status(200).json(verify(token).message);
+  } else {
     const options: formidable.Options = {};
     const imgStoragePath = "./public/uploads";
 
@@ -77,6 +81,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await Post.updateOne({ _id: id }, { title: title, content: content, img: uploadImg });
     await deleteImg.map((v: any) => deleteFile(v.filename));
 
-    res.status(200).json("OK");
+    res.status(200).json("Access");
   }
 }

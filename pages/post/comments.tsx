@@ -9,14 +9,16 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import CreateTime from "../../components/utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";
 import { userState } from "../../store";
-import { IComments, IPost } from "../../lib/interface/post";
+import { IComments } from "../../lib/interface/post";
+import { GetServerSideProps } from "next";
 
 interface Props {
   data: IComments[];
+  cookie: string;
 }
 
 export default function Comments(props: Props) {
-  const { data } = props;
+  const { data, cookie } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
   const postId = router.query.id as string;
@@ -27,13 +29,18 @@ export default function Comments(props: Props) {
   const [isModal, setIsModal] = useState<boolean>(false);
 
   // 댓글 작성
-  const setComments = useMutation(writeComments, {
+  const setComments = useMutation<string | void, unknown, IComments>((requset) => writeComments(requset, cookie), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries("detail");
-      setCommnets("");
+    onSuccess: async (data, variables) => {
+      if (data === "Access") {
+        queryClient.invalidateQueries("detail");
+        setCommnets("");
+      } else {
+        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+        await router.push("/user/signin");
+      }
     },
   });
 
@@ -98,7 +105,7 @@ export default function Comments(props: Props) {
         </div>
         <div className="comments__container">
           {data.map((v, index) => (
-            <div className="flex justify-between w-full">
+            <div className="flex justify-between items-end w-full">
               <div className="comments__wrapper" key={index}>
                 <div className="comments__wrapper-info">
                   <p>{v.nickname}</p>

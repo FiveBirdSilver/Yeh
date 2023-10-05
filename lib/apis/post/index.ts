@@ -37,9 +37,10 @@ const writePost = async (data: FormData, params: string) => {
 };
 
 // 게시글 수정
-const updatePost = async (data: FormData) => {
+const updatePost = async (data: FormData, params: string) => {
   const result = await axios.post("/api/post/update", data, {
     headers: {
+      Authorization: params,
       "Content-Type": "multipart/form-data",
     },
   });
@@ -53,8 +54,12 @@ const dropPost = async (data: IDeletePost) => {
 };
 
 // 댓글 작성
-const writeComments = async (data: IComments) => {
-  const result = await axios.post("/api/post/comment", data);
+const writeComments = async (data: IComments, params: string) => {
+  const result = await axios.post("/api/post/comment", data, {
+    headers: {
+      Authorization: params,
+    },
+  });
   if (result.status === 200) return result.data;
 };
 

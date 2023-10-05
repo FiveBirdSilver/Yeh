@@ -13,6 +13,7 @@ import {
 import { useRecoilValue } from "recoil";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { GetServerSideProps } from "next";
 
 import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -22,10 +23,11 @@ import { IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
 
-export default function Details() {
+export default function Details(props: { cookies: string }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const postId = router.query.id as string;
+  const cookie = props.cookies;
   const user = useRecoilValue(userState);
 
   const [isModal, setIsModal] = useState<boolean>(false);
@@ -161,7 +163,7 @@ export default function Details() {
           ) : null}
         </div>
       </div>
-      {detail.isSuccess && <Comments data={detail.data[0].comments} />}
+      {detail.isSuccess && <Comments data={detail.data[0].comments} cookie={cookie} />}
       <Modal
         title="게시글 삭제"
         open={isModal}
@@ -177,3 +179,12 @@ export default function Details() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req.cookies?.accessToken || "";
+  return {
+    props: {
+      cookies: cookies,
+    },
+  };
+};

@@ -10,11 +10,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { GetServerSideProps } from "next";
 
 export default function New(props: { cookies: string }) {
-  console.log(props.cookies);
-
   const user = useRecoilValue(userState);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const cookie = props.cookies;
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,7 +22,6 @@ export default function New(props: { cookies: string }) {
 
   const inputRefTitle = useRef<HTMLInputElement | null>(null);
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
-  const formData = new FormData();
 
   useEffect(() => {
     if (!user.logging) {
@@ -32,18 +30,24 @@ export default function New(props: { cookies: string }) {
     }
   }, [user.logging]);
 
-  // const setPost = useMutation(wr, {
-  //   onError: (data, error, variables) => {
-  //     alert("잠시 후 다시 시도해주세요.");
-  //   },
-  //   onSuccess: (data, variables) => {
-  //     alert("등록되었습니다.");
-  //     queryClient.invalidateQueries("posts");
-  //     router.push("/main");
-  //   },
-  // });
+  const setPost = useMutation<string | void, unknown, FormData>((formData) => writePost(formData, cookie), {
+    onError: (data, error, variables) => {
+      alert("잠시 후 다시 시도해주세요.");
+    },
+    onSuccess: (data, variables) => {
+      if (data === "Access") {
+        alert("등록되었습니다.");
+        queryClient.invalidateQueries("posts");
+        router.push("/main");
+      } else {
+        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+        router.push("/user/signin");
+      }
+    },
+  });
 
   const handleOnSubmit = async () => {
+    const formData = new FormData();
     if (title === "") {
       return inputRefTitle?.current?.focus();
     } else if (content === "") {
@@ -56,13 +60,7 @@ export default function New(props: { cookies: string }) {
     formData.append("content", content);
     images?.forEach((file) => formData.append("image", file));
 
-    // setPost.mutate(formData);
-    const submit = await writePost(formData, props.cookies);
-
-    if (submit === "Access") {
-      alert("등록되었습니다.");
-      // router.push("/main");
-    } else alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+    setPost.mutate(formData);
   };
 
   // 이미지 첨부 핸들러

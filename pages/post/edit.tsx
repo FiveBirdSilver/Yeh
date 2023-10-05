@@ -3,17 +3,19 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Modal } from "antd";
-import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
+import { GetServerSideProps } from "next";
 
 import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { IPost, Iimage } from "../../lib/interface/post";
 import { detailPost, updatePost } from "../../lib/apis/post";
 
-export default function Edit() {
+export default function Edit(props: { cookies: string }) {
   const router = useRouter();
   const postId = router.query.id as string;
   const user = useRecoilValue(userState);
+  const cookie = props.cookies;
 
   const [title, setTitle] = useState<string>(""); // props 제목
   const [content, setContent] = useState<string>(""); // props 내용
@@ -47,13 +49,17 @@ export default function Edit() {
   }, []);
 
   // 게시글 수정
-  const setUpdate = useMutation(updatePost, {
+  const setUpdate = useMutation<string | void, unknown, FormData>((formData) => updatePost(formData, cookie), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
-    onSuccess: (data, variables) => {
-      alert("등록되었습니다.");
-      queryClient.invalidateQueries("posts");
+    onSuccess: async (data, variables) => {
+      if (data === "Access") {
+        await queryClient.invalidateQueries("posts");
+      } else {
+        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+        await router.push("/user/signin");
+      }
     },
   });
 
@@ -162,3 +168,12 @@ export default function Edit() {
         </Modal>
       ) : null} */
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req.cookies?.accessToken || "";
+  return {
+    props: {
+      cookies: cookies,
+    },
+  };
+};
