@@ -16,8 +16,8 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
     <>
       <Header />
       <div className="section">
-        {pathRoute()}
         {children}
+        {pathRoute()}
       </div>
       {/* <AppFooter /> */}
     </>

@@ -48,8 +48,13 @@ const updatePost = async (data: FormData, params: string) => {
 };
 
 // 게시글 삭제
-const dropPost = async (data: IDeletePost) => {
-  const result = await axios.delete("/api/post/delete", { data });
+const dropPost = async (data: IDeletePost, params: string) => {
+  const result = await axios.delete("/api/post/delete", {
+    data,
+    headers: {
+      Authorization: params,
+    },
+  });
   if (result.status === 200) return result.data;
 };
 
@@ -64,14 +69,23 @@ const writeComments = async (data: IComments, params: string) => {
 };
 
 // 댓글 삭제
-const dropComments = async (data: IDeleteComments) => {
-  const result = await axios.delete("/api/post/comment", { data });
+const dropComments = async (data: IDeleteComments, params: string) => {
+  const result = await axios.delete("/api/post/comment", {
+    data,
+    headers: {
+      Authorization: params,
+    },
+  });
   if (result.status === 200) return result.data;
 };
 
 // 좋아요
-const increaseLikes = async (data: ILikes) => {
-  const result = await axios.post("/api/post/like", data);
+const increaseLikes = async (data: ILikes, params: string) => {
+  const result = await axios.post("/api/post/like", data, {
+    headers: {
+      Authorization: params,
+    },
+  });
   if (result.status === 200) return result.data;
 };
 

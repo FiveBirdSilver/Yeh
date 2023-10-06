@@ -5,7 +5,6 @@ import { verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization!;
-  console.log(token);
   if (verify(token).message === "Access Denied") {
     res.status(200).json(verify(token).message);
   } else {

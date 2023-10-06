@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import CreateTime from "../../components/utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";
 import { userState } from "../../store";
-import { IComments } from "../../lib/interface/post";
+import { IComments, IDeleteComments } from "../../lib/interface/post";
 import { GetServerSideProps } from "next";
 
 interface Props {
@@ -58,14 +58,22 @@ export default function Comments(props: Props) {
   };
 
   // 댓글 삭제
-  const deleteComments = useMutation(dropComments, {
-    onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
-    },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries("detail");
-    },
-  });
+  const deleteComments = useMutation<string | void, unknown, IDeleteComments>(
+    (request) => dropComments(request, cookie),
+    {
+      onError: (data, error, variables) => {
+        alert("잠시 후 다시 시도해주세요.");
+      },
+      onSuccess: (data, variables) => {
+        if (data === "Access") {
+          queryClient.invalidateQueries("detail");
+        } else {
+          alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+          router.push("/user/signin");
+        }
+      },
+    }
+  );
 
   // 댓글 삭제 모달 ON
   const handleOnDeleteComment = async (id: string) => {

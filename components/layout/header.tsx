@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import logo from "../../public/static/logo.png";
 import { keywordState, userState } from "../../store/index";
+import { signOut } from "../../lib/apis/auth";
 
 export default function Header() {
   const router = useRouter();
@@ -15,8 +16,10 @@ export default function Header() {
   const [user, setUser] = useRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
-  const logout = () => {
-    setUser({ nickname: "", id: "", logging: false });
+  const logout = async () => {
+    const res = await signOut(user.id);
+    console.log(res);
+    // setUser({ nickname: "", id: "", logging: false });
   };
 
   const items = [

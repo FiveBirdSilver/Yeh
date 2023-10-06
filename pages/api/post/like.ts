@@ -1,9 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/db/connet";
 import Post from "../../../lib/db/model/post";
+import { verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
+  const token = req.headers.authorization!;
+  if (verify(token).message === "Access Denied") {
+    res.status(200).json(verify(token).message);
+  } else {
     const { id, postId } = req.body;
 
     dbConnect();
@@ -31,6 +35,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       );
     }
-    res.status(200).json("OK");
+    res.status(200).json("Access");
   }
 }

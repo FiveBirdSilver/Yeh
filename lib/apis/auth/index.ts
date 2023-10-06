@@ -14,4 +14,9 @@ const signIn = async (data: SignInType) => {
   if (result.status === 200) return result.data;
 };
 
-export { signUp, signIn };
+// 로그아웃
+const signOut = async (data: string) => {
+  const result = await axios.post("/api/auth/signout", data);
+  if (result.status === 200) return result.data;
+};
+export { signUp, signIn, signOut };

@@ -19,7 +19,7 @@ import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { detailPost, dropPost, increaseLikes } from "../../lib/apis/post";
 import CreateTime from "../../components/utils/createTime";
-import { IPost } from "../../lib/interface/post";
+import { IDeletePost, ILikes, IPost } from "../../lib/interface/post";
 
 const Comments = dynamic(() => import("./comments"));
 
@@ -71,12 +71,17 @@ export default function Details(props: { cookies: string }) {
   };
 
   // 게시글 좋아요
-  const setLikes = useMutation(increaseLikes, {
+  const setLikes = useMutation<string | void, unknown, ILikes>((requset) => increaseLikes(requset, cookie), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries("detail");
+      if (data === "Access") {
+        queryClient.invalidateQueries("detail");
+      } else {
+        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+        router.push("/user/signin");
+      }
     },
   });
 
@@ -94,12 +99,17 @@ export default function Details(props: { cookies: string }) {
   };
 
   // 게시글 삭제
-  const setDelete = useMutation(dropPost, {
+  const setDelete = useMutation<string | void, unknown, IDeletePost>((requset) => dropPost(requset, cookie), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries("detail");
+      if (data === "Access") {
+        queryClient.invalidateQueries("detail");
+      } else {
+        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
+        router.push("/user/signin");
+      }
     },
   });
 

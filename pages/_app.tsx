@@ -1,13 +1,13 @@
-import "../asset/styles/main.scss";
+import type { AppProps, AppContext, AppInitialProps } from "next/app";
+import { useState } from "react";
 import Head from "next/head";
-import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { RecoilRoot } from "recoil";
+
 import RecoilNexus from "recoil-nexus";
-import { getRecoil, setRecoil } from "recoil-nexus";
+import { RecoilRoot } from "recoil";
 import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "../asset/styles/main.scss";
 import "tailwindcss/tailwind.css";
 
 import { useGrid } from "../components/utils/responsive";
@@ -20,10 +20,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   const [theme, setTheme] = useState(false);
   const { isDesktop } = useGrid();
-
-  // useEffect(() => {
-  //   setTheme(getRecoil(themeState));
-  // }, []);
 
   const handleThemeToggle = () => {
     setTheme((prev) => !prev);
@@ -66,15 +62,28 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>YEH</title>
       </Head>
-      {/* <ThemeProvider theme={!theme ? lightTheme : darkTheme}> */}
       <RecoilRoot>
         <RecoilNexus />
-        {/* <GlobalStyles /> */}
         {PageRouter()}
         {isDesktop && SideBtn}
       </RecoilRoot>
-      {/* </ThemeProvider> */}
     </QueryClientProvider>
   );
 }
 export default MyApp;
+
+// MyApp.getServerSideProps = async (context: AppContext): Promise<AppInitialProps & { token?: string }> => {
+//   const { ctx, Component } = context;
+
+//   let pageProps = {};
+//   if (Component.getInitialProps) {
+//     pageProps = await Component.getInitialProps(ctx);
+//   }
+//   const req = ctx.req as Request;
+//   const token = req.cookies.accessToken;
+
+//   console.log(token);
+//   pageProps = { ...pageProps, token };
+
+//   return { pageProps };
+// };

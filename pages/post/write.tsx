@@ -36,7 +36,6 @@ export default function New(props: { cookies: string }) {
     },
     onSuccess: (data, variables) => {
       if (data === "Access") {
-        alert("등록되었습니다.");
         queryClient.invalidateQueries("posts");
         router.push("/main");
       } else {
