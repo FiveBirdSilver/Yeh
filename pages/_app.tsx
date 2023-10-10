@@ -1,18 +1,15 @@
-import type { AppProps, AppContext, AppInitialProps } from "next/app";
+import type { AppProps } from "next/app";
 import { useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-
 import RecoilNexus from "recoil-nexus";
 import { RecoilRoot } from "recoil";
 import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
 import { QueryClient, QueryClientProvider } from "react-query";
+
 import "../asset/styles/main.scss";
 import "tailwindcss/tailwind.css";
-
 import { useGrid } from "../components/utils/responsive";
-// import { lightTheme, darkTheme, GlobalStyles } from "../components/utils/themeConfig";
-// import { themeState } from "../store";
 
 const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
 
@@ -23,7 +20,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const handleThemeToggle = () => {
     setTheme((prev) => !prev);
-    // setRecoil(themeState, (prev: any) => !prev);
   };
 
   const handleOnTop = () => {
@@ -35,7 +31,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     switch (pages) {
       case "signin":
       case "signup":
-      case "postNew":
         return <Component {...pageProps} />;
       default:
         return (
@@ -71,19 +66,3 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 export default MyApp;
-
-// MyApp.getServerSideProps = async (context: AppContext): Promise<AppInitialProps & { token?: string }> => {
-//   const { ctx, Component } = context;
-
-//   let pageProps = {};
-//   if (Component.getInitialProps) {
-//     pageProps = await Component.getInitialProps(ctx);
-//   }
-//   const req = ctx.req as Request;
-//   const token = req.cookies.accessToken;
-
-//   console.log(token);
-//   pageProps = { ...pageProps, token };
-
-//   return { pageProps };
-// };

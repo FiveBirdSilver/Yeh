@@ -19,7 +19,6 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
         {children}
         {pathRoute()}
       </div>
-      {/* <AppFooter /> */}
     </>
   );
 };

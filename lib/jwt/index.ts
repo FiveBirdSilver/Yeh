@@ -4,7 +4,7 @@ const secret = process.env.JWT_SECRET!;
 // access Token 발급
 const access = (id: string) => {
   return jwt.sign({ id: id }, secret, {
-    expiresIn: "10m",
+    expiresIn: "1m",
     algorithm: "HS256",
   });
 };
@@ -23,6 +23,7 @@ const verify = (token: string) => {
   try {
     decoded = jwt.verify(token, secret);
     return {
+      id: decoded.id,
       message: "Access",
     };
   } catch (error: any) {

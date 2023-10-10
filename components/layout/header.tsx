@@ -7,7 +7,8 @@ import { useState } from "react";
 
 import logo from "../../public/static/logo.png";
 import { keywordState, userState } from "../../store/index";
-import { signOut } from "../../lib/apis/auth";
+import { getToken, signOut } from "../../lib/apis/auth";
+import { useQuery } from "react-query";
 
 export default function Header() {
   const router = useRouter();
@@ -16,8 +17,10 @@ export default function Header() {
   const [user, setUser] = useRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
+  // console.log("Expiration", Expiration);
+
   const logout = async () => {
-    const res = await signOut(user.id);
+    const res = await signOut();
     try {
       if (res.message === "Access") {
         setUser({ nickname: "", id: "", logging: false });
@@ -27,6 +30,16 @@ export default function Header() {
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
   };
+
+  useQuery(["token", router], async () => await getToken(), {
+    // refetchInterval: 60 * 1000 * 10 - 1000,
+    refetchInterval: 10000,
+    refetchOnMount: true,
+    onSuccess: (data) => {
+      console.log(data);
+      if (data === "Access Denied") logout();
+    },
+  });
 
   const items = [
     {

@@ -15,8 +15,15 @@ const signIn = async (data: SignInType) => {
 };
 
 // 로그아웃
-const signOut = async (data: string) => {
-  const result = await axios.post("/api/auth/signout", data);
+const signOut = async () => {
+  const result = await axios.get("/api/auth/signout");
   if (result.status === 200) return result.data;
 };
-export { signUp, signIn, signOut };
+
+// 토큰 재발급
+const getToken = async () => {
+  const result = await axios.get("/api/auth/getToken");
+  if (result.status === 200) return result.data;
+};
+
+export { signUp, signIn, signOut, getToken };
