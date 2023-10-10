@@ -9,13 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     if (req.method === "POST") {
-      const { userId, nickname, postId, content } = req.body;
+      const { nickname, postId, content } = req.body;
 
       dbConnect();
 
       const update = {
         content: content,
-        userId: userId,
         nickname: nickname,
         writeTime: new Date(),
       };

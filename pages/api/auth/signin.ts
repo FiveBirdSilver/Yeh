@@ -27,6 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000).toUTCString()}; HttpOnly`
     );
 
-    res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname, id: checkUser[0]?._id } });
+    res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname } });
   }
 }

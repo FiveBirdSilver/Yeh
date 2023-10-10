@@ -5,6 +5,7 @@ import { access, verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.cookie?.split("=")[1] || "";
+  console.log("token", token);
   if (verify(token).message === "Access Denied") {
     res.status(200).json(verify(token).message);
   } else {

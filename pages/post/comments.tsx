@@ -10,7 +10,6 @@ import CreateTime from "../../components/utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";
 import { userState } from "../../store";
 import { IComments, IDeleteComments } from "../../lib/interface/post";
-import { GetServerSideProps } from "next";
 
 interface Props {
   data: IComments[];
@@ -47,7 +46,6 @@ export default function Comments(props: Props) {
   // 댓글 작성
   const insertComments = async () => {
     const requset = {
-      userId: user.id,
       nickname: user.nickname,
       postId: postId,
       content: comments,
@@ -104,8 +102,8 @@ export default function Comments(props: Props) {
             value={comments}
             onChange={(e) => setCommnets(e.target.value)}
             onKeyUp={(e) => handleOnKeyup(e)}
-            onClick={() => !user.logging && router.push("/user/signin")}
-            className={user.logging ? `comments_input` : `comments_input not-logging`}
+            onClick={() => !user.nickname && router.push("/user/signin")}
+            className={user.nickname ? `comments_input` : `comments_input not-logging`}
           />
           <button onClick={() => insertComments()}>
             <FaPen />
@@ -113,7 +111,7 @@ export default function Comments(props: Props) {
         </div>
         <div className="comments__container">
           {data.map((v, index) => (
-            <div className="flex justify-between items-end w-full">
+            <div className="flex items-end justify-between w-full">
               <div className="comments__wrapper" key={index}>
                 <div className="comments__wrapper-info">
                   <p>{v.nickname}</p>

@@ -12,6 +12,4 @@ export interface SignInType {
 
 export interface LoggingType {
   nickname: string;
-  id: string;
-  logging: boolean;
 }

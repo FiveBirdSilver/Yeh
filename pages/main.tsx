@@ -97,7 +97,7 @@ export default function Main() {
                       )}
                     </div>
                     <div className="post-card__info">
-                      <p className="post-card__info writer">{i.writer.nickname}</p>
+                      <p className="post-card__info writer">{i.writer}</p>
                       <div className="post-card__info_wrapper">
                         <p>
                           <FieldTimeOutlined className="post-card__info_wrapper icon" />

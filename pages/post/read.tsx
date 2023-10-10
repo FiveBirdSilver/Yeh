@@ -87,11 +87,11 @@ export default function Details(props: { cookies: string }) {
 
   // 게시글 좋아요
   const handleOnLike = async () => {
-    if (user.id === "") {
+    if (user.nickname === "") {
       router.push("/user/signin");
     } else {
       const requset = {
-        id: user.id,
+        nickname: user.nickname,
         postId: postId,
       };
       setLikes.mutate(requset);
@@ -121,6 +121,7 @@ export default function Details(props: { cookies: string }) {
     router.push("/main");
   };
 
+  console.log(detail.data);
   return (
     <div className="detailPostBox">
       <div className="detailPostBox_header">
@@ -140,7 +141,7 @@ export default function Details(props: { cookies: string }) {
           ) : (
             <Skeleton.Input active size="small" />
           )}
-          {detail.isSuccess ? <p>{detail.data[0].writer.nickname}</p> : <Skeleton.Input active size="small" />}
+          {detail.isSuccess ? <p>{detail.data[0]?.writer}</p> : <Skeleton.Input active size="small" />}
         </div>
       </div>
       <div className="detailPostBox_contents">
@@ -154,7 +155,7 @@ export default function Details(props: { cookies: string }) {
       <div className="detail-footer">
         <div className="detail-footer__container">
           <button onClick={() => handleOnLike()} className="detail-footer__container like">
-            {detail.isSuccess && detail.data[0].likes.includes(user.id) ? <LikeFilled /> : <LikeOutlined />}
+            {detail.isSuccess && detail.data[0].likes.includes(user.nickname) ? <LikeFilled /> : <LikeOutlined />}
             <span>{detail.isSuccess && detail.data[0].likes.length}</span>
           </button>
           <div className="detail-footer__container comment">
@@ -166,7 +167,7 @@ export default function Details(props: { cookies: string }) {
           <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)}>
             <ShareAltOutlined className="detail-footer__container share" />
           </button>
-          {detail.isSuccess && detail.data[0].writer.id === user.id ? (
+          {detail.isSuccess && detail.data[0].writer === user.nickname ? (
             <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
               <MoreOutlined className="font-bold cursor-pointer" />
             </Dropdown>

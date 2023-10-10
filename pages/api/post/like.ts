@@ -8,20 +8,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (verify(token).message === "Access Denied") {
     res.status(200).json(verify(token).message);
   } else {
-    const { id, postId } = req.body;
+    const { nickname, postId } = req.body;
 
     dbConnect();
 
     const checkingId = await Post.find({ _id: postId });
 
-    const isLike = checkingId && checkingId[0]?.likes.includes(id);
+    const isLike = checkingId && checkingId[0]?.likes.includes(nickname);
 
     if (!isLike) {
       await Post.updateOne(
         { _id: postId },
         {
           $push: {
-            likes: id,
+            likes: nickname,
           },
         }
       );
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         { _id: postId },
         {
           $pull: {
-            likes: id,
+            likes: nickname,
           },
         }
       );

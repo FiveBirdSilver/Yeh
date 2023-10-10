@@ -17,13 +17,11 @@ export default function Header() {
   const [user, setUser] = useRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
-  // console.log("Expiration", Expiration);
-
   const logout = async () => {
     const res = await signOut();
     try {
       if (res.message === "Access") {
-        setUser({ nickname: "", id: "", logging: false });
+        setUser({ nickname: "" });
       }
     } catch (e) {
       console.log(e);
@@ -32,12 +30,12 @@ export default function Header() {
   };
 
   useQuery(["token", router], async () => await getToken(), {
-    // refetchInterval: 60 * 1000 * 10 - 1000,
-    refetchInterval: 10000,
-    refetchOnMount: true,
+    refetchInterval: 60 * 1000 * 10 - 1000,
     onSuccess: (data) => {
-      console.log(data);
-      if (data === "Access Denied") logout();
+      if (data === "Access Denied") {
+        // alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        logout();
+      }
     },
   });
 
@@ -54,6 +52,7 @@ export default function Header() {
 
   const handleOnSubmit = () => {
     if (keyword !== "") {
+      router.push("/main", undefined, { shallow: true });
       setKeywordState({ keyword: keyword });
     }
   };
@@ -96,7 +95,7 @@ export default function Header() {
         </div>
       </div>
       <div className="header__buttons">
-        {user?.logging ? (
+        {user?.nickname ? (
           <Dropdown menu={{ items }} placement="bottom" className="user-dropdown">
             <Button className="user__button">{user.nickname}</Button>
           </Dropdown>

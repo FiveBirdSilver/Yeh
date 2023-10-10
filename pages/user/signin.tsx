@@ -29,7 +29,7 @@ export default function Signiin() {
     try {
       const response = await signIn(data);
       if (response.message === "Access") {
-        setLogging({ nickname: response.data.nickname, id: response.data.id, logging: true });
+        setLogging({ nickname: response.data.nickname });
         router.push("/main");
       } else if (response.message === "Access Denied") {
         alert("일치하는 계정정보가 없습니다.");

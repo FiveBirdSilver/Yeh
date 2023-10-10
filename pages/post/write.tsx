@@ -24,11 +24,11 @@ export default function New(props: { cookies: string }) {
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    if (!user.logging) {
+    if (!user.nickname) {
       alert("로그인 후 이용 가능합니다.");
       router.push("/user/signin");
     }
-  }, [user.logging]);
+  }, [user.nickname]);
 
   const setPost = useMutation<string | void, unknown, FormData>((formData) => writePost(formData, cookie), {
     onError: (data, error, variables) => {
@@ -53,7 +53,6 @@ export default function New(props: { cookies: string }) {
       return inputRefContent?.current?.focus();
     }
 
-    formData.append("id", user.id);
     formData.append("writer", user.nickname);
     formData.append("title", title);
     formData.append("content", content);

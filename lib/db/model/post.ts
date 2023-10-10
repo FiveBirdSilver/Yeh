@@ -1,9 +1,9 @@
 import mongoose, { Schema, models } from "mongoose";
 
-const WriterSchema = new mongoose.Schema({
-  id: String,
-  nickname: String,
-});
+// const WriterSchema = new mongoose.Schema({
+//   id: String,
+//   nickname: String,
+// });
 
 const ImageSchema = new mongoose.Schema({
   filename: String,
@@ -36,7 +36,7 @@ export const PostSchema = new Schema(
       required: true,
     },
     writer: {
-      type: WriterSchema,
+      type: String,
       required: true,
     },
     view: {

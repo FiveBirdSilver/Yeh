@@ -8,10 +8,7 @@ export interface IPost {
   likes: string[];
   title: string;
   view: number;
-  writer: {
-    nickname: string;
-    id: string;
-  };
+  writer: string;
   img: Iimage[];
   _id: string;
 }
@@ -20,7 +17,7 @@ export interface IDeletePost {
   postId: string;
 }
 export interface ILikes {
-  id: string;
+  nickname: string;
   postId: string;
 }
 export interface Iimage {
@@ -32,7 +29,6 @@ export interface Iimage {
 
 export interface IComments {
   content: string;
-  userId: string;
   nickname: string;
   postId: string;
   writeTime?: Date;
