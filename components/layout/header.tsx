@@ -18,8 +18,14 @@ export default function Header() {
 
   const logout = async () => {
     const res = await signOut(user.id);
-    console.log(res);
-    // setUser({ nickname: "", id: "", logging: false });
+    try {
+      if (res.message === "Access") {
+        setUser({ nickname: "", id: "", logging: false });
+      }
+    } catch (e) {
+      console.log(e);
+      alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+    }
   };
 
   const items = [
