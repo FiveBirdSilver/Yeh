@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import logo from "../../public/static/logo.png";
 import { signUp } from "../../lib/apis/auth";
-import { SignUpType } from "../../lib/interface/auth";
+import { ISignUP } from "../../lib/interface/auth";
 import { AxiosError } from "axios";
 
 export default function Signup() {
@@ -14,7 +14,6 @@ export default function Signup() {
 
   // 회원가입 정보 유효성 검사 및 에러 메시지 출력
   const formSchema = yup.object({
-    id: yup.string().required("아이디는 필수 입력 정보입니다"),
     email: yup.string().required("이메일은 필수 입력 정보입니다 입력해주세요").email("이메일 형식이 아닙니다."),
     password: yup
       .string()
@@ -33,10 +32,10 @@ export default function Signup() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<SignUpType>({ mode: "onChange", resolver: yupResolver(formSchema) });
+  } = useForm<ISignUP>({ mode: "onChange", resolver: yupResolver(formSchema) });
 
   // 회원가입 정보 제출
-  const onSubmit = async (data: SignUpType) => {
+  const onSubmit = async (data: ISignUP) => {
     try {
       const response = await signUp(data);
       if (response === "OK") {
@@ -57,9 +56,9 @@ export default function Signup() {
         <span>조직문화의 개선과 소통을 위해 지금 시작해보세요</span>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="sign-up__contents">
-        <label htmlFor="id">아이디</label>
-        <input id="id" type="text" {...register("id")} placeholder="아이디를 입력해주세요" autoComplete="off" />
-        {errors.id && <p>{errors.id.message}</p>}
+        <label htmlFor="email">이메일</label>
+        <input id="email" type="email" placeholder="이메일을 입력해주세요" {...register("email")} autoComplete="off" />
+        {errors.email && <p>{errors.email.message}</p>}
         <label htmlFor="password">비밀번호</label>
         <input
           id="password"
@@ -85,9 +84,6 @@ export default function Signup() {
           autoComplete="off"
         />
         {errors.nickname && <p>{errors.nickname.message}</p>}
-        <label htmlFor="email">이메일</label>
-        <input id="email" type="email" placeholder="이메일을 입력해주세요" {...register("email")} autoComplete="off" />
-        {errors.email && <p>{errors.email.message}</p>}
         <button type="submit" className="sign-up__button">
           가입하기
         </button>

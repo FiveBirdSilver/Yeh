@@ -5,12 +5,12 @@ import { verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.cookie?.split("=")[1] || "";
-  const id = verify(token).id;
-  if (id) {
+  const email = verify(token).email;
+  if (email) {
     dbConnect();
     res.setHeader("Set-Cookie", `accessToken=; Path=/; Expires=${new Date(Date.now() - 1).toUTCString()}; HttpOnly`);
 
-    await User.updateOne({ userId: id }, { $unset: { refreshToken: 1 } });
+    await User.updateOne({ email }, { $unset: { refreshToken: 1 } });
   }
 
   res.status(200).json({ message: "Access" });

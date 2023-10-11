@@ -6,20 +6,21 @@ import { access, refresh } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { id, password } = req.body;
+    const { email, password } = req.body;
 
     dbConnect();
 
-    const checkUser = await User.find({ userId: id });
-    if (checkUser.length === 0 || !bcrypt.compareSync(password, checkUser[0]?.password)) {
+    const checkUser = await User.findOne({ email });
+
+    if (checkUser === null || !bcrypt.compareSync(password, checkUser.password)) {
       res.status(200).json({ message: "Access Denied" });
     }
 
-    const accessToken = access(id);
-    const refreshToken = refresh(id);
+    const accessToken = access(email);
+    const refreshToken = refresh(email);
 
     // DB에 Refresh Token 저장
-    await User.updateOne({ userId: id }, { refreshToken });
+    await User.updateOne({ email }, { refreshToken });
 
     // Access Token은 쿠키에 담아 보내줌
     res.setHeader(
@@ -27,6 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
     );
 
-    res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname } });
+    res.status(200).json({ message: "Access", data: { nickname: checkUser.nickname } });
   }
 }

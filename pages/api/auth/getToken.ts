@@ -5,17 +5,17 @@ import { access, verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.cookie?.split("=")[1] || "";
-  console.log("token", token);
   if (verify(token).message === "Access Denied") {
-    res.status(200).json(verify(token).message);
+    res.status(200).json({ message: verify(token).message, nickname: null });
   } else {
-    const id = verify(token).id;
-    const accessToken = access(id);
+    const email = verify(token).email;
+    const checkUser = await User.findOne({ email });
+    const accessToken = access(email);
 
     res.setHeader(
       "Set-Cookie",
       `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
     );
-    res.status(200).json({ message: "Access" });
+    res.status(200).json({ message: "Access", nickname: checkUser.nickname });
   }
 }

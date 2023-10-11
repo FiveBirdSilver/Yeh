@@ -120,7 +120,6 @@ export default function Details(props: { cookies: string }) {
     router.push("/main");
   };
 
-  console.log(detail.data);
   return (
     <div className="detailPostBox">
       <div className="detailPostBox_header">

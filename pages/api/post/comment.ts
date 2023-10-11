@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else {
     if (req.method === "POST") {
       const { postId, content } = req.body;
-      const checkUser = await User.find({ userId: verify(token).id });
+      const checkUser = await User.find({ email: verify(token).email });
 
       dbConnect();
 

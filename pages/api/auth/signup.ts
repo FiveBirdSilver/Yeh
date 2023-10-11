@@ -5,11 +5,11 @@ import bcrypt from "bcrypt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { id, password, nickname, email } = req.body;
+    const { password, nickname, email } = req.body;
 
     dbConnect();
 
-    const checkExisting = await User.findOne({ id });
+    const checkExisting = await User.findOne({ email });
 
     if (checkExisting) {
       res.status(422).json("Duplication");
@@ -18,7 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const userData = new User({
       email: email,
-      userId: id,
       nickname: nickname,
       password: await bcrypt.hash(password, 12), // 비밀번호 Hash 암호화
     });

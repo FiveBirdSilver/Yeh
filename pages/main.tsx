@@ -90,7 +90,7 @@ export default function Main() {
                       {i.img.length !== 0 && (
                         <div className="post-card__image">
                           <div className="post-card__image_wrapper">
-                            <Image src={`/../public/uploads/${i.img[0]?.filename}`} fill alt="postImage" />
+                            <Image src={`/uploads/${i.img[0]?.filename}`} fill alt="postImage" />
                           </div>
                           {i.img.length > 1 && <p className="post-card__image_num">{`+${i.img.length - 1}`}</p>}
                         </div>

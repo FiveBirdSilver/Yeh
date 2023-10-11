@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     const { postId } = req.body;
-    const checkUser = await User.find({ userId: verify(token).id });
+    const checkUser = await User.find({ email: verify(token).email });
 
     dbConnect();
 

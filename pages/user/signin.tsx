@@ -8,7 +8,7 @@ import axios from "axios";
 
 import logo from "../../public/static/logo.png";
 import { userState } from "../../store/index";
-import { LoggingType, SignInType } from "../../lib/interface/auth";
+import { LoggingType, ISignIn } from "../../lib/interface/auth";
 import { signIn } from "../../lib/apis/auth";
 
 export default function Signiin() {
@@ -16,16 +16,20 @@ export default function Signiin() {
   const setLogging = useSetRecoilState<LoggingType>(userState);
 
   const formSchema = yup.object({
-    id: yup.string().required(""),
+    email: yup.string().required("").email("이메일 형식이 아닙니다."),
     password: yup.string().required(""),
   });
 
-  const { register, handleSubmit } = useForm<SignInType>({
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<ISignIn>({
     mode: "onChange",
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = async (data: SignInType) => {
+  const onSubmit = async (data: ISignIn) => {
     try {
       const response = await signIn(data);
       if (response.message === "Access") {
@@ -50,8 +54,9 @@ export default function Signiin() {
         />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="sign-in__contents">
-        <label htmlFor="id">아이디</label>
-        <input id="id" type="text" {...register("id")} placeholder="아이디를 입력해주세요" autoComplete="off" />
+        <label htmlFor="email">이메일</label>
+        <input id="email" type="email" {...register("email")} placeholder="이메일을 입력해주세요" autoComplete="off" />
+        {errors.email && <p>{errors.email.message}</p>}
         <label htmlFor="password">비밀번호</label>
         <input id="password" type="password" {...register("password")} placeholder="비밀번호를 입력해주세요" />
         <button type="submit" className="sign-in__button" style={{ marginTop: "50px" }}>
