@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/db/connet";
 import Post from "../../../lib/db/model/post";
 import { verify } from "../../../lib/jwt";
+import User from "../../../lib/db/model/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization!;
@@ -9,13 +10,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     if (req.method === "POST") {
-      const { nickname, postId, content } = req.body;
+      const { postId, content } = req.body;
+      const checkUser = await User.find({ userId: verify(token).id });
 
       dbConnect();
 
       const update = {
         content: content,
-        nickname: nickname,
+        nickname: checkUser[0].nickname,
         writeTime: new Date(),
       };
 

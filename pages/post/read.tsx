@@ -87,11 +87,10 @@ export default function Details(props: { cookies: string }) {
 
   // 게시글 좋아요
   const handleOnLike = async () => {
-    if (user.nickname === "") {
+    if (cookie === "") {
       router.push("/user/signin");
     } else {
       const requset = {
-        nickname: user.nickname,
         postId: postId,
       };
       setLikes.mutate(requset);

@@ -34,11 +34,11 @@ export default function Edit(props: { cookies: string }) {
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
   useEffect(() => {
-    if (!user.logging) {
+    if (!cookie) {
       alert("로그인 후 이용 가능합니다.");
       router.push("/user/signin");
     }
-  }, [user.logging]);
+  }, [cookie]);
 
   useEffect(() => {
     if (detail.isSuccess) {

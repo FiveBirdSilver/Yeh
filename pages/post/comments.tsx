@@ -46,7 +46,6 @@ export default function Comments(props: Props) {
   // 댓글 작성
   const insertComments = async () => {
     const requset = {
-      nickname: user.nickname,
       postId: postId,
       content: comments,
     };
@@ -102,8 +101,8 @@ export default function Comments(props: Props) {
             value={comments}
             onChange={(e) => setCommnets(e.target.value)}
             onKeyUp={(e) => handleOnKeyup(e)}
-            onClick={() => !user.nickname && router.push("/user/signin")}
-            className={user.nickname ? `comments_input` : `comments_input not-logging`}
+            onClick={() => !cookie && router.push("/user/signin")}
+            className={cookie ? `comments_input` : `comments_input not-logging`}
           />
           <button onClick={() => insertComments()}>
             <FaPen />

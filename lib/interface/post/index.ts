@@ -17,7 +17,7 @@ export interface IDeletePost {
   postId: string;
 }
 export interface ILikes {
-  nickname: string;
+  nickname?: string;
   postId: string;
 }
 export interface Iimage {
@@ -29,7 +29,7 @@ export interface Iimage {
 
 export interface IComments {
   content: string;
-  nickname: string;
+  nickname?: string;
   postId: string;
   writeTime?: Date;
   _id?: string;

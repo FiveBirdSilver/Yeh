@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Access Token은 쿠키에 담아 보내줌
     res.setHeader(
       "Set-Cookie",
-      `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000).toUTCString()}; HttpOnly`
+      `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
     );
 
     res.status(200).json({ message: "Access", data: { nickname: checkUser[0]?.nickname } });

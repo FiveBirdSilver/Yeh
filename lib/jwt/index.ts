@@ -4,7 +4,7 @@ const secret = process.env.JWT_SECRET!;
 // access Token 발급
 const access = (id: string) => {
   return jwt.sign({ id: id }, secret, {
-    expiresIn: "1m",
+    expiresIn: "10m",
     algorithm: "HS256",
   });
 };
