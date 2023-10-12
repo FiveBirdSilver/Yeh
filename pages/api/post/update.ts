@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     const options: formidable.Options = {};
-    const imgStoragePath = "./public/uploads";
+    const imgStoragePath = "/uploads";
 
     try {
       await fs.readdir(imgStoragePath);

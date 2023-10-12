@@ -140,7 +140,7 @@ export default function Edit(props: { cookies: string }) {
           images.map((i) => (
             <div className="post__preview-wrapper" key={i._id}>
               <button onClick={() => handleOnImageDelete(i._id)}>X</button>
-              <Image src={`/../public/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />
+              <Image src={`/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />
             </div>
           ))}
         {newImages?.map((img) => handleOnPreview(img))}

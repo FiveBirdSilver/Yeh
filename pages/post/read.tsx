@@ -147,7 +147,7 @@ export default function Details(props: { cookies: string }) {
         {detail.isSuccess &&
           !imgConfirm &&
           detail.data.map((v) =>
-            v.img?.map((i) => <Image src={`/../public/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />)
+            v.img?.map((i) => <Image src={`/uploads/${i.filename}`} key={i._id} fill alt="게시글사진" />)
           )}
       </div>
       <div className="detail-footer">
