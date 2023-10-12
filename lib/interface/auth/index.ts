@@ -16,3 +16,6 @@ export interface IConfirm {
   message: string;
   nickname: string;
 }
+export interface ISendEmail {
+  email: string;
+}

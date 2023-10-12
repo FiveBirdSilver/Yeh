@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ISignUP, ISignIn } from "../../interface/auth";
+import { ISignUP, ISignIn, ISendEmail } from "../../interface/auth";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 회원가입
@@ -26,4 +26,10 @@ const getToken = async () => {
   if (result.status === 200) return result.data;
 };
 
-export { signUp, signIn, signOut, getToken };
+// 인증용 이메일 전송
+const sendEmail = async (data: ISendEmail) => {
+  const result = await axios.post("/api/auth/sendEmail", data);
+  if (result.status === 200) return result.data;
+};
+
+export { signUp, signIn, signOut, getToken, sendEmail };

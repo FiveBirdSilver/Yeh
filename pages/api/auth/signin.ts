@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const checkUser = await User.findOne({ email });
 
     if (checkUser === null || !bcrypt.compareSync(password, checkUser.password)) {
-      res.status(200).json({ message: "Access Denied" });
+      return res.status(200).json({ message: "Access Denied" });
     }
 
     const accessToken = access(email);
@@ -28,6 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
     );
 
-    res.status(200).json({ message: "Access", data: { nickname: checkUser.nickname } });
+    return res.status(200).json({ message: "Access", data: { nickname: checkUser.nickname } });
   }
 }

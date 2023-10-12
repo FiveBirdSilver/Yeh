@@ -1,18 +1,20 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { message } from "antd";
 import * as yup from "yup";
 import Image from "next/image";
-import axios from "axios";
 
 import logo from "../../public/static/logo.png";
 import { userState } from "../../store/index";
 import { LoggingType, ISignIn } from "../../lib/interface/auth";
 import { signIn } from "../../lib/apis/auth";
+import { Alert } from "../../components/utils/alert";
 
 export default function Signiin() {
   const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
   const setLogging = useSetRecoilState<LoggingType>(userState);
 
   const formSchema = yup.object({
@@ -35,9 +37,7 @@ export default function Signiin() {
       if (response.message === "Access") {
         setLogging({ nickname: response.data.nickname });
         router.push("/main");
-      } else if (response.message === "Access Denied") {
-        alert("일치하는 계정정보가 없습니다.");
-      }
+      } else if (response.message === "Access Denied") Alert("warning", "일치하는 계정정보가 없습니다.");
     } catch (error) {
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
@@ -64,20 +64,9 @@ export default function Signiin() {
         </button>
       </form>
       <div className="sign-in__button_etc">
-        <button onClick={() => router.push({ pathname: "/user/userFind", query: { type: "id" } })}>아이디 찾기</button>
+        <button onClick={() => router.push("/user/sendEmail")}>비밀번호 재설정</button>
         <span>|</span>
-        <button
-          onClick={() =>
-            router.push({
-              pathname: "/user/userFind",
-              query: { type: "password" },
-            })
-          }
-        >
-          비밀번호 찾기
-        </button>
-        <span>|</span>
-        <button onClick={() => router.push("/user/signup")}>회원가입</button>
+        <button onClick={() => router.push("/user/signup")}>간편 회원가입</button>
       </div>
     </div>
   );
