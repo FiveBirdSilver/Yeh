@@ -43,9 +43,9 @@ export default function Signup() {
       }
     } catch (error) {
       const { response } = error as unknown as AxiosError;
-      if (response?.data === "Duplication") {
-        alert("이미 존재하는 계정입니다.");
-      } else alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+      if (response?.data === "Duplication account") alert("이미 존재하는 계정입니다.");
+      else if (response?.data === "Duplication nickname") alert("이미 사용중인 닉네임입니다.");
+      else alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
   };
 

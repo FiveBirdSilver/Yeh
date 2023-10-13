@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const checkingId = await Post.find({ _id: postId });
 
     if (checkingId[0]?.img.length !== 0) {
-      const path = checkingId[0]?.img.map((v: any) => "/uploads/" + v.filename);
+      const path = checkingId[0]?.img.map((v: any) => "./public/uploads/" + v.filename);
       path.map((file: any) => fs.unlink(file));
     }
 

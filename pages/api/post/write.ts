@@ -1,7 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../../lib/db/connet";
-import jwt from "jsonwebtoken";
-
 import formidable from "formidable";
 import fs from "fs/promises";
 import dbConnect from "../../../lib/db/connet";
@@ -21,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     const options: formidable.Options = {};
-    const imgStoragePath = "/uploads";
+    const imgStoragePath = "./public/uploads/";
 
     try {
       await fs.readdir(imgStoragePath);

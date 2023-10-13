@@ -12,7 +12,6 @@ const ImageSchema = new mongoose.Schema({
 });
 
 const CommentSchema = new mongoose.Schema({
-  userId: String,
   nickname: String,
   content: String,
   writeTime: Date,

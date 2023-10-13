@@ -17,6 +17,7 @@
       display: grid;
       grid-template-columns: 7fr 3fr;
       gap: 10px;
+      position: relative;
 
       > span {
         font-size: $fontSize14;
@@ -29,7 +30,23 @@
         border: 1px solid #dedede;
         border-radius: 5px;
         padding-left: 10px;
-        font-size: $fontSize14;
+        font-size: $fontSize12;
+      }
+
+      .email-find__error {
+        position: absolute;
+        bottom: -19px;
+        font-size: $fontSize11;
+        padding-left: 6px;
+        color: tomato;
+      }
+
+      .sendComplete__count {
+        color: tomato;
+        font-size: $fontSize11;
+        position: absolute;
+        right: 35%;
+        top: 30%;
       }
 
       .sendComplete__buttton {

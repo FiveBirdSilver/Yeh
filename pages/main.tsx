@@ -53,6 +53,7 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
+  console.log(posts);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
@@ -90,7 +91,8 @@ export default function Main() {
                       {i.img.length !== 0 && (
                         <div className="post-card__image">
                           <div className="post-card__image_wrapper">
-                            <Image src={`/uploads/${i.img[0]?.filename}`} fill alt="postImage" />
+                            <Image src={`/uploads/${i.img[0].filename}`} fill alt="postImage" />
+                            {/* <Image src={i.img[0]?.path} fill alt="postImage" /> */}
                           </div>
                           {i.img.length > 1 && <p className="post-card__image_num">{`+${i.img.length - 1}`}</p>}
                         </div>

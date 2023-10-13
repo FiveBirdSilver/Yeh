@@ -9,10 +9,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     dbConnect();
 
-    const checkExisting = await User.findOne({ email });
+    const checkEmail = await User.findOne({ email });
+    const checkNickname = await User.findOne({ nickname });
 
-    if (checkExisting) {
-      res.status(422).json("Duplication");
+    if (checkEmail) {
+      res.status(422).json("Duplication account");
+      return;
+    } else if (checkNickname) {
+      res.status(422).json("Duplication nickname");
       return;
     }
 

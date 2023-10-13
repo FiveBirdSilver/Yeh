@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { sendEmail } from "../../lib/apis/auth";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function UserFind() {
   const router = useRouter();
@@ -8,6 +11,42 @@ export default function UserFind() {
   const [code, setCode] = useState<string>("");
 
   const [sendComplete, setSendComplete] = useState<boolean>(false);
+  const [minutes, setMinutes] = useState<number>(3);
+  const [seconds, setSeconds] = useState<number>(0);
+
+  const formSchema = yup.object({
+    email: yup.string().required("").email("이메일 형식이 아닙니다."),
+  });
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<{ email: String }>({
+    mode: "onChange",
+    resolver: yupResolver(formSchema),
+  });
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      if (sendComplete && seconds > 0) {
+        setSeconds((prevSeconds) => prevSeconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(countdown);
+        } else {
+          setMinutes((prevMinutes) => prevMinutes - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+
+    // 컴포넌트가 언마운트되면 clearInterval로 타이머를 정리합니다.
+    return () => {
+      clearInterval(countdown);
+    };
+  }, [sendComplete, minutes, seconds]);
 
   const handleOnSend = async () => {
     const data = {
@@ -15,18 +54,17 @@ export default function UserFind() {
     };
     try {
       const res = await sendEmail(data);
-      console.log(res);
-      // setSendComplete(true);
-      // alert(`가입한 이메일 주소로 인증번호가 전송되었습니다.`);
-      // router.push("/main");
+      if (res.message === "Access Denied") {
+        alert(`등록된 이메일 주소가 아닙니다.`);
+        return;
+      } else {
+        alert(`가입한 이메일 주소로 인증번호가 전송되었습니다.`);
+        setSendComplete(true);
+      }
     } catch (err) {
       console.log(err);
       alert("잠시 후 다시 시도해 주세요.");
     }
-  };
-
-  const handleonSendKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") handleOnSend();
   };
 
   const handleOnSubmit = async () => {
@@ -39,15 +77,16 @@ export default function UserFind() {
     <div className="email-find">
       <div className="email-find__container">
         <span>가입한 이메일 주소를 입력해주세요.</span>
-        <div className="email-find__wrapper">
+        <form onSubmit={handleSubmit(handleOnSend)} className="email-find__wrapper">
           <input
             type="text"
-            name="email"
-            placeholder="example@goldenplanet.co.kr"
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyUp={(e) => handleonSendKeyUp(e)}
+            placeholder="example@gmail.com"
+            {...register("email")}
+            // onChange={(e) => setEmail(e.target.value)}
+            // onKeyUp={(e) => handleonSendKeyUp(e)}
             disabled={sendComplete}
           />
+          {errors.email && <p className="email-find__error">{errors.email.message}</p>}
           <button
             onClick={handleOnSend}
             disabled={sendComplete}
@@ -55,7 +94,7 @@ export default function UserFind() {
           >
             인증 메일 보내기
           </button>
-        </div>
+        </form>
         {sendComplete && (
           <div className="email-find__wrapper">
             <input
@@ -65,6 +104,9 @@ export default function UserFind() {
               onChange={(e) => setCode(e.target.value)}
               onKeyUp={(e) => (e.key === "Enter" ? handleOnSubmit() : null)}
             />
+            <p className="sendComplete__count">
+              {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
+            </p>
             <button onClick={handleOnSubmit} className="sendComplete__buttton">
               인증 확인
             </button>

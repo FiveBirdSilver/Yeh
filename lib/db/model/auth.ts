@@ -2,6 +2,11 @@ import mongoose, { Schema, models } from "mongoose";
 
 export const UserSchema = new Schema(
   {
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     nickname: {
       type: String,
       unique: true,
@@ -14,10 +19,8 @@ export const UserSchema = new Schema(
     refreshToken: {
       type: String,
     },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
+    authCode: {
+      type: Number,
     },
   },
   { collection: "User" }
