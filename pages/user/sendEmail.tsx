@@ -1,15 +1,15 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { sendEmail } from "../../lib/apis/auth";
+import { confirmCode, sendEmail } from "../../lib/apis/auth";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ISendEmail } from "../../lib/interface/auth";
 
 export default function UserFind() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState<string>("");
-
   const [sendComplete, setSendComplete] = useState<boolean>(false);
   const [minutes, setMinutes] = useState<number>(3);
   const [seconds, setSeconds] = useState<number>(0);
@@ -22,7 +22,7 @@ export default function UserFind() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<{ email: String }>({
+  } = useForm<ISendEmail>({
     mode: "onChange",
     resolver: yupResolver(formSchema),
   });
@@ -48,10 +48,7 @@ export default function UserFind() {
     };
   }, [sendComplete, minutes, seconds]);
 
-  const handleOnSend = async () => {
-    const data = {
-      email: email,
-    };
+  const handleOnSend = async (data: ISendEmail) => {
     try {
       const res = await sendEmail(data);
       if (res.message === "Access Denied") {
@@ -69,8 +66,21 @@ export default function UserFind() {
 
   const handleOnSubmit = async () => {
     const data = {
+      email: email,
       code: code,
     };
+    try {
+      const res = await confirmCode(data);
+      if (res.message === "Access Denied") {
+        alert(`인증 번호가 일치하지 않습니다.`);
+        return;
+      } else {
+        console.log("success");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("잠시 후 다시 시도해 주세요.");
+    }
   };
 
   return (
@@ -82,13 +92,12 @@ export default function UserFind() {
             type="text"
             placeholder="example@gmail.com"
             {...register("email")}
-            // onChange={(e) => setEmail(e.target.value)}
-            // onKeyUp={(e) => handleonSendKeyUp(e)}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={sendComplete}
           />
           {errors.email && <p className="email-find__error">{errors.email.message}</p>}
           <button
-            onClick={handleOnSend}
+            type="submit"
             disabled={sendComplete}
             className={!sendComplete ? "sendComplete__buttton" : "sendComplete__buttton not"}
           >

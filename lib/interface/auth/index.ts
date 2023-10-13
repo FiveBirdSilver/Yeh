@@ -19,3 +19,7 @@ export interface IConfirm {
 export interface ISendEmail {
   email: string;
 }
+export interface ICode {
+  email: string;
+  code: string;
+}

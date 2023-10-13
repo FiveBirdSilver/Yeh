@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ISignUP, ISignIn, ISendEmail } from "../../interface/auth";
+import { ISignUP, ISignIn, ISendEmail, ICode } from "../../interface/auth";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 회원가입
@@ -32,4 +32,10 @@ const sendEmail = async (data: ISendEmail) => {
   if (result.status === 200) return result.data;
 };
 
-export { signUp, signIn, signOut, getToken, sendEmail };
+// 인증 확인용 메일
+const confirmCode = async (data: ICode) => {
+  const result = await axios.post("/api/auth/confirmCode", data);
+  if (result.status === 200) return result.data;
+};
+
+export { signUp, signIn, signOut, getToken, sendEmail, confirmCode };

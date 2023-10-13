@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   dbConnect();
   const checkUser = await User.findOne({ email });
-
+  console.log(req.body);
   if (!checkUser) {
     return res.status(200).json({ message: "Access Denied" });
   }
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await User.updateOne({ email }, { $unset: { authCode: 1 } });
   };
 
-  setTimeout(deleteCode, 6000 * 10 * 3); // 코드 유효시간 3분 후 삭제
+  setTimeout(deleteCode, 60 * 1000 * 3); // 코드 유효시간 3분 후 삭제
 
   const mailData = {
     to: email,
