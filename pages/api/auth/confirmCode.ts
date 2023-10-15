@@ -17,9 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await User.updateOne({ email }, { refreshToken });
     res.setHeader(
       "Set-Cookie",
-      `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
+      `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 3).toUTCString()}; HttpOnly`
     );
-
     return res.status(200).json({ message: "Access" });
   } else return res.status(200).json({ message: "Access Denied" });
 }

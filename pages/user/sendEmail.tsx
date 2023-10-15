@@ -42,7 +42,7 @@ export default function UserFind() {
       }
     }, 1000);
 
-    // 컴포넌트가 언마운트되면 clearInterval로 타이머를 정리합니다.
+    // 컴포넌트가 언마운트되면 clearInterval로 타이머를 정리
     return () => {
       clearInterval(countdown);
     };
@@ -75,7 +75,11 @@ export default function UserFind() {
         alert(`인증 번호가 일치하지 않습니다.`);
         return;
       } else {
-        console.log("success");
+        router.push({
+          pathname: "/user/resetPw",
+          query: { email },
+        });
+        router.push("/user/resetPw");
       }
     } catch (err) {
       console.log(err);

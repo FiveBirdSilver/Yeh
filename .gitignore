@@ -2,7 +2,7 @@
 
 ##otenv environment variable files
 .env
-.auth.json
+/auth.json
 
 # dependencies
 /node_modules

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ISignUP, ISignIn, ISendEmail, ICode } from "../../interface/auth";
+import { ISignUP, ISignIn, ISendEmail, ICode, IResetPw } from "../../interface/auth";
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 회원가입
@@ -38,4 +38,14 @@ const confirmCode = async (data: ICode) => {
   if (result.status === 200) return result.data;
 };
 
-export { signUp, signIn, signOut, getToken, sendEmail, confirmCode };
+// 인증 확인용 메일
+const resetPw = async (data: IResetPw, params: string) => {
+  const result = await axios.post("/api/auth/resetPw", data, {
+    headers: {
+      Authorization: params,
+    },
+  });
+  if (result.status === 200) return result.data;
+};
+
+export { signUp, signIn, signOut, getToken, sendEmail, confirmCode, resetPw };

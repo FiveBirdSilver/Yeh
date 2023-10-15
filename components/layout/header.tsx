@@ -7,17 +7,19 @@ import { useEffect, useState } from "react";
 
 import logo from "../../public/static/logo.png";
 import { keywordState, userState } from "../../store/index";
-import { getToken, signOut } from "../../lib/apis/auth";
+import { getToken, sendEmail, signOut } from "../../lib/apis/auth";
 import { useQuery } from "react-query";
 import { IConfirm, LoggingType } from "../../lib/interface/auth";
 
 export default function Header() {
   const router = useRouter();
+  const pathname: string[] = router.pathname.split("/");
   const [keyword, setKeyword] = useState<string>("");
   const [user, setUser] = useRecoilState(userState);
   const resetUser = useResetRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
+  console.log(pathname);
   const logout = async () => {
     const res = await signOut();
     try {
@@ -38,17 +40,26 @@ export default function Header() {
     } else return;
   };
 
-  const confrimUser = useQuery<IConfirm>(["token", router], async () => await getToken(), {
-    refetchInterval: 60 * 1000 * 10 - 1000,
-    onSuccess: (data) => {
-      if (data.message === "Access") setUser({ nickname: data.nickname });
-      else accessExpiration();
+  useQuery<IConfirm>(
+    ["token", router],
+    async () => {
+      if (pathname[2] !== "resetPw") {
+        const token = await getToken();
+        return token;
+      }
     },
-    onError: (err) => {
-      console.log(err);
-      alert("잠시 후 다시 시도해주세요.");
-    },
-  });
+    {
+      refetchInterval: 60 * 1000 * 10 - 1000,
+      onSuccess: (data) => {
+        if (data?.message === "Access") setUser({ nickname: data.nickname });
+        else accessExpiration();
+      },
+      onError: (err) => {
+        console.log(err);
+        alert("잠시 후 다시 시도해주세요.");
+      },
+    }
+  );
 
   const items = [
     {

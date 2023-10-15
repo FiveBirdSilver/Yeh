@@ -2,7 +2,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { Modal } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { GetServerSideProps } from "next";
 

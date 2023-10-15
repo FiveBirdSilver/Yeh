@@ -14,7 +14,6 @@ import { Alert } from "../../components/utils/alert";
 
 export default function Signiin() {
   const router = useRouter();
-  const [messageApi, contextHolder] = message.useMessage();
   const setLogging = useSetRecoilState<LoggingType>(userState);
 
   const formSchema = yup.object({
