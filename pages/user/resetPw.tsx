@@ -37,6 +37,9 @@ export default function RestPW(props: { cookies: string }) {
       if (res === "Access Denied") {
         alert("유효시간이 지났습니다. 다시 시도해주세요.");
         router.push("/user/sendEmail");
+      } else {
+        alert("비밀번호가 변경되었습니다. 로그인 페이지로 이동합니다.");
+        router.push("/user/signin");
       }
     } catch (err) {
       console.log(err);

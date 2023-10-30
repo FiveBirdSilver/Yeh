@@ -10,20 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(verify(token).message);
   } else {
     const { password } = req.body;
-    console.log(password);
+    const email = verify(token).email;
+    dbConnect();
+
+    await User.updateOne({ email }, { password });
+    return res.status(200).json({ message: "Access" });
   }
-  dbConnect();
-  //   const checkUser = await User.findOne({ email });
-
-  //   if (checkUser.authCode === Number(code)) {
-  //     const accessToken = access(email);
-  //     const refreshToken = refresh(email);
-
-  //     await User.updateOne({ email }, { refreshToken });
-  //     res.setHeader(
-  //       "Set-Cookie",
-  //       `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 3).toUTCString()}; HttpOnly`
-  //     );
-  //     return res.status(200).json({ message: "Access" });
-  //   } else return res.status(200).json({ message: "Access Denied" });
 }

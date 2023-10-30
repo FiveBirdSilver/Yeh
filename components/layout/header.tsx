@@ -19,7 +19,6 @@ export default function Header() {
   const resetUser = useResetRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
-  console.log(pathname);
   const logout = async () => {
     const res = await signOut();
     try {
