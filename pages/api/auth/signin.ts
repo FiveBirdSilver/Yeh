@@ -2,14 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import dbConnect from "../../../lib/db/connet";
 import User from "../../../lib/db/model/auth";
-import { access, refresh } from "../../../lib/jwt";
+import { access, refresh, verify } from "../../../lib/jwt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  dbConnect();
+
   if (req.method === "POST") {
     const { email, password } = req.body;
-
-    dbConnect();
-
     const checkUser = await User.findOne({ email });
 
     if (checkUser === null || !bcrypt.compareSync(password, checkUser.password)) {
@@ -30,5 +29,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ]);
 
     return res.status(200).json({ message: "Access" });
+  } else if (req.method === "DELETE") {
+    const cookie = req.headers.cookie?.split(";");
+
+    if (cookie) {
+      const token = cookie[1].replace(" accessToken=", "").replace(/'/g, "");
+      const email = verify(token).email;
+      const expired = new Date(Date.now() - 1);
+
+      res.setHeader("Set-Cookie", [
+        `uid=; Path=/; Expires=${expired.toUTCString()};`,
+        `accessToken=; Path=/; Expires=${expired.toUTCString()}; HttpOnly`,
+      ]);
+
+      await User.updateOne({ email }, { $unset: { refreshToken: 1 } });
+
+      res.status(200).json({ message: "Access" });
+    }
   }
 }

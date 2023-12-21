@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Dropdown, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useSetRecoilState } from "recoil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import logo from "../../public/static/logo.png";
 import { keywordState } from "../../store/index";
@@ -16,13 +16,19 @@ import { Alert } from "../utils/alert";
 export default function Header() {
   const router = useRouter();
   const uid = Cookies.get("uid") as string;
+  const setKeywordState = useSetRecoilState<string>(keywordState);
 
   const [keyword, setKeyword] = useState<string>("");
-  const setKeywordState = useSetRecoilState(keywordState);
+  const [user, setUser] = useState<string | null>("");
+
+  useEffect(() => {
+    setUser(uid);
+  }, [uid]);
 
   const logout = async () => {
     try {
-      await signOut();
+      const response = await signOut();
+      if (response.message === "Access") setUser(null);
     } catch (err) {
       console.log(err);
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
@@ -107,9 +113,9 @@ export default function Header() {
         </div>
       </div>
       <div className="header__buttons">
-        {uid ? (
+        {user ? (
           <Dropdown menu={{ items }} placement="bottom" className="user-dropdown">
-            <Button className="user__button">{uid}</Button>
+            <Button className="user__button">{user}</Button>
           </Dropdown>
         ) : (
           <div className="flex gap-3 pr-2">

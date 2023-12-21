@@ -16,7 +16,7 @@ const signIn = async (data: ISignIn) => {
 
 // 로그아웃
 const signOut = async () => {
-  const result = await axios.get("/api/auth/signout");
+  const result = await axios.delete("/api/auth/signin");
   return result.data;
 };
 
