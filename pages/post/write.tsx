@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
 import { Modal } from "antd";
 import { InboxOutlined, DeleteFilled } from "@ant-design/icons";
+import Cookies from "js-cookie";
 
-import { userState } from "../../store/index";
 import { writePost } from "../../lib/apis/post";
 import { useMutation, useQueryClient } from "react-query";
 import { GetServerSideProps } from "next";
 
 export default function New(props: { cookies: string }) {
-  const user = useRecoilValue(userState);
   const router = useRouter();
   const queryClient = useQueryClient();
   const cookie = props.cookies;
+  const uid = Cookies.get("uid") as string;
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -53,7 +52,7 @@ export default function New(props: { cookies: string }) {
       return inputRefContent?.current?.focus();
     }
 
-    formData.append("writer", user.nickname);
+    formData.append("writer", uid);
     formData.append("title", title);
     formData.append("content", content);
     images?.forEach((file) => formData.append("image", file));

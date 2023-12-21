@@ -53,7 +53,6 @@ export default function Main() {
     color: theme.palette.text.secondary,
   }));
 
-  console.log(posts);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>

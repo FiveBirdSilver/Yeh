@@ -6,22 +6,21 @@ import { FaPen } from "react-icons/fa";
 import { useRecoilValue } from "recoil";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import CreateTime from "../../components/utils/createTime";
+import CreateTime from "../utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";
-import { userState } from "../../store";
 import { IComments, IDeleteComments } from "../../lib/interface/post";
 
 interface Props {
   data: IComments[];
   cookie: string;
+  uid: string;
 }
 
 export default function Comments(props: Props) {
-  const { data, cookie } = props;
+  const { data, cookie, uid } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
   const postId = router.query.id as string;
-  const user = useRecoilValue(userState);
 
   const [comments, setCommnets] = useState<string>("");
   const [commentId, setCommnetId] = useState<string>("");
@@ -119,7 +118,7 @@ export default function Comments(props: Props) {
                 </div>
                 <p className="comments__wrapper-content">{v.content}</p>
               </div>
-              {v.nickname === user.nickname ? (
+              {v.nickname === uid ? (
                 <button onClick={() => handleOnDeleteComment(v._id as string)} className="comments__delete">
                   삭제
                 </button>

@@ -1,20 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useSetRecoilState } from "recoil";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { message } from "antd";
 import * as yup from "yup";
 import Image from "next/image";
 
 import logo from "../../public/static/logo.png";
-import { userState } from "../../store/index";
-import { LoggingType, ISignIn } from "../../lib/interface/auth";
+import { ISignIn } from "../../lib/interface/auth";
 import { signIn } from "../../lib/apis/auth";
 import { Alert } from "../../components/utils/alert";
 
 export default function Signiin() {
   const router = useRouter();
-  const setLogging = useSetRecoilState<LoggingType>(userState);
 
   const formSchema = yup.object({
     email: yup.string().required("").email("이메일 형식이 아닙니다."),
@@ -34,10 +31,10 @@ export default function Signiin() {
     try {
       const response = await signIn(data);
       if (response.message === "Access") {
-        setLogging({ nickname: response.data.nickname });
         router.push("/main");
-      } else if (response.message === "Access Denied") Alert("warning", "일치하는 계정정보가 없습니다.");
+      } else alert("일치하는 계정정보가 없습니다.");
     } catch (error) {
+      console.log(error);
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
   };

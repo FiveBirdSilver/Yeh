@@ -15,20 +15,22 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { GetServerSideProps } from "next";
 
-import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { detailPost, dropPost, increaseLikes } from "../../lib/apis/post";
 import CreateTime from "../../components/utils/createTime";
 import { IDeletePost, ILikes, IPost } from "../../lib/interface/post";
+const Comments = dynamic(() => import("../../components/layout/comments"));
 
-const Comments = dynamic(() => import("./comments"));
+interface Props {
+  cookies: string;
+  uid: string;
+}
 
-export default function Details(props: { cookies: string }) {
+export default function Details(props: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const postId = router.query.id as string;
-  const cookie = props.cookies;
-  const user = useRecoilValue(userState);
+  const { cookies, uid } = props;
 
   const [isModal, setIsModal] = useState<boolean>(false);
   const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
@@ -71,7 +73,7 @@ export default function Details(props: { cookies: string }) {
   };
 
   // 게시글 좋아요
-  const setLikes = useMutation<string | void, unknown, ILikes>((requset) => increaseLikes(requset, cookie), {
+  const setLikes = useMutation<string | void, unknown, ILikes>((requset) => increaseLikes(requset, cookies), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
@@ -87,7 +89,7 @@ export default function Details(props: { cookies: string }) {
 
   // 게시글 좋아요
   const handleOnLike = async () => {
-    if (cookie === "") {
+    if (cookies === "") {
       router.push("/user/signin");
     } else {
       const requset = {
@@ -98,7 +100,7 @@ export default function Details(props: { cookies: string }) {
   };
 
   // 게시글 삭제
-  const setDelete = useMutation<string | void, unknown, IDeletePost>((requset) => dropPost(requset, cookie), {
+  const setDelete = useMutation<string | void, unknown, IDeletePost>((requset) => dropPost(requset, cookies), {
     onError: (data, error, variables) => {
       alert("잠시 후 다시 시도해주세요.");
     },
@@ -153,7 +155,7 @@ export default function Details(props: { cookies: string }) {
       <div className="detail-footer">
         <div className="detail-footer__container">
           <button onClick={() => handleOnLike()} className="detail-footer__container like">
-            {detail.isSuccess && detail.data[0].likes.includes(user.nickname) ? <LikeFilled /> : <LikeOutlined />}
+            {detail.isSuccess && detail.data[0].likes.includes(uid) ? <LikeFilled /> : <LikeOutlined />}
             <span>{detail.isSuccess && detail.data[0].likes.length}</span>
           </button>
           <div className="detail-footer__container comment">
@@ -165,14 +167,14 @@ export default function Details(props: { cookies: string }) {
           <button onClick={() => doCopy(`https://fivebirdsilver/${router.asPath}`)}>
             <ShareAltOutlined className="detail-footer__container share" />
           </button>
-          {detail.isSuccess && detail.data[0].writer === user.nickname ? (
+          {detail.isSuccess && detail.data[0].writer === uid ? (
             <Dropdown trigger={["click"]} menu={{ items }} placement="bottom">
               <MoreOutlined className="font-bold cursor-pointer" />
             </Dropdown>
           ) : null}
         </div>
       </div>
-      {detail.isSuccess && <Comments data={detail.data[0].comments} cookie={cookie} />}
+      {detail.isSuccess && <Comments data={detail.data[0].comments} cookie={cookies} uid={uid} />}
       <Modal
         title="게시글 삭제"
         open={isModal}
@@ -191,9 +193,11 @@ export default function Details(props: { cookies: string }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = context.req.cookies?.accessToken || "";
+  const uid = context.req.cookies?.uid || "";
   return {
     props: {
       cookies: cookies,
+      uid: uid,
     },
   };
 };

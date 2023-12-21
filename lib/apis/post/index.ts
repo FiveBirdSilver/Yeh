@@ -1,14 +1,11 @@
 import axios from "axios";
-import { useCookies } from "react-cookie";
-import { IComments, IDeleteComments, IDeletePost, IKeyword, ILikes } from "../../interface/post";
+import { IComments, IDeleteComments, IDeletePost, ILikes } from "../../interface/post";
 
-// const [cookie] = useCookies(["accessToken"]);
 axios.defaults.baseURL = "http://localhost:3000";
 
 // 메인화면 전체 게시글 조회
-const viewPosts = async (data: IKeyword, page?: number) => {
+const viewPosts = async (keyword: string, page?: number) => {
   const limit = 20;
-  const keyword = data.keyword;
 
   const result = await axios.get(`/api/post/view?keyword=${keyword}&page=${page}&limit=${limit}`);
   if (result.status === 200 && result.data.message === "OK") return result.data.data;

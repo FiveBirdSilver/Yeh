@@ -1,61 +1,52 @@
 import Image from "next/image";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { Dropdown, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { useState } from "react";
 
 import logo from "../../public/static/logo.png";
-import { keywordState, userState } from "../../store/index";
-import { getToken, sendEmail, signOut } from "../../lib/apis/auth";
+import { keywordState } from "../../store/index";
+import { getToken, signOut } from "../../lib/apis/auth";
 import { useQuery } from "react-query";
-import { IConfirm, LoggingType } from "../../lib/interface/auth";
+import { IConfirm } from "../../lib/interface/auth";
+import { Alert } from "../utils/alert";
 
 export default function Header() {
   const router = useRouter();
-  const pathname: string[] = router.pathname.split("/");
+  const uid = Cookies.get("uid") as string;
+
   const [keyword, setKeyword] = useState<string>("");
-  const [user, setUser] = useRecoilState(userState);
-  const resetUser = useResetRecoilState(userState);
   const setKeywordState = useSetRecoilState(keywordState);
 
   const logout = async () => {
-    const res = await signOut();
     try {
-      if (res.message === "Access") {
-        resetUser();
-      }
+      await signOut();
     } catch (err) {
       console.log(err);
       alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
     }
   };
 
-  const accessExpiration = async () => {
-    if (user.nickname) {
-      await router.push("/user/signin");
-      alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-      logout();
-    } else return;
-  };
-
   useQuery<IConfirm>(
-    ["token", router],
+    ["token", uid],
     async () => {
-      if (pathname[2] !== "resetPw") {
-        const token = await getToken();
-        return token;
-      }
+      const token = await getToken();
+      return token;
     },
     {
-      refetchInterval: 60 * 1000 * 10 - 1000,
-      onSuccess: (data) => {
-        if (data?.message === "Access") setUser({ nickname: data.nickname });
-        else accessExpiration();
+      staleTime: 600000, // 10분에 한 번씩 요청
+      onSuccess: (res) => {
+        if (res?.message === "Access Denied") {
+          router.push("/user/signin");
+          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+          logout();
+        }
       },
       onError: (err) => {
         console.log(err);
-        alert("잠시 후 다시 시도해주세요.");
+        Alert("잠시 후 다시 시도해주세요.");
       },
     }
   );
@@ -74,7 +65,7 @@ export default function Header() {
   const handleOnSubmit = () => {
     if (keyword !== "") {
       router.push("/main", undefined, { shallow: true });
-      setKeywordState({ keyword: keyword });
+      setKeywordState(keyword);
     }
   };
 
@@ -87,7 +78,7 @@ export default function Header() {
   // 로고 버튼 클릭 핸들러
   const handleOnInit = () => {
     router.push("/main", undefined, { shallow: true });
-    setKeywordState({ keyword: "" });
+    setKeywordState("");
     setKeyword("");
   };
 
@@ -116,9 +107,9 @@ export default function Header() {
         </div>
       </div>
       <div className="header__buttons">
-        {user.nickname ? (
+        {uid ? (
           <Dropdown menu={{ items }} placement="bottom" className="user-dropdown">
-            <Button className="user__button">{user.nickname}</Button>
+            <Button className="user__button">{uid}</Button>
           </Dropdown>
         ) : (
           <div className="flex gap-3 pr-2">

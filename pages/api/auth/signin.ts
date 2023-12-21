@@ -18,16 +18,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const accessToken = access(email);
     const refreshToken = refresh(email);
+    const expired = new Date(Date.now() + 60 * 1000 * 10);
 
     // DB에 Refresh Token 저장
     await User.updateOne({ email }, { refreshToken });
 
     // Access Token은 쿠키에 담아 보내줌
-    res.setHeader(
-      "Set-Cookie",
-      `accessToken=${accessToken}; Path=/; Expires=${new Date(Date.now() + 60 * 1000 * 10).toUTCString()}; HttpOnly`
-    );
+    await res.setHeader("Set-Cookie", [
+      `uid=${encodeURI(checkUser.nickname)};Path=/;Expires=${expired.toUTCString()};`,
+      `accessToken=${accessToken}; Path=/; Expires=${expired.toUTCString()}; HttpOnly`,
+    ]);
 
-    return res.status(200).json({ message: "Access", data: { nickname: checkUser.nickname } });
+    return res.status(200).json({ message: "Access" });
   }
 }
