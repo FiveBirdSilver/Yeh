@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (cookie) {
     const token = cookie[1].replace(" accessToken=", "").replace(/'/g, "");
     if (verify(token).message === "Access Denied") {
-      res.status(200).json({ message: verify(token).message });
+      res.status(401).json({ message: verify(token).message });
     } else {
       const email = verify(token).email;
       const checkUser = await User.findOne({ email });
@@ -22,5 +22,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json({ message: "Access" });
     }
-  }
+  } else res.status(401).json({ message: "Access Denied" });
 }

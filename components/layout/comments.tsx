@@ -9,6 +9,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import CreateTime from "../utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";
 import { IComments, IDeleteComments } from "../../lib/interface/post";
+import { AxiosError } from "axios";
+import { toastAlert } from "../utils/toastAlert";
 
 interface Props {
   data: IComments[];
@@ -29,16 +31,12 @@ export default function Comments(props: Props) {
   // 댓글 작성
   const setComments = useMutation<string | void, unknown, IComments>((requset) => writeComments(requset, cookie), {
     onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     },
     onSuccess: async (data, variables) => {
-      if (data === "Access") {
-        queryClient.invalidateQueries("detail");
-        setCommnets("");
-      } else {
-        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-        await router.push("/user/signin");
-      }
+      queryClient.invalidateQueries("detail");
+      setCommnets("");
     },
   });
 
@@ -57,16 +55,12 @@ export default function Comments(props: Props) {
   const deleteComments = useMutation<string | void, unknown, IDeleteComments>(
     (request) => dropComments(request, cookie),
     {
-      onError: (data, error, variables) => {
-        alert("잠시 후 다시 시도해주세요.");
+      onError: (error) => {
+        const { response } = error as unknown as AxiosError;
+        toastAlert({ status: response?.status });
       },
       onSuccess: (data, variables) => {
-        if (data === "Access") {
-          queryClient.invalidateQueries("detail");
-        } else {
-          alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-          router.push("/user/signin");
-        }
+        queryClient.invalidateQueries("detail");
       },
     }
   );

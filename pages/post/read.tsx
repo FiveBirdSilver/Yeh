@@ -19,6 +19,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { detailPost, dropPost, increaseLikes } from "../../lib/apis/post";
 import CreateTime from "../../components/utils/createTime";
 import { IDeletePost, ILikes, IPost } from "../../lib/interface/post";
+import { toastAlert } from "../../components/utils/toastAlert";
+import { AxiosError } from "axios";
 const Comments = dynamic(() => import("../../components/layout/comments"));
 
 interface Props {
@@ -64,53 +66,40 @@ export default function Details(props: Props) {
       navigator.clipboard
         .writeText(url)
         .then(() => {
-          alert("클립보드에 복사되었습니다.");
+          toastAlert({ status: 200, content: "클립보드에 복사되었습니다." });
         })
-        .catch(() => {
-          alert("잠시 후 다시 시도해주세요.");
+        .catch((error) => {
+          const { response } = error as unknown as AxiosError;
+          toastAlert({ status: response?.status });
         });
     }
   };
 
   // 게시글 좋아요
   const setLikes = useMutation<string | void, unknown, ILikes>((requset) => increaseLikes(requset, cookies), {
-    onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
+    onError: (error) => {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     },
     onSuccess: (data, variables) => {
-      if (data === "Access") {
-        queryClient.invalidateQueries("detail");
-      } else {
-        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-        router.push("/user/signin");
-      }
+      queryClient.invalidateQueries("detail");
     },
   });
 
   // 게시글 좋아요
   const handleOnLike = async () => {
-    if (cookies === "") {
-      router.push("/user/signin");
-    } else {
-      const requset = {
-        postId: postId,
-      };
-      setLikes.mutate(requset);
-    }
+    if (cookies) setLikes.mutate({ postId: postId });
+    else router.push("/user/signin");
   };
 
   // 게시글 삭제
   const setDelete = useMutation<string | void, unknown, IDeletePost>((requset) => dropPost(requset, cookies), {
-    onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
+    onError: (error) => {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     },
     onSuccess: (data, variables) => {
-      if (data === "Access") {
-        queryClient.invalidateQueries("detail");
-      } else {
-        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-        router.push("/user/signin");
-      }
+      queryClient.invalidateQueries("detail");
     },
   });
 

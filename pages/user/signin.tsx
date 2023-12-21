@@ -8,7 +8,8 @@ import Image from "next/image";
 import logo from "../../public/static/logo.png";
 import { ISignIn } from "../../lib/interface/auth";
 import { signIn } from "../../lib/apis/auth";
-import { Alert } from "../../components/utils/alert";
+import { toastAlert } from "../../components/utils/toastAlert";
+import { AxiosError } from "axios";
 
 export default function Signiin() {
   const router = useRouter();
@@ -32,10 +33,10 @@ export default function Signiin() {
       const response = await signIn(data);
       if (response.message === "Access") {
         router.push("/main");
-      } else alert("일치하는 계정정보가 없습니다.");
+      } else toastAlert({ status: 200, content: "일치하는 계정정보가 없습니다." });
     } catch (error) {
-      console.log(error);
-      alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     }
   };
 

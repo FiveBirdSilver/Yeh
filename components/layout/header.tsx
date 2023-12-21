@@ -11,7 +11,8 @@ import { keywordState } from "../../store/index";
 import { getToken, signOut } from "../../lib/apis/auth";
 import { useQuery } from "react-query";
 import { IConfirm } from "../../lib/interface/auth";
-import { Alert } from "../utils/alert";
+import { AxiosError } from "axios";
+import { toastAlert } from "../utils/toastAlert";
 
 export default function Header() {
   const router = useRouter();
@@ -25,34 +26,30 @@ export default function Header() {
     setUser(uid);
   }, [uid]);
 
+  // 로그 아웃
   const logout = async () => {
     try {
       const response = await signOut();
       if (response.message === "Access") setUser(null);
-    } catch (err) {
-      console.log(err);
-      alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+    } catch (error) {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     }
   };
 
+  // 토큰 재발급 함수
   useQuery<IConfirm>(
-    ["token", uid],
+    ["token"],
     async () => {
       const token = await getToken();
       return token;
     },
     {
+      enabled: uid !== undefined,
       staleTime: 600000, // 10분에 한 번씩 요청
-      onSuccess: (res) => {
-        if (res?.message === "Access Denied") {
-          router.push("/user/signin");
-          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-          logout();
-        }
-      },
-      onError: (err) => {
-        console.log(err);
-        Alert("잠시 후 다시 시도해주세요.");
+      onError: (error) => {
+        const { response } = error as unknown as AxiosError;
+        toastAlert({ status: response?.status });
       },
     }
   );
@@ -128,7 +125,10 @@ export default function Header() {
             </button>
           </div>
         )}
-        <button onClick={() => router.push("/post/write")} className="write__button">
+        <button
+          onClick={() => (user ? router.push("/post/write") : router.push("/user/signin"))}
+          className="write__button"
+        >
           글쓰기
         </button>
       </div>

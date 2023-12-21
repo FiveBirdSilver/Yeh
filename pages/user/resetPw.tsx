@@ -6,6 +6,8 @@ import * as yup from "yup";
 import { IResetPw } from "../../lib/interface/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { resetPw } from "../../lib/apis/auth";
+import { AxiosError } from "axios";
+import { toastAlert } from "../../components/utils/toastAlert";
 
 export default function RestPW(props: { cookies: string }) {
   const router = useRouter();
@@ -35,15 +37,15 @@ export default function RestPW(props: { cookies: string }) {
     try {
       const res = await resetPw(data, cookie);
       if (res === "Access Denied") {
-        alert("유효시간이 지났습니다. 다시 시도해주세요.");
+        toastAlert({ status: 200, content: "유효시간이 지났습니다. 다시 시도해주세요." });
         router.push("/user/sendEmail");
       } else {
-        alert("비밀번호가 변경되었습니다. 로그인 페이지로 이동합니다.");
+        toastAlert({ status: 200, content: "비밀번호가 변경되었습니다. 로그인 페이지로 이동합니다." });
         router.push("/user/signin");
       }
-    } catch (err) {
-      console.log(err);
-      alert("잠시 후 다시 시도해 주세요.");
+    } catch (error) {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     }
   };
 

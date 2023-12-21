@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   dbConnect();
   const checkUser = await User.findOne({ email });
-  console.log(req.body);
+
   if (!checkUser) {
     return res.status(200).json({ message: "Access Denied" });
   }
@@ -46,7 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await transporter.sendMail(mailData, (error, info) => {
     if (error) {
-      console.error(error);
       return res.status(400);
     } else {
       console.log("success", info);

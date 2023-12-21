@@ -1,22 +1,24 @@
-import type { AppProps } from "next/app";
 import { useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import RecoilNexus from "recoil-nexus";
 import { RecoilRoot } from "recoil";
+import { useGrid } from "../components/utils/responsive";
 import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastContainer } from "react-toastify";
+import type { AppProps } from "next/app";
 
+import "react-toastify/dist/ReactToastify.css";
 import "../asset/styles/main.scss";
 import "tailwindcss/tailwind.css";
-import { useGrid } from "../components/utils/responsive";
+import { AxiosError } from "axios";
 
 const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
   const [theme, setTheme] = useState(false);
-  const { isDesktop } = useGrid();
+  // const { isDesktop } = useGrid();
 
   const handleThemeToggle = () => {
     setTheme((prev) => !prev);
@@ -41,16 +43,35 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }
 
-  const SideBtn = (
-    <div className="side_btns_container">
-      <button onClick={() => handleOnTop()} className="side_btns">
-        <BsArrowBarUp className="side_btns_icons" />
-      </button>
-      <button onClick={() => handleThemeToggle()} className="side_btns">
-        {!theme ? <BsFillMoonFill className="side_btns_icons" /> : <BsFillSunFill className="side_btns_icons" />}
-      </button>
-    </div>
-  );
+  // const SideBtn = (
+  //   <div className="side_btns_container">
+  //     <button onClick={() => handleOnTop()} className="side_btns">
+  //       <BsArrowBarUp className="side_btns_icons" />
+  //     </button>
+  //     <button onClick={() => handleThemeToggle()} className="side_btns">
+  //       {!theme ? <BsFillMoonFill className="side_btns_icons" /> : <BsFillSunFill className="side_btns_icons" />}
+  //     </button>
+  //   </div>
+  // );
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        onError: (err) => {
+          console.log(err);
+          // if (err instanceof AxiosError) {
+
+          //   const status = err.response?.status;
+          //   console.log(status);
+          //   // fnTest(status as number);
+          // }
+        },
+        // retry: 0, // 0으로 설정해도 기본적으로 3번 재시도
+        // staleTime: 0,
+        // suspense: true,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -60,7 +81,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <RecoilRoot>
         <RecoilNexus />
         {PageRouter()}
-        {isDesktop && SideBtn}
+        <ToastContainer limit={1} style={{ fontSize: 12 }} />
+        {/* {isDesktop && SideBtn} */}
       </RecoilRoot>
     </QueryClientProvider>
   );

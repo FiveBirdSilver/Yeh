@@ -7,6 +7,7 @@ import Image from "next/image";
 import logo from "../../public/static/logo.png";
 import { signUp } from "../../lib/apis/auth";
 import { ISignUP } from "../../lib/interface/auth";
+import { toastAlert } from "../../components/utils/toastAlert";
 import { AxiosError } from "axios";
 
 export default function Signup() {
@@ -38,57 +39,65 @@ export default function Signup() {
   const onSubmit = async (data: ISignUP) => {
     try {
       const response = await signUp(data);
-      if (response === "OK") {
-        router.push("/user/signupComplete");
-      }
+      const msg = response.message;
+      if (msg === "OK") router.push("/user/signupComplete");
+      else if (msg === "Duplication account") toastAlert({ status: 200, content: "이미 존재하는 계정입니다." });
+      else if (msg === "Duplication nickname") toastAlert({ status: 200, content: "이미 사용중인 닉네임입니다." });
+      else return;
     } catch (error) {
       const { response } = error as unknown as AxiosError;
-      if (response?.data === "Duplication account") alert("이미 존재하는 계정입니다.");
-      else if (response?.data === "Duplication nickname") alert("이미 사용중인 닉네임입니다.");
-      else alert("일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.");
+      toastAlert({ status: response?.status });
     }
   };
 
   return (
-    <div className="sign-up">
-      <div className="sign-up__title">
-        <Image src={logo} alt="yehLogo" onClick={() => router.push("/main")} />
-        <span>조직문화의 개선과 소통을 위해 지금 시작해보세요</span>
+    <>
+      <div className="sign-up">
+        <div className="sign-up__title">
+          <Image src={logo} alt="yehLogo" onClick={() => router.push("/main")} />
+          <span>조직문화의 개선과 소통을 위해 지금 시작해보세요</span>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="sign-up__contents">
+          <label htmlFor="email">이메일</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            {...register("email")}
+            autoComplete="off"
+          />
+          {errors.email && <p>{errors.email.message}</p>}
+          <label htmlFor="password">비밀번호</label>
+          <input
+            id="password"
+            type="password"
+            {...register("password")}
+            placeholder="비밀번호를 입력해주세요 (8 ~ 20자의 영문, 숫자, 특수문자 조합)"
+          />
+          {errors.password && <p>{errors.password.message}</p>}
+          <label htmlFor="confirmPassword">비밀번호 확인</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            {...register("confirmPassword")}
+            placeholder="비밀번호를 한 번 더 입력해주세요"
+          />
+          {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+          <label htmlFor="nickname">닉네임</label>
+          <input
+            id="nickname"
+            type="text"
+            {...register("nickname")}
+            placeholder="닉네임을 입력해주세요"
+            autoComplete="off"
+          />
+          {errors.nickname && <p>{errors.nickname.message}</p>}
+          <button type="submit" className="sign-up__button">
+            가입하기
+          </button>
+        </form>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="sign-up__contents">
-        <label htmlFor="email">이메일</label>
-        <input id="email" type="email" placeholder="이메일을 입력해주세요" {...register("email")} autoComplete="off" />
-        {errors.email && <p>{errors.email.message}</p>}
-        <label htmlFor="password">비밀번호</label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          placeholder="비밀번호를 입력해주세요 (8 ~ 20자의 영문, 숫자, 특수문자 조합)"
-        />
-        {errors.password && <p>{errors.password.message}</p>}
-        <label htmlFor="confirmPassword">비밀번호 확인</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          {...register("confirmPassword")}
-          placeholder="비밀번호를 한 번 더 입력해주세요"
-        />
-        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
-        <label htmlFor="nickname">닉네임</label>
-        <input
-          id="nickname"
-          type="text"
-          {...register("nickname")}
-          placeholder="닉네임을 입력해주세요"
-          autoComplete="off"
-        />
-        {errors.nickname && <p>{errors.nickname.message}</p>}
-        <button type="submit" className="sign-up__button">
-          가입하기
-        </button>
-      </form>
-    </div>
+    </>
   );
 }
 export async function getStaticProps() {

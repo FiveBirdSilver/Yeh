@@ -13,10 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const checkNickname = await User.findOne({ nickname });
 
     if (checkEmail) {
-      res.status(422).json("Duplication account");
+      res.status(200).json({ message: "Duplication account" });
       return;
     } else if (checkNickname) {
-      res.status(422).json("Duplication nickname");
+      res.status(200).json({ message: "Duplication nickname" });
       return;
     }
 
@@ -27,6 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     await User.create(userData);
-    res.status(200).json("OK");
+    res.status(200).json({ message: "OK" });
   }
 }

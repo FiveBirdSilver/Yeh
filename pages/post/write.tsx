@@ -7,6 +7,8 @@ import Cookies from "js-cookie";
 import { writePost } from "../../lib/apis/post";
 import { useMutation, useQueryClient } from "react-query";
 import { GetServerSideProps } from "next";
+import { AxiosError } from "axios";
+import { toastAlert } from "../../components/utils/toastAlert";
 
 export default function New(props: { cookies: string }) {
   const router = useRouter();
@@ -22,25 +24,14 @@ export default function New(props: { cookies: string }) {
   const inputRefTitle = useRef<HTMLInputElement | null>(null);
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
 
-  useEffect(() => {
-    if (!cookie) {
-      alert("로그인 후 이용 가능합니다.");
-      router.push("/user/signin");
-    }
-  }, [cookie]);
-
   const setPost = useMutation<string | void, unknown, FormData>((formData) => writePost(formData, cookie), {
-    onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
+    onError: (error) => {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     },
     onSuccess: (data, variables) => {
-      if (data === "Access") {
-        queryClient.invalidateQueries("posts");
-        router.push("/main");
-      } else {
-        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-        router.push("/user/signin");
-      }
+      queryClient.invalidateQueries("posts");
+      router.push("/main");
     },
   });
 

@@ -1,19 +1,18 @@
 import Image from "next/image";
+import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
 import { InboxOutlined } from "@ant-design/icons";
 import { GetServerSideProps } from "next";
-
-import { userState } from "../../store/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import { IPost, Iimage } from "../../lib/interface/post";
 import { detailPost, updatePost } from "../../lib/apis/post";
+import { toastAlert } from "../../components/utils/toastAlert";
 
 export default function Edit(props: { cookies: string }) {
   const router = useRouter();
   const postId = router.query.id as string;
-  const user = useRecoilValue(userState);
   const cookie = props.cookies;
 
   const [title, setTitle] = useState<string>(""); // props 제목
@@ -33,10 +32,7 @@ export default function Edit(props: { cookies: string }) {
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
   useEffect(() => {
-    if (!cookie) {
-      alert("로그인 후 이용 가능합니다.");
-      router.push("/user/signin");
-    }
+    if (!cookie) router.push("/user/signin");
   }, [cookie]);
 
   useEffect(() => {
@@ -50,15 +46,11 @@ export default function Edit(props: { cookies: string }) {
   // 게시글 수정
   const setUpdate = useMutation<string | void, unknown, FormData>((formData) => updatePost(formData, cookie), {
     onError: (data, error, variables) => {
-      alert("잠시 후 다시 시도해주세요.");
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     },
     onSuccess: async (data, variables) => {
-      if (data === "Access") {
-        await queryClient.invalidateQueries("posts");
-      } else {
-        alert("세션이 만료 되었거나 유효하지 않은 요청 입니다.");
-        await router.push("/user/signin");
-      }
+      await queryClient.invalidateQueries("posts");
     },
   });
 

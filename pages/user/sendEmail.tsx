@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ISendEmail } from "../../lib/interface/auth";
+import { AxiosError } from "axios";
+import { toastAlert } from "../../components/utils/toastAlert";
 
 export default function UserFind() {
   const router = useRouter();
@@ -51,16 +53,13 @@ export default function UserFind() {
   const handleOnSend = async (data: ISendEmail) => {
     try {
       const res = await sendEmail(data);
-      if (res.message === "Access Denied") {
-        alert(`등록된 이메일 주소가 아닙니다.`);
-        return;
-      } else {
-        alert(`가입한 이메일 주소로 인증번호가 전송되었습니다.`);
+      if (res.message === "Access") {
+        toastAlert({ status: 200, content: "가입한 이메일 주소로 인증번호가 전송되었습니다." });
         setSendComplete(true);
-      }
-    } catch (err) {
-      console.log(err);
-      alert("잠시 후 다시 시도해 주세요.");
+      } else toastAlert({ status: 200, content: "등록된 이메일 주소가 아닙니다." });
+    } catch (error) {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     }
   };
 
@@ -72,7 +71,7 @@ export default function UserFind() {
     try {
       const res = await confirmCode(data);
       if (res.message === "Access Denied") {
-        alert(`인증 번호가 일치하지 않습니다.`);
+        toastAlert({ status: 200, content: "인증 번호가 일치하지 않습니다." });
         return;
       } else {
         router.push({
@@ -81,9 +80,9 @@ export default function UserFind() {
         });
         router.push("/user/resetPw");
       }
-    } catch (err) {
-      console.log(err);
-      alert("잠시 후 다시 시도해 주세요.");
+    } catch (error) {
+      const { response } = error as unknown as AxiosError;
+      toastAlert({ status: response?.status });
     }
   };
 
