@@ -1,14 +1,21 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import { viewPosts } from "../../lib/apis/post";
+import { useEffect } from "react";
 import { useQuery } from "react-query";
-import { IPost } from "../../lib/interface/post";
+import { useRouter } from "next/router";
 import { Skeleton } from "antd";
+
+import { viewPosts } from "../../lib/apis/post";
+import { IPost } from "../../lib/interface/post";
 
 export default function Aside() {
   const router = useRouter();
-  const post = useQuery<IPost[]>(["posts"], async () => await viewPosts({ keyword: "" }));
+  const post = useQuery<IPost[]>(["posts"], async () => await viewPosts(""));
   const ranking = post.data?.slice(0, 10);
+
+  useEffect(() => {
+    if (router.pathname) {
+      post.refetch();
+    }
+  }, [router.pathname]);
 
   return (
     <div className="ranking">

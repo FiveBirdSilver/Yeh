@@ -96,3 +96,11 @@ textarea {
     font-weight: bold;
   }
 }
+
+// 토스트 알림
+.Toastify__toast-container--top-center {
+  width: auto;
+  min-width: 300px;
+  font-size: 12px;
+  font-weight: 700;
+}

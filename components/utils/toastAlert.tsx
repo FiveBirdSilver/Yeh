@@ -25,12 +25,6 @@ export const toastAlert = (props: ItoastAlert) => {
     onClick: () => (window.location.href = "/forbidden"),
   };
 
-  const dafaultOption: ToastOptions = {
-    ...option,
-    onClose: () => (window.location.href = "/main"),
-    onClick: () => (window.location.href = "/main"),
-  };
-
   switch (status) {
     case 200: {
       return toast.info(content, option);
@@ -44,7 +38,7 @@ export const toastAlert = (props: ItoastAlert) => {
       return toast.error(content ? content : "서비스에 접속할 수 없습니다.", errorOption);
     }
     default: {
-      return toast.error(content ? content : "잠시 후 다시 시도해 주세요", dafaultOption);
+      return toast.error(content ? content : "잠시 후 다시 시도해 주세요.", errorOption);
     }
   }
 };

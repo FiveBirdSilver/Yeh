@@ -5,7 +5,7 @@ import RecoilNexus from "recoil-nexus";
 import { RecoilRoot } from "recoil";
 import { useGrid } from "../components/utils/responsive";
 import { BsFillSunFill, BsFillMoonFill, BsArrowBarUp } from "react-icons/bs";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import type { AppProps } from "next/app";
 
@@ -13,26 +13,29 @@ import "react-toastify/dist/ReactToastify.css";
 import "../asset/styles/main.scss";
 import "tailwindcss/tailwind.css";
 import { AxiosError } from "axios";
+import { toastAlert } from "../components/utils/toastAlert";
+import { useRouter } from "next/router";
 
 const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [theme, setTheme] = useState(false);
+  // const [theme, setTheme] = useState(false);
   // const { isDesktop } = useGrid();
+  const router = useRouter();
+  // const handleThemeToggle = () => {
+  //   setTheme((prev) => !prev);
+  // };
 
-  const handleThemeToggle = () => {
-    setTheme((prev) => !prev);
-  };
-
-  const handleOnTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // const handleOnTop = () => {
+  //   window.scrollTo({ top: 0, behavior: "smooth" });
+  // };
 
   function PageRouter() {
     const pages = pageProps.path;
     switch (pages) {
       case "signin":
       case "signup":
+      case "forbidden":
         return <Component {...pageProps} />;
       default:
         return (
@@ -54,25 +57,24 @@ function MyApp({ Component, pageProps }: AppProps) {
   //   </div>
   // );
 
+  // const queryClient = new QueryClient({
+  //   defaultOptions: {
+  //     queries: {
+  //       onError: (error) => {
+  //         if (error instanceof AxiosError) {
+  //           toastAlert({ status: error?.status });
+  //         }
+  //       },
+  //       retry: 0, // 0으로 설정해도 기본적으로 3번 재시도
+  //       // suspense: true,
+  //     },
+  //   },
+  // });
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        onError: (err) => {
-          console.log(err);
-          // if (err instanceof AxiosError) {
-
-          //   const status = err.response?.status;
-          //   console.log(status);
-          //   // fnTest(status as number);
-          // }
-        },
-        // retry: 0, // 0으로 설정해도 기본적으로 3번 재시도
-        // staleTime: 0,
-        // suspense: true,
-      },
-    },
+    queryCache: new QueryCache({
+      onError: (error) => toastAlert({ status: 400 }),
+    }),
   });
-
   return (
     <QueryClientProvider client={queryClient}>
       <Head>

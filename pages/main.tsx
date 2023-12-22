@@ -3,24 +3,25 @@ import { useEffect } from "react";
 import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
+import { Skeleton } from "antd";
+import { AxiosError } from "axios";
+import { useRecoilValue } from "recoil";
 import { Grid } from "@mui/material";
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 
-import CreateTime from "../components/utils/createTime";
+import { keywordState } from "../store";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
-import { Skeleton } from "antd";
-import { useRecoilValue } from "recoil";
-import { keywordState } from "../store";
+import CreateTime from "../components/utils/createTime";
+import { toastAlert } from "../components/utils/toastAlert";
 
 export default function Main() {
   const router = useRouter();
-  const { ref, inView } = useInView();
   const keyword = useRecoilValue(keywordState);
+  const { ref, inView } = useInView();
 
   const posts = useInfiniteQuery(
     ["posts", keyword],
@@ -32,6 +33,7 @@ export default function Main() {
       };
     },
     {
+      useErrorBoundary: true,
       getNextPageParam: (lastPage) => {
         return lastPage?.page + 1;
       },

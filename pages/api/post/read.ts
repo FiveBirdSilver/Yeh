@@ -7,6 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const result = await Post.find({ _id: postId });
 
-    res.status(200).json(result);
+    res.status(400).json(result);
   }
 }
