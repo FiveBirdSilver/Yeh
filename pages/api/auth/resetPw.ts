@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
 
 import dbConnect from "../../../lib/db/connet";
 import User from "../../../lib/db/model/auth";
@@ -13,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const email = verify(token).email;
     dbConnect();
 
-    await User.updateOne({ email }, { password });
+    await User.updateOne({ email }, { password: await bcrypt.hash(password, 12) });
     return res.status(200).json({ message: "Access" });
   }
 }

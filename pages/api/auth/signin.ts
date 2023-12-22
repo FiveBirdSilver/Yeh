@@ -10,6 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     const { email, password } = req.body;
     const checkUser = await User.findOne({ email });
+    console.log(checkUser.password);
+    console.log(password);
 
     if (checkUser === null || !bcrypt.compareSync(password, checkUser.password)) {
       return res.status(200).json({ message: "Access Denied" });
@@ -29,7 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ]);
 
     return res.status(200).json({ message: "Access" });
-  } else if (req.method === "DELETE") {
+  }
+
+  // 로그아웃
+  else if (req.method === "DELETE") {
     const cookie = req.headers.cookie?.split(";");
 
     if (cookie) {
