@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { ToastOptions, toast } from "react-toastify";
 
 interface ItoastAlert {

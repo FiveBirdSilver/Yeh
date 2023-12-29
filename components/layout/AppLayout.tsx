@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect } from "react";
 import Aside from "./aside";
 import Header from "./header";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 
 const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
     <>
       <Header />
       <div className="section">
+        <title>YEH</title>
+        <ToastContainer limit={1} style={{ fontSize: 12 }} />
         {children}
         {pathRoute()}
       </div>

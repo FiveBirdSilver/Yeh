@@ -16,7 +16,6 @@ import { keywordState } from "../store";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
 import CreateTime from "../components/utils/createTime";
-import { toastAlert } from "../components/utils/toastAlert";
 
 export default function Main() {
   const router = useRouter();
@@ -34,6 +33,7 @@ export default function Main() {
     },
     {
       useErrorBoundary: true,
+      // retry: 0,
       getNextPageParam: (lastPage) => {
         return lastPage?.page + 1;
       },
