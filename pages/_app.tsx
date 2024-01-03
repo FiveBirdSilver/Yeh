@@ -12,7 +12,7 @@ import "tailwindcss/tailwind.css";
 import "../asset/styles/main.scss";
 import Error from "./error";
 
-const AppLayout = dynamic(() => import("../components/layout/appLayout"), { ssr: false });
+const AppLayout = dynamic(() => import("../components/layout/AppLayout"), { ssr: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { reset } = useQueryErrorResetBoundary();

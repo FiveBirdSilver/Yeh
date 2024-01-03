@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 import { FaPen } from "react-icons/fa";
-import { useRecoilValue } from "recoil";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 import CreateTime from "../utils/createTime";
 import { dropComments, writeComments } from "../../lib/apis/post";

@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
 import { Skeleton } from "antd";
-import { AxiosError } from "axios";
 import { useRecoilValue } from "recoil";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";

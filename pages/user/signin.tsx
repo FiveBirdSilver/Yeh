@@ -31,7 +31,6 @@ export default function Signiin() {
   const onSubmit = async (data: ISignIn) => {
     try {
       const response = await signIn(data);
-      console.log(response);
       if (response.message === "Access") {
         router.push("/main");
       } else toastAlert({ status: 200, content: "일치하는 계정정보가 없습니다." });

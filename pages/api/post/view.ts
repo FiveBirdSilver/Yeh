@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../../lib/db/connet";
 import dbConnect from "../../../lib/db/connet";
 import Post from "../../../lib/db/model/post";
 
@@ -21,12 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 페이지 번호가 범위를 벗어나는 경우 처리
   if (currentPage < 1 || currentPage > totalPages) {
-    return res.status(401).json({ message: "noData" });
+    return res.status(200).json({ message: "noData" });
   }
 
-  // 게시글 조회 및 페이징 처리
+  // 게시글 조회 및 페이징 처리₩`
   const skip = (currentPage - 1) * perPage;
   const result = await Post.find(searchQuery).sort({ createTime: -1 }).skip(skip).limit(perPage);
 
-  return res.status(401).json({ message: "OK", data: result });
+  return res.status(200).json({ message: "OK", data: result });
 }
