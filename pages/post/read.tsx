@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dropdown, Modal, Skeleton } from "antd";
 import {
   EyeOutlined,
@@ -10,7 +10,6 @@ import {
   LikeFilled,
   MoreOutlined,
 } from "@ant-design/icons";
-import { useRecoilValue } from "recoil";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { GetServerSideProps } from "next";
@@ -33,9 +32,13 @@ export default function Details(props: Props) {
   const queryClient = useQueryClient();
   const postId = router.query.id as string;
   const { cookies, uid } = props;
-
   const [isModal, setIsModal] = useState<boolean>(false);
-  const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
+
+  // 상세 게시글 가져오기
+  const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId), {
+    useErrorBoundary: true,
+    retry: 0,
+  });
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
   const items = [
@@ -110,7 +113,6 @@ export default function Details(props: Props) {
     await setDelete.mutate(requset);
     router.push("/main");
   };
-
   return (
     <div className="detailPostBox">
       <div className="detailPostBox_header">

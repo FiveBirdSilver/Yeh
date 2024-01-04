@@ -81,7 +81,10 @@ export default function Comments(props: Props) {
   };
 
   const handleOnKeyup = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") insertComments();
+    e.stopPropagation(); // 이벤트 전파 중지
+    if (e.key === "Enter") {
+      insertComments();
+    }
   };
 
   return (

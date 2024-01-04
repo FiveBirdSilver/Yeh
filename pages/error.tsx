@@ -7,7 +7,6 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 export default function Error({ error, reset }: { error?: AxiosError; reset: () => void }) {
   const router = useRouter();
-
   return (
     <div className="flex flex-col items-center h-full">
       <div className="mx-0 my-auto text-center">
@@ -26,7 +25,7 @@ export default function Error({ error, reset }: { error?: AxiosError; reset: () 
             다시 시도
           </button>
           <button
-            onClick={() => router.push("/main")}
+            onClick={() => router.push("/")}
             className="w-24 h-10 font-bold text-white rounded cursor-pointer bg-mainColor"
           >
             홈으로

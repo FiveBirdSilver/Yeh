@@ -28,7 +28,10 @@ export default function Edit(props: { cookies: string }) {
   const inputRefContent = useRef<HTMLTextAreaElement | null>(null);
 
   const queryClient = useQueryClient();
-  const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId));
+  const detail = useQuery<IPost[]>(["detail"], async () => await detailPost(postId), {
+    useErrorBoundary: true,
+    retry: 0,
+  });
   const imgConfirm = detail.isSuccess && detail.data?.map((v) => v.img).every((i) => i === null);
 
   useEffect(() => {
@@ -144,20 +147,6 @@ export default function Edit(props: { cookies: string }) {
       </div>
     </div>
   );
-}
-{
-  /* {isModal ? (
-        <Modal
-          open={isModal}
-          centered
-          onOk={() => setIsModal(false)}
-          onCancel={() => setIsModal(false)}
-          cancelButtonProps={{ style: { display: "none" } }}
-          width="420px"
-        >
-          <p className="modal_content"> 첨부 이미지는 최대 5장까지 가능합니다.</p>
-        </Modal>
-      ) : null} */
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

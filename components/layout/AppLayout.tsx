@@ -18,7 +18,6 @@ const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
       <Header />
       <div className="section">
         <title>YEH</title>
-        <ToastContainer limit={1} style={{ fontSize: 12 }} />
         {children}
         {pathRoute()}
       </div>

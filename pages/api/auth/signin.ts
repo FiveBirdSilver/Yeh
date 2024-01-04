@@ -10,8 +10,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     const { email, password } = req.body;
     const checkUser = await User.findOne({ email });
-    console.log(checkUser.password);
-    console.log(password);
 
     if (checkUser === null || !bcrypt.compareSync(password, checkUser.password)) {
       return res.status(200).json({ message: "Access Denied" });

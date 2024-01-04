@@ -47,20 +47,14 @@ export default function Header() {
     {
       enabled: uid !== undefined,
       staleTime: 600000, // 10분에 한 번씩 요청
-      onError: (error) => {
-        const { response } = error as unknown as AxiosError;
-        toastAlert({ status: response?.status });
-      },
+      useErrorBoundary: true,
+      retry: 0,
     }
   );
 
   const items = [
     {
       key: "1",
-      label: <a onClick={() => router.push("/user/myPost")}>마이페이지</a>,
-    },
-    {
-      key: "2",
       label: <a onClick={() => logout()}>로그아웃</a>,
     },
   ];
