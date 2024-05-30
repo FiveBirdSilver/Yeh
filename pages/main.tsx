@@ -15,7 +15,6 @@ import { keywordState } from "../store";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
 import CreateTime from "../components/utils/createTime";
-import { toast } from "react-toastify";
 
 export default function Main() {
   const router = useRouter();

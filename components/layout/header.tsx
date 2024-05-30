@@ -38,19 +38,19 @@ export default function Header() {
   };
 
   // 토큰 재발급 함수
-  useQuery<IConfirm>(
-    ["token"],
-    async () => {
-      const token = await getToken();
-      return token;
-    },
-    {
-      enabled: uid !== undefined,
-      staleTime: 600000, // 10분에 한 번씩 요청
-      useErrorBoundary: true,
-      retry: 0,
-    }
-  );
+  // useQuery<IConfirm>(
+  //   ["token"],
+  //   async () => {
+  //     const token = await getToken();
+  //     return token;
+  //   },
+  //   {
+  //     enabled: uid !== undefined,
+  //     staleTime: 600000, // 10분에 한 번씩 요청
+  //     useErrorBoundary: true,
+  //     retry: 0,
+  //   }
+  // );
 
   const items = [
     {

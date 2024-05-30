@@ -47,6 +47,9 @@ export default function New(props: { cookies: string }) {
     formData.append("title", title);
     formData.append("content", content);
     images?.forEach((file) => formData.append("image", file));
+    for (const value of formData.values()) {
+      console.log(value);
+    }
 
     setPost.mutate(formData);
   };
