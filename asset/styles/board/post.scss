@@ -49,10 +49,13 @@
   .post-card__image {
     position: relative;
     display: flex;
+    min-height: 100px;
 
     .post-card__image_wrapper {
-      width: 75px;
-      height: 75px;
+      img {
+        width: 100px;
+        height: 100px;
+      }
     }
     .post-card__image_num {
       position: absolute;

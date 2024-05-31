@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { EyeOutlined, CommentOutlined, LikeOutlined, FieldTimeOutlined } from "@ant-design/icons";
-import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
-import { Skeleton } from "antd";
 import { useRecoilValue } from "recoil";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -15,35 +13,31 @@ import { keywordState } from "../store";
 import { IPost } from "../lib/interface/post";
 import { viewPosts } from "../lib/apis/post";
 import CreateTime from "../components/utils/createTime";
+import Image from "next/image";
 
 export default function Main() {
   const router = useRouter();
   const keyword = useRecoilValue(keywordState);
   const { ref, inView } = useInView();
 
-  const posts = useInfiniteQuery(
+  const posts = useInfiniteQuery<IPost>(
     ["posts", keyword],
-    async ({ pageParam = 1 }) => {
-      const response = await viewPosts(keyword, pageParam);
-      return {
-        list: response,
-        page: pageParam,
-      };
-    },
+    async ({ pageParam = 1 }) => viewPosts(keyword, pageParam),
     {
       useErrorBoundary: true,
       retry: 0,
-      getNextPageParam: (lastPage) => {
-        return lastPage?.page + 1;
+      getNextPageParam: (lastPage, allPages) => {
+        return allPages.length + 1;
       },
+      select: (data) => ({
+        pages: data.pages.flatMap((page) => page),
+        pageParams: data.pageParams,
+      }),
     }
   );
 
-  // 무한 스크롤 기능으로 추가되는 데이터 깊은 병합
-  const flatData = posts.data?.pages.map((v) => v.list).flat();
-
   useEffect(() => {
-    if (inView && !flatData?.includes(null)) posts.fetchNextPage();
+    if (inView) posts.fetchNextPage();
   }, [inView]);
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -57,67 +51,58 @@ export default function Main() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        {flatData
-          ?.filter((v) => v !== null)
-          ?.map((i: IPost) => (
-            <Grid item xs={12} md={6}>
+        {posts.isSuccess &&
+          posts.data?.pages?.map(({ _id, title, content, img, writer, createTime, view, comments, likes }) => (
+            <Grid item xs={12} md={6} key={_id}>
               <Item
                 onClick={() =>
                   router.push({
                     pathname: "/post/read",
-                    query: { id: i._id },
+                    query: { id: _id },
                   })
                 }
                 className="post-card"
-                key={i._id}
+                key={_id}
               >
-                {posts.isLoading ? (
-                  <div className="post-card-loading">
-                    <Skeleton paragraph={{ rows: 2 }} />
-                    <Skeleton.Image active className="post-card-loading image" />
-                  </div>
-                ) : (
-                  <>
-                    {CreateTime(i.createTime).includes("방금전") ||
-                    CreateTime(i.createTime).includes("분전") ||
-                    CreateTime(i.createTime).includes("시간전") ? (
-                      <p className="post-card__new_label">NEW</p>
-                    ) : null}
-                    <div className="post-card__text">
-                      <div className="post-card__text_container">
-                        <span className="post-card__text_container title">{i.title}</span>
-                        <span className="post-card__text_container content">{i.content}</span>
-                      </div>
-                      {i.img.length !== 0 && (
-                        <div className="post-card__image">
-                          <div className="post-card__image_wrapper">
-                            <Image src={`/uploads/${i.img[0].filename}`} fill alt="postImage" />
-                            {/* <Image src={i.img[0]?.path} fill alt="postImage" /> */}
-                          </div>
-                          {i.img.length > 1 && <p className="post-card__image_num">{`+${i.img.length - 1}`}</p>}
+                <>
+                  {CreateTime(createTime).includes("방금전") ||
+                  CreateTime(createTime).includes("분전") ||
+                  CreateTime(createTime).includes("시간전") ? (
+                    <p className="post-card__new_label">NEW</p>
+                  ) : null}
+                  <div className="post-card__text">
+                    <div className="post-card__text_container">
+                      <span className="post-card__text_container title">{title}</span>
+                      <span className="post-card__text_container content">{content}</span>
+                    </div>
+                    <div className="post-card__image">
+                      {img.length !== 0 && (
+                        <div className="post-card__image_wrapper">
+                          <Image src={`/uploads/${img[0].filename}`} alt="post_image" width={100} height={100} />
+                          {img.length > 1 && <p className="post-card__image_num">{`+${img.length - 1}`}</p>}
                         </div>
                       )}
                     </div>
-                    <div className="post-card__info">
-                      <p className="post-card__info writer">{i.writer}</p>
-                      <div className="post-card__info_wrapper">
-                        <p>
-                          <FieldTimeOutlined className="post-card__info_wrapper icon" />
-                          {CreateTime(i.createTime)}
-                        </p>
-                        <p>
-                          <EyeOutlined className="post-card__info_wrapper icon" /> {i.view}
-                        </p>
-                        <p>
-                          <CommentOutlined className="post-card__info_wrapper icon" /> {i.comments.length}
-                        </p>
-                        <p>
-                          <LikeOutlined className="post-card__info_wrapper icon" /> {i.likes.length}
-                        </p>
-                      </div>
+                  </div>
+                  <div className="post-card__info">
+                    <p className="post-card__info writer">{writer}</p>
+                    <div className="post-card__info_wrapper">
+                      <p>
+                        <FieldTimeOutlined className="post-card__info_wrapper icon" />
+                        {CreateTime(createTime)}
+                      </p>
+                      <p>
+                        <EyeOutlined className="post-card__info_wrapper icon" /> {view}
+                      </p>
+                      <p>
+                        <CommentOutlined className="post-card__info_wrapper icon" /> {comments.length}
+                      </p>
+                      <p>
+                        <LikeOutlined className="post-card__info_wrapper icon" /> {likes.length}
+                      </p>
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
               </Item>
             </Grid>
           ))}
@@ -126,3 +111,9 @@ export default function Main() {
     </Box>
   );
 }
+// {posts.isLoading ? (
+//   <div className="post-card-loading">
+//     <Skeleton paragraph={{ rows: 2 }} />
+//     <Skeleton.Image active className="post-card-loading image" />
+//   </div>
+// ) : (

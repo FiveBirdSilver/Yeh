@@ -105,8 +105,8 @@ export default function Comments(props: Props) {
         </div>
         <div className="comments__container">
           {data.map((v, index) => (
-            <div className="flex items-end justify-between w-full">
-              <div className="comments__wrapper" key={index}>
+            <div className="flex items-end justify-between w-full" key={index}>
+              <div className="comments__wrapper">
                 <div className="comments__wrapper-info">
                   <p>{v.nickname}</p>
                   <p> · </p>
