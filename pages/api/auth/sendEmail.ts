@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 
 import dbConnect from "../../../lib/db/connet";
-import senderAuth from "../../../auth.json";
 import User from "../../../lib/db/model/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,7 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const transporter = nodemailer.createTransport({
     service: "Gmail",
-    auth: senderAuth,
+    auth: {
+      user: "tpdms0401@gmail.com",
+      pass: process.env.NEXT_PUBLIC_PASSWORD,
+    },
   });
 
   const authCode = Math.floor(Math.random() * 1000000); //랜덤 번호 생성
